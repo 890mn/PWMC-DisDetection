@@ -216,9 +216,11 @@ void transposeMatrix(uint16_t input[CHAR_HEIGHT], uint16_t output[CHAR_HEIGHT / 
 /**
  * @brief Draw a character on the LCD screen.
  * 
- * output[i][0] -> low pixel in i's column  
+ * output[i][0] 
+ * -> low pixel in i's column  
  * 
- * output[i][1] -> high pixel in i's column 
+ * output[i][1] 
+ * -> high pixel in i's column 
  * 
  * Draw from low 12-bit to high 12-bit
  * 

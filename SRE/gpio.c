@@ -45,4 +45,5 @@ void GPIO_Config(void)
 
     /* 设置 PA7 输出低电平 */
     GPIO_ResetBits(GPIOA, GPIO_Pin_7);
+    LED_Control(LEDALL, 0);
 }

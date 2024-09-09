@@ -391,8 +391,33 @@ uint16_t FontMartix[][24] = {
          0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000	 
 };
 
+/**
+ * @brief Adjust Motor Speed(PWM Duty Cycle) based on distance 
+ * 
+ * @param distance measured by Ultrasonic
+ */
 void Motor_Control(float distance);
+
+/**
+ * @brief Update the display of two octagons and their corresponding bar graphs based on distance and PWM pulse.
+ * 
+ * This function updates two vertical bar graphs, each associated with an octagon, based on the provided distance 
+ * and PWM pulse values. The bar graphs are drawn in blocks, and their height is updated incrementally to reflect 
+ * the new values. The bars are drawn or cleared incrementally based on the change in values.
+ * 
+ * The left-side bar represents the filtered distance, and the right-side bar represents the PWM duty cycle.
+ * Octagons are drawn once to surround the bars.
+ * 
+ * @param distance The current distance value to be represented on the left bar graph.
+ * @param pwm_pulse The current PWM pulse value to be represented on the right bar graph.
+ */
 void Update_Octagons(float distance, float pwm_pulse);
+
+/**
+ * @brief Delay with Millisecond precision
+ * 
+ * @param nTime Delay time
+ */
 void Delay_Ms(uint32_t nTime);
 
 #endif

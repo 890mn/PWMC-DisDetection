@@ -1,3 +1,10 @@
+/**
+ * @file tim.h
+ * @brief TIM Mode
+ * including GPIO_Config.
+ * 
+ */
+
 #ifndef __TIM_H
 #define __TIM_H
 

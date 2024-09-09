@@ -1,3 +1,9 @@
+/**
+ * @file lcd.h
+ * @brief LCD Drive
+ * 
+ */
+
 #ifndef __LCD_H
 #define __LCD_H
 

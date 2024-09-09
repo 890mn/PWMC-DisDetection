@@ -1,3 +1,10 @@
+/**
+ * @file usart.h
+ * @brief USART Mode
+ * including GPIO_Config.
+ * 
+ */
+
 #ifndef __USART_H
 #define __USART_H
 #include "stdint.h"

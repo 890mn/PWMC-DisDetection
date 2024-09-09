@@ -1,20 +1,12 @@
-/*
-  程序说明: CT117E嵌入式竞赛板LCD驱动程序
-  软件环境: Keil uVision 4.10 
-  硬件环境: CT117E嵌入式竞赛板
-  日    期: 2011-8-9
-*/
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __LCD_H
 #define __LCD_H
 
-/* Includes ------------------------------------------------------------------*/
 #include "stm32f10x.h"
 #include "stdint.h"
-/* Exported types ------------------------------------------------------------*/
-/* Exported constants --------------------------------------------------------*/
-#define CHAR_WIDTH  16   // 字符的宽度
-#define CHAR_HEIGHT 24  // 字符的高度
+
+#define CHAR_WIDTH  16 
+#define CHAR_HEIGHT 24 
+
 /* LCD Registers */
 #define R0             0x00
 #define R1             0x01
@@ -160,39 +152,122 @@
 #define Horizontal     0x00
 #define Vertical       0x01
 
-
-/* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-/*----- High layer function -----*/
 void STM3210B_LCD_Init(void);
 void LCD_SetTextColor(vu16 Color);
 void LCD_SetBackColor(vu16 Color);
 void LCD_ClearLine(u8 Line);
 void LCD_Clear(u16 Color);
 void LCD_SetCursor(u8 Xpos, u16 Ypos);
+
+/**
+ * @brief Draw a pixel at the specified coordinates with the given color.
+ * 
+ * @param Xpos The X-coordinate of the pixel.
+ * @param Ypos The Y-coordinate of the pixel.
+ * @param Color The color of the pixel (16-bit RGB value).
+ */
+void LCD_DrawPixel(u8 Xpos, u16 Ypos, u16 Color);
+
+/**
+ * @brief Draw a line between two points using the Bresenham's line algorithm.
+ * 
+ * @param x0 The X-coordinate of the start point.
+ * @param y0 The Y-coordinate of the start point.
+ * @param x1 The X-coordinate of the end point.
+ * @param y1 The Y-coordinate of the end point.
+ */
+void PRO_DrawLine(int x0, int y0, int x1, int y1);
+
+/**
+ * @brief Draw an octagon centered at the specified coordinates with a given radius.
+ * 
+ * This function calculates the 8 vertices of an octagon with one side parallel to 
+ * the horizontal axis. 
+ * 
+ * @param centerX The X-coordinate of the center of the octagon.
+ * @param centerY The Y-coordinate of the center of the octagon.
+ * @param radius The radius of the octagon.
+ */
+void LCD_DrawOctagon(u8 centerX, u16 centerY, u16 radius);
+
+/**
+ * @brief Display a character in vertical mode on the LCD.
+ * 
+ * @param Xpos The starting X coordinate for the character.
+ * @param Ypos The starting Y coordinate for the character.
+ * @param input The input character matrix (24x16).
+ */
+void LCD_VerticalDisplay(u8 Xpos, u16 Ypos, uint16_t input[CHAR_HEIGHT]);
+
+/**
+ * @brief Transpose a character matrix for vertical display.
+ * 
+ * This function takes a horizontally-aligned character matrix (input) and transposes it 
+ * for vertical display. 
+ * 
+ * Each column is split into two 12-bit halves for drawing.
+ * 
+ * @param input The input character matrix (24x16).
+ * @param output The transposed output matrix (each element contains 12 bits for high and low parts).
+ */
+void transposeMatrix(uint16_t input[CHAR_HEIGHT], uint16_t output[CHAR_HEIGHT / 2][2]);
+
+/**
+ * @brief Draw a character on the LCD screen.
+ * 
+ * output[i][0] 
+ * -> low pixel in i's column  
+ * 
+ * output[i][1] 
+ * -> high pixel in i's column 
+ * 
+ * Draw from low 12-bit to high 12-bit
+ * 
+ * @param Xpos The starting X coordinate for the character.
+ * @param Ypos The starting Y coordinate for the character.
+ * @param c A pointer to the character data (16 columns, 12 + 12 bits per column).
+ */
+void PRO_DrawChar(u8 Xpos, u16 Ypos, uc16 *c);
+
+/**
+ * @brief Init the Distance and DutyCycle's Display with presets
+ * 
+ */
+void LCD_Back_Init(void);
+
+/**
+ * @brief Filter used for LCD Display in quick refresh mode.
+ * 
+ * This function filters the input distance value for display on an LCD in a mode
+ * that prioritizes quick refresh rates.
+ *
+ * @param new_distance The new distance value to be filtered (float).
+ * @return The filtered distance value (float).
+ */
+float Filter_Distance(float new_distance);
+
+/**
+ * @brief Filling a matrix bit-by-bit
+ * 
+ * @param x The X-coordinate of the start point.
+ * @param y The Y-coordinate of the start point.
+ * @param width The width of the martix.
+ * @param height The height of the martix.
+ * @param color The color of the martix.
+ */
+void LCD_FillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color);
+
 void LCD_DrawChar(u8 Xpos, u16 Ypos, uc16 *c);
-//void LCD_DisplayChar(u8 Line, u16 Column, u8 Ascii);
-//void LCD_DisplayStringLine(u8 Line, u8 *ptr);
 void LCD_SetDisplayWindow(u8 Xpos, u16 Ypos, u8 Height, u16 Width);
 void LCD_WindowModeDisable(void);
-//void LCD_DrawLine(u8 Xpos, u16 Ypos, u16 Length, u8 Direction);
 void LCD_DrawRect(u8 Xpos, u16 Ypos, u8 Height, u16 Width);
 void LCD_DrawCircle(u8 Xpos, u16 Ypos, u16 Radius);
 void LCD_DrawMonoPict(uc32 *Pict);
 void LCD_WriteBMP(u32 BmpAddress);
 void LCD_DrawBMP(u32 BmpAddress);
 void LCD_DrawPicture(const u8* picture);
-void LCD_DrawPixel(u8 Xpos, u16 Ypos, u16 Color);
-void PRO_DrawLine(int x0, int y0, int x1, int y1);
-void LCD_DrawOctagon(u8 centerX, u16 centerY, u16 radius);
-void LCD_DrawChar_Portrait(uint16_t x, uint16_t y, char ch, const uint16_t* font, uint16_t color);
-void LCD_DrawString_Portrait(uint16_t x, uint16_t y, const char* str, const uint16_t* font, uint16_t color);
 
-void PRO_DrawChar(u8 Xpos, u16 Ypos, uc16 *c);
-void transposeMatrix(uint16_t input[CHAR_HEIGHT], uint16_t output[CHAR_HEIGHT / 2][2]);
-void liftDisplay(u8 Xpos, u16 Ypos, uint16_t input[CHAR_HEIGHT]);
-
-/*----- Medium layer function -----*/
 void LCD_WriteReg(u8 LCD_Reg, u16 LCD_RegValue);
 u16 LCD_ReadReg(u8 LCD_Reg);
 void LCD_WriteRAM_Prepare(void);
@@ -202,13 +277,8 @@ void LCD_PowerOn(void);
 void LCD_DisplayOn(void);
 void LCD_DisplayOff(void);
 
-/*----- Low layer function -----*/
 void LCD_CtrlLinesConfig(void);
-
 void LCD_BusIn(void);
 void LCD_BusOut(void);
 
-
-#endif /* __LCD_H */
-
-/******************* (C) COPYRIGHT 2008 STMicroelectronics *****END OF FILE****/
+#endif

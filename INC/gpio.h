@@ -3,6 +3,10 @@
 
 #include "led.h"
 
+/**
+ * @brief GPIO MAIN CONFIG
+ * 
+ */
 void GPIO_Config(void);
 
 #endif

@@ -1,0 +1,16 @@
+..\output\gpio.o: ..\SRE\gpio.c
+..\output\gpio.o: ..\INC\gpio.h
+..\output\gpio.o: ..\INC\led.h
+..\output\gpio.o: C:\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdint.h
+..\output\gpio.o: ..\Drivers\CMSIS\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h
+..\output\gpio.o: C:\Keil_v5\ARM\CMSIS\Include\core_cm3.h
+..\output\gpio.o: C:\Keil_v5\ARM\CMSIS\Include\core_cmInstr.h
+..\output\gpio.o: C:\Keil_v5\ARM\CMSIS\Include\core_cmFunc.h
+..\output\gpio.o: ..\Drivers\CMSIS\CM3\DeviceSupport\ST\STM32F10x\system_stm32f10x.h
+..\output\gpio.o: ..\INC\stm32f10x_conf.h
+..\output\gpio.o: ..\Drivers\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h
+..\output\gpio.o: ..\Drivers\CMSIS\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h
+..\output\gpio.o: ..\Drivers\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rcc.h
+..\output\gpio.o: ..\Drivers\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h
+..\output\gpio.o: ..\Drivers\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h
+..\output\gpio.o: ..\Drivers\STM32F10x_StdPeriph_Driver\inc\misc.h

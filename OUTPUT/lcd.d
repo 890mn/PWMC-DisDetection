@@ -1,0 +1,17 @@
+..\output\lcd.o: ..\SRE\lcd.c
+..\output\lcd.o: ..\INC\lcd.h
+..\output\lcd.o: ..\Drivers\CMSIS\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h
+..\output\lcd.o: C:\Keil_v5\ARM\CMSIS\Include\core_cm3.h
+..\output\lcd.o: C:\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdint.h
+..\output\lcd.o: C:\Keil_v5\ARM\CMSIS\Include\core_cmInstr.h
+..\output\lcd.o: C:\Keil_v5\ARM\CMSIS\Include\core_cmFunc.h
+..\output\lcd.o: ..\Drivers\CMSIS\CM3\DeviceSupport\ST\STM32F10x\system_stm32f10x.h
+..\output\lcd.o: ..\INC\stm32f10x_conf.h
+..\output\lcd.o: ..\Drivers\STM32F10x_StdPeriph_Driver\inc\stm32f10x_gpio.h
+..\output\lcd.o: ..\Drivers\CMSIS\CM3\DeviceSupport\ST\STM32F10x\stm32f10x.h
+..\output\lcd.o: ..\Drivers\STM32F10x_StdPeriph_Driver\inc\stm32f10x_rcc.h
+..\output\lcd.o: ..\Drivers\STM32F10x_StdPeriph_Driver\inc\stm32f10x_tim.h
+..\output\lcd.o: ..\Drivers\STM32F10x_StdPeriph_Driver\inc\stm32f10x_usart.h
+..\output\lcd.o: ..\Drivers\STM32F10x_StdPeriph_Driver\inc\misc.h
+..\output\lcd.o: C:\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\math.h
+..\output\lcd.o: C:\Keil_v5\ARM\ARM_Compiler_5.06u7\Bin\..\include\stdlib.h

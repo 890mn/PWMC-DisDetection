@@ -33,7 +33,7 @@ void Delay_LCD(u16 n)
 }
 
 /*
-	uC8230ĞÍÒº¾§¿ØÖÆÆ÷¼Ä´æÆ÷ÅäÖÃ
+	uC8230å‹æ¶²æ™¶æ§åˆ¶å™¨å¯„å­˜å™¨é…ç½®
 */
 void REG_8230_Init(void)
 {
@@ -776,9 +776,9 @@ void LCD_DrawPicture(const u8* picture)
 
 void LCD_DrawPixel(u8 Xpos, u16 Ypos, u16 Color)
 {
-    LCD_SetCursor(Xpos, Ypos);    // ÉèÖÃ¹â±êÎ»ÖÃ
-    LCD_WriteRAM_Prepare();       // ×¼±¸Ğ´ÈëGRAM
-    LCD_WriteRAM(Color);          // Ğ´ÈëÑÕÉ«
+    LCD_SetCursor(Xpos, Ypos);    // è®¾ç½®å…‰æ ‡ä½ç½®
+    LCD_WriteRAM_Prepare();       // å‡†å¤‡å†™å…¥GRAM
+    LCD_WriteRAM(Color);          // å†™å…¥é¢œè‰²
 }
 
 void PRO_DrawLine(int x0, int y0, int x1, int y1) {
@@ -880,21 +880,21 @@ void transposeMatrix(uint16_t input[CHAR_HEIGHT], uint16_t output[CHAR_HEIGHT / 
 
 float Filter_Distance(float new_distance)
 {
-    // ¸üĞÂÂË²¨»º³åÇø
+    // æ›´æ–°æ»¤æ³¢ç¼“å†²åŒº
     distance_buffer[filter_index] = new_distance;
     filter_index = (filter_index + 1) % FILTER_SIZE;
 
-    // ¼ÆËãÂË²¨ºóµÄ¾àÀë
+    // è®¡ç®—æ»¤æ³¢åçš„è·ç¦»
     float filtered_distance = 0;
     for (uint8_t i = 0; i < FILTER_SIZE; ++i)
         filtered_distance += distance_buffer[i];
 
-    // Èç¹û¾àÀë±ä»¯½Ï´ó£¬¼õĞ¡ÂË²¨Ğ§¹û£¬¿ìËÙÏìÓ¦
+    // å¦‚æœè·ç¦»å˜åŒ–è¾ƒå¤§ï¼Œå‡å°æ»¤æ³¢æ•ˆæœï¼Œå¿«é€Ÿå“åº”
     if (fabs(new_distance - filtered_distance / FILTER_SIZE) > 5.0f)
-        // ¾àÀë±ä»¯½Ï´óÊ±£¬Ö±½ÓÊ¹ÓÃ×îĞÂÖµ
+        // è·ç¦»å˜åŒ–è¾ƒå¤§æ—¶ï¼Œç›´æ¥ä½¿ç”¨æœ€æ–°å€¼
         return new_distance;
 
-    return filtered_distance / FILTER_SIZE; // ·ñÔòÊ¹ÓÃÆ½¾ùÂË²¨
+    return filtered_distance / FILTER_SIZE; // å¦åˆ™ä½¿ç”¨å¹³å‡æ»¤æ³¢
 }
 
 void LCD_FillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color)

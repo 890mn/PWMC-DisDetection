@@ -1,4 +1,3 @@
-/* Includes --------*/
 #include "main.h"
 #include "lcd.h"
 #include "tim.h"
@@ -10,7 +9,7 @@
 #define TABLE_SIZE 201
 #define STEP 0.1f
 #define MAX_X 20.0f
-/* Private variables --------*/
+
 float pwm_lookup_table[TABLE_SIZE];
 
 uint8_t echo_flag = 0;
@@ -26,13 +25,13 @@ uint16_t Start_DutX = 195;
 uint16_t Start_DutY = 270;
 
 uint32_t TimingDelay = 0;
-/* Private functions ----------------------------------------*/
+
 void Init_PWM_LookupTable(void) 
 {
     for (uint16_t i = 0; i < TABLE_SIZE; ++i) {
         float x = i * STEP;
         if (x <= MAX_X) 
-            pwm_lookup_table[i] = (849.0f / 43.0f) * sqrt(1849.0f - x * x) - 20;
+            pwm_lookup_table[i] = (849.0f / 43.0f) * sqrt(1849.0f - x * x) - 30;
     }
 }
 
@@ -51,7 +50,7 @@ void Motor_Control(float distance)
 	
 		// Fitting curve implementation
 		if(distance >= 0 && distance <= 20) pwm_pulse = Get_PWM_Pulse(distance);
-		else if(distance > 20 && distance <= 100) pwm_pulse = - 9.9 * distance + 948 - 90;
+		else if(distance > 20 && distance <= 100) pwm_pulse = - 9.9 * distance + 948 - 60;
 		else pwm_pulse = 0;
 	
     // PWM Duty Cycle
@@ -68,7 +67,6 @@ void Motor_Control(float distance)
     LED_Control(LEDALL, 0);
     LED_PWM(pwm_value);
 }
-
 
 void Update_Octagons(float distance, float pwm_pulse)
 {

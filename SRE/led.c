@@ -22,7 +22,7 @@ void LED_PWM(float pwm_pulse){
 	uint16_t level = 0;
 	uint16_t i;
 	while (pwm_pulse > 0 ) {
-		pwm_pulse -= 12.5;
+		pwm_pulse -= 8.125;
 		++level;
 	}
 	for (i = 0; i < level; ++i) {

@@ -251,7 +251,7 @@ void LCD_Back_Init(void);
  * @param new_distance The new distance value to be filtered (float).
  * @return The filtered distance value (float).
  */
-float Filter_Distance(float new_distance);
+uint16_t Filter_Distance(uint16_t new_distance);
 
 /**
  * @brief Filling a matrix bit-by-bit

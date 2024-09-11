@@ -406,22 +406,11 @@ uint16_t FontMartix[][24] = {
 void Init_PWM_LookupTable(void);
 
 /**
- * @brief Retrieve the pre-computed PWM pulse value based on the input distance using a lookup table.
- * 
- * @param x input distance value for the corresponding PWM pulse
- * 
- * @return The pre-calculated PWM pulse value
- *
- */
-uint16_t Get_PWM_Pulse(uint16_t x);
-
-
-/**
  * @brief Adjust Motor Speed(PWM Duty Cycle) based on distance 
  * 
  * @param distance measured by Ultrasonic
  */
-void Motor_Control(float distance);
+void Motor_Control(float distance);		
 
 /**
  * @brief Update the display of two octagons and their corresponding bar graphs based on distance and PWM pulse.

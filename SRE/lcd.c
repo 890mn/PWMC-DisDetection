@@ -6,7 +6,7 @@
 #define CHAR_HEIGHT 24
 #define FILTER_SIZE 3
 
-float distance_buffer[FILTER_SIZE] = {0};
+uint16_t distance_buffer[FILTER_SIZE] = {0};
 
 uint8_t filter_index = 0;
 
@@ -878,18 +878,18 @@ void transposeMatrix(uint16_t input[CHAR_HEIGHT], uint16_t output[CHAR_HEIGHT / 
                     output[j / 2][1] |= (1 << (i - 12));  // Set bit in the second half (upper 12 bits)          
 }
 
-float Filter_Distance(float new_distance)
+uint16_t Filter_Distance(uint16_t new_distance)
 {
     // Update filter buffer
     distance_buffer[filter_index] = new_distance;
     filter_index = (filter_index + 1) % FILTER_SIZE;
 
-    float filtered_distance = 0;
+    uint16_t filtered_distance = 0;
     for (uint8_t i = 0; i < FILTER_SIZE; ++i)
         filtered_distance += distance_buffer[i];
 
     // Reduce the filtering quickly
-    if (fabs(new_distance - filtered_distance / FILTER_SIZE) > 5.0f)
+    if (abs(new_distance - filtered_distance / FILTER_SIZE) > 50) // 5 -> 50
         return new_distance;
 
     return filtered_distance / FILTER_SIZE; // Average Filter

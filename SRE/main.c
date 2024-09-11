@@ -24,25 +24,32 @@ uint32_t TimingDelay = 0;
 /* Private functions ----------------------------------------*/
 void Motor_Control(float distance)
 {
-    float pwm_pulse = 1.0f - (distance / 40.0f);
-    uint16_t pwm_value = (uint16_t)(pwm_pulse * 909.0f);
+    // 计算 pwm_pulse
+    float pwm_pulse = -11.0 * distance + 849.0;
 
-    if (pwm_value > 60)
-        GPIO_SetBits(GPIOA, GPIO_Pin_1); // IN1 = 1
-    else {
-        GPIO_ResetBits(GPIOA, GPIO_Pin_1); // IN1 = 0
-        pwm_value = 0;
+    // 限制 pwm_pulse 的范围，避免出现负值
+    if (pwm_pulse < 0)
         pwm_pulse = 0;
-    }
+    if (pwm_pulse > 849.0f)
+        pwm_pulse = 849.0f;
 
-    TIM_SetCompare2(TIM2, pwm_value);
+    // 转换为 PWM 比例
+    uint16_t pwm_value = (uint16_t)(pwm_pulse / 849.0f * 100.0f); // 转换为 0-100%
 
-    sprintf((char *)buf, "PWM Duty Cycle: %.2f%%\r\n", pwm_pulse * 100.0f);
+    // 设置 PWM 输出
+    TIM_SetCompare2(TIM2, (uint16_t)pwm_pulse);
+
+    GPIO_SetBits(GPIOA, GPIO_Pin_1); // IN1 = 1
+
+    // 打印 PWM 占空比
+    sprintf((char *)buf, "PWM Duty Cycle: %.2d%%\r\n", pwm_value);
     USART_SendString((int8_t *)buf);
 
+    // 控制 LED 和其他部件
     LED_Control(LEDALL, 0);
-    LED_PWM(pwm_pulse);
+    LED_PWM(pwm_value);
 }
+
 
 void Update_Octagons(float distance, float pwm_pulse)
 {

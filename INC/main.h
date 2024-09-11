@@ -413,7 +413,7 @@ void Init_PWM_LookupTable(void);
  * @return The pre-calculated PWM pulse value
  *
  */
-float Get_PWM_Pulse(float x);
+uint16_t Get_PWM_Pulse(uint16_t x);
 
 
 /**

@@ -6,16 +6,13 @@
 #include "gpio.h"
 #include "led.h"
 
-#define TABLE_SIZE 201
-#define STEP 0.1f
-#define MAX_X 20.0f
-
-float pwm_lookup_table[TABLE_SIZE];
+#define STEP_01_10 1     // STEP = 0.1 -> 1
+#define MAX_X_01_10 200  // MAX_X = 20 -> 200
 
 uint8_t echo_flag = 0;
+uint8_t rx_index = 0;
 uint8_t buf[32];
 uint8_t rx_buffer[32];
-uint8_t rx_index = 0;
 
 uint16_t rising_cnt = 0;
 uint16_t falling_cnt = 0;
@@ -23,25 +20,15 @@ uint16_t Start_DisX = 47;
 uint16_t Start_DisY = 270;
 uint16_t Start_DutX = 195;
 uint16_t Start_DutY = 270;
+uint16_t pwm_lookup_table[201];
 
 uint32_t TimingDelay = 0;
 
 void Init_PWM_LookupTable(void) 
 {
-    for (uint16_t i = 0; i < TABLE_SIZE; ++i) {
-        float x = i * STEP;
-        if (x <= MAX_X) 
-            pwm_lookup_table[i] = (849.0f / 43.0f) * sqrt(1849.0f - x * x) - 30;
-    }
-}
-
-float Get_PWM_Pulse(float x) 
-{
-    if (x < 0.0f) x = 0.0f;
-    else if (x > MAX_X) x = MAX_X;
+    for (uint16_t i = 0; i < 201; ++i) 
+        pwm_lookup_table[i] = (849 / 43) * sqrt(1849 - (i * i) / (STEP_01_10 * STEP_01_10)) - 30;
     
-    uint16_t index = (uint16_t)(x / STEP + 0.5f);
-    return pwm_lookup_table[index];
 }
 
 void Motor_Control(float distance)
@@ -49,7 +36,7 @@ void Motor_Control(float distance)
     float pwm_pulse;
 	
 		// Fitting curve implementation
-		if(distance >= 0 && distance <= 20) pwm_pulse = Get_PWM_Pulse(distance);
+		if(distance >= 0 && distance <= 20) pwm_pulse = pwm_lookup_table[(uint16_t)distance];
 		else if(distance > 20 && distance <= 100) pwm_pulse = - 9.9 * distance + 948 - 60;
 		else pwm_pulse = 0;
 	

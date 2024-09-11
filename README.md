@@ -1,2 +1,23 @@
-# PWMC-DisDetection
-PWM_Motor_Control Based on Distance_Detection Apply to STM32F103RBT6
+# 基于STM32F103RBT6开发板的超声波测距电机控制系统 
+**Ultrasonic Distance-Based Motor Controller on STM32F103RBT6**
+
+- CT117E 嵌入式竞赛板 搭载 STM32F103RBT6
+- 超声波测距模块 HC-SR04
+- 电机驱动模块 DRV8833
+- 蓝牙串口模块 DX-BT24
+- 代码遵循 Doxygen 注释规范，精简目录结构 
+
+---
+
+## 项目研究方向 
+1. **超声波测距精度控制及存储结构优化** 
+
+> 细化超声波测距的PWM中断控制范围及PWM滤波强度等细节调参，对返回的数值进行精度保留并采用缩放因子进行整型保存
+
+2. **直流电机PWM低占空比优化**
+   
+> 针对低占空比电机空耗问题进行软件消抖，在测距和占空比之间设计测试一套拟合曲线用于最大程度的电机输出优化
+
+3. **LCD竖向显示及局部滤波更新状态系统**
+ 
+> 设计字库转换、绘制图形等函数适配竖向LCD显示，刷新方式采用滤波局部更新减少闪烁使得总体框架更加流畅丝滑

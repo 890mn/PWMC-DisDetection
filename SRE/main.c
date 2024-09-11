@@ -7,7 +7,12 @@
 #include "gpio.h"
 #include "led.h"
 
+#define TABLE_SIZE 201
+#define STEP 0.1f
+#define MAX_X 20.0f
 /* Private variables --------*/
+float pwm_lookup_table[TABLE_SIZE];
+
 uint8_t echo_flag = 0;
 uint8_t buf[32];
 uint8_t rx_buffer[32];
@@ -22,30 +27,44 @@ uint16_t Start_DutY = 270;
 
 uint32_t TimingDelay = 0;
 /* Private functions ----------------------------------------*/
+void Init_PWM_LookupTable(void) 
+{
+    for (uint16_t i = 0; i < TABLE_SIZE; ++i) {
+        float x = i * STEP;
+        if (x <= MAX_X) 
+            pwm_lookup_table[i] = (849.0f / 43.0f) * sqrt(1849.0f - x * x) - 20;
+    }
+}
+
+float Get_PWM_Pulse(float x) 
+{
+    if (x < 0.0f) x = 0.0f;
+    else if (x > MAX_X) x = MAX_X;
+    
+    uint16_t index = (uint16_t)(x / STEP + 0.5f);
+    return pwm_lookup_table[index];
+}
+
 void Motor_Control(float distance)
 {
-    // 计算 pwm_pulse
-    float pwm_pulse = -11.0 * distance + 849.0;
+    float pwm_pulse;
+	
+		// Fitting curve implementation
+		if(distance >= 0 && distance <= 20) pwm_pulse = Get_PWM_Pulse(distance);
+		else if(distance > 20 && distance <= 100) pwm_pulse = - 9.9 * distance + 948 - 90;
+		else pwm_pulse = 0;
+	
+    // PWM Duty Cycle
+    uint16_t pwm_value = (uint16_t)(pwm_pulse / 849.0f * 100.0f); 
 
-    // 限制 pwm_pulse 的范围，避免出现负值
-    if (pwm_pulse < 0)
-        pwm_pulse = 0;
-    if (pwm_pulse > 849.0f)
-        pwm_pulse = 849.0f;
-
-    // 转换为 PWM 比例
-    uint16_t pwm_value = (uint16_t)(pwm_pulse / 849.0f * 100.0f); // 转换为 0-100%
-
-    // 设置 PWM 输出
+    // Sey PWM Output
     TIM_SetCompare2(TIM2, (uint16_t)pwm_pulse);
 
     GPIO_SetBits(GPIOA, GPIO_Pin_1); // IN1 = 1
 
-    // 打印 PWM 占空比
     sprintf((char *)buf, "PWM Duty Cycle: %.2d%%\r\n", pwm_value);
     USART_SendString((int8_t *)buf);
 
-    // 控制 LED 和其他部件
     LED_Control(LEDALL, 0);
     LED_PWM(pwm_value);
 }
@@ -127,6 +146,7 @@ int main(void)
     TIM2_Config();
     NVIC_Config();
     LCD_Back_Init();
+		Init_PWM_LookupTable();
 
     while (1) {
         // Trigger the Ultrasonic Sensor

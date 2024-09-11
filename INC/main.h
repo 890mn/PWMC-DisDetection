@@ -397,6 +397,26 @@ uint16_t FontMartix[][24] = {
 };
 
 /**
+ * @brief Initialize the PWM lookup table based on the pre-defined curve
+ * 
+ * This function pre-computes and stores the PWM pulse values corresponding to distance values ranging from 0 to MAX_X 
+ * using the equation: y = -849/43 * sqrt(1849 - x^2). 
+ * 
+ */
+void Init_PWM_LookupTable(void);
+
+/**
+ * @brief Retrieve the pre-computed PWM pulse value based on the input distance using a lookup table.
+ * 
+ * @param x input distance value for the corresponding PWM pulse
+ * 
+ * @return The pre-calculated PWM pulse value
+ *
+ */
+float Get_PWM_Pulse(float x);
+
+
+/**
  * @brief Adjust Motor Speed(PWM Duty Cycle) based on distance 
  * 
  * @param distance measured by Ultrasonic

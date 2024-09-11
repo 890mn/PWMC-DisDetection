@@ -29,7 +29,7 @@
 void LED_Control(uint16_t LED,uint8_t LED_Status);
 
 /**
- * @brief Use LED to simulate PWM Duty Cycle value
+ * @brief Use LED to simulate PWM Duty Cycle value [0 - 65 %]
  * 
  * @param pwm_pulse Duty Cycle
  */

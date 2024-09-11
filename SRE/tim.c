@@ -32,9 +32,9 @@ void TIM2_Config(void)
 
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
 
-    TIM_TimeBaseStructure.TIM_Prescaler = 72 - 1; 
+    TIM_TimeBaseStructure.TIM_Prescaler = 2; 
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-    TIM_TimeBaseStructure.TIM_Period = 910 - 1; // ARR = 909，PWM = 909Hz
+    TIM_TimeBaseStructure.TIM_Period = 850 - 1; // ARR = 849，PWM = Hz
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 

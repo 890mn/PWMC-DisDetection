@@ -1,4 +1,3 @@
-/* Includes --------*/
 #include "main.h"
 #include "lcd.h"
 #include "tim.h"
@@ -7,7 +6,12 @@
 #include "gpio.h"
 #include "led.h"
 
-/* Private variables --------*/
+#define TABLE_SIZE 201
+#define STEP 0.1f
+#define MAX_X 20.0f
+
+float pwm_lookup_table[TABLE_SIZE];
+
 uint8_t echo_flag = 0;
 uint8_t buf[32];
 uint8_t rx_buffer[32];
@@ -21,27 +25,47 @@ uint16_t Start_DutX = 195;
 uint16_t Start_DutY = 270;
 
 uint32_t TimingDelay = 0;
-/* Private functions ----------------------------------------*/
+
+void Init_PWM_LookupTable(void) 
+{
+    for (uint16_t i = 0; i < TABLE_SIZE; ++i) {
+        float x = i * STEP;
+        if (x <= MAX_X) 
+            pwm_lookup_table[i] = (849.0f / 43.0f) * sqrt(1849.0f - x * x) - 30;
+    }
+}
+
+float Get_PWM_Pulse(float x) 
+{
+    if (x < 0.0f) x = 0.0f;
+    else if (x > MAX_X) x = MAX_X;
+    
+    uint16_t index = (uint16_t)(x / STEP + 0.5f);
+    return pwm_lookup_table[index];
+}
+
 void Motor_Control(float distance)
 {
-    float pwm_pulse = 1.0f - (distance / 40.0f);
-    uint16_t pwm_value = (uint16_t)(pwm_pulse * 909.0f);
+    float pwm_pulse;
+	
+		// Fitting curve implementation
+		if(distance >= 0 && distance <= 20) pwm_pulse = Get_PWM_Pulse(distance);
+		else if(distance > 20 && distance <= 100) pwm_pulse = - 9.9 * distance + 948 - 60;
+		else pwm_pulse = 0;
+	
+    // PWM Duty Cycle
+    uint16_t pwm_value = (uint16_t)(pwm_pulse / 849.0f * 100.0f); 
 
-    if (pwm_value > 60)
-        GPIO_SetBits(GPIOA, GPIO_Pin_1); // IN1 = 1
-    else {
-        GPIO_ResetBits(GPIOA, GPIO_Pin_1); // IN1 = 0
-        pwm_value = 0;
-        pwm_pulse = 0;
-    }
+    // Sey PWM Output
+    TIM_SetCompare2(TIM2, (uint16_t)pwm_pulse);
 
-    TIM_SetCompare2(TIM2, pwm_value);
+    GPIO_SetBits(GPIOA, GPIO_Pin_1); // IN1 = 1
 
-    sprintf((char *)buf, "PWM Duty Cycle: %.2f%%\r\n", pwm_pulse * 100.0f);
+    sprintf((char *)buf, "PWM Duty Cycle: %.2d%%\r\n", pwm_value);
     USART_SendString((int8_t *)buf);
 
     LED_Control(LEDALL, 0);
-    LED_PWM(pwm_pulse);
+    LED_PWM(pwm_value);
 }
 
 void Update_Octagons(float distance, float pwm_pulse)
@@ -120,6 +144,7 @@ int main(void)
     TIM2_Config();
     NVIC_Config();
     LCD_Back_Init();
+		Init_PWM_LookupTable();
 
     while (1) {
         // Trigger the Ultrasonic Sensor

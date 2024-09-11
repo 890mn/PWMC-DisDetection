@@ -880,21 +880,19 @@ void transposeMatrix(uint16_t input[CHAR_HEIGHT], uint16_t output[CHAR_HEIGHT / 
 
 float Filter_Distance(float new_distance)
 {
-    // 更新滤波缓冲区
+    // Update filter buffer
     distance_buffer[filter_index] = new_distance;
     filter_index = (filter_index + 1) % FILTER_SIZE;
 
-    // 计算滤波后的距离
     float filtered_distance = 0;
     for (uint8_t i = 0; i < FILTER_SIZE; ++i)
         filtered_distance += distance_buffer[i];
 
-    // 如果距离变化较大，减小滤波效果，快速响应
+    // Reduce the filtering quickly
     if (fabs(new_distance - filtered_distance / FILTER_SIZE) > 5.0f)
-        // 距离变化较大时，直接使用最新值
         return new_distance;
 
-    return filtered_distance / FILTER_SIZE; // 否则使用平均滤波
+    return filtered_distance / FILTER_SIZE; // Average Filter
 }
 
 void LCD_FillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color)

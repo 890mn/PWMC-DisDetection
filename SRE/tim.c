@@ -34,7 +34,7 @@ void TIM2_Config(void)
 
     TIM_TimeBaseStructure.TIM_Prescaler = 2; 
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-    TIM_TimeBaseStructure.TIM_Period = 850 - 1; // ARR = 849，PWM = Hz
+    TIM_TimeBaseStructure.TIM_Period = 850 - 1; // ARR = 849，PWM = 42 kHz
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
     TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 

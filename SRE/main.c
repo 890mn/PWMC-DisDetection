@@ -28,7 +28,7 @@ uint32_t TimingDelay = 0;
 void Init_PWM_LookupTable(void) 
 {
     for (uint16_t i = 0; i < 201; ++i) 
-        pwm_lookup_table[i] = (849 / 43) * sqrt(1849 - (i * i) / (STEP_01_10 * STEP_01_10)) - 30;
+        pwm_lookup_table[i] = (849 / 43) * sqrt(1849 - (i * i) / (STEP_01_10 * STEP_01_10)) - 30; // Delta +- 30
     
 }
 
@@ -36,10 +36,10 @@ void Motor_Control(float distance)
 {
     float pwm_pulse;
 	
-		// Fitting curve implementation
-		if(distance >= 0 && distance <= 20) pwm_pulse = pwm_lookup_table[(uint16_t)distance];
-		else if(distance > 20 && distance <= 100) pwm_pulse = - 9.9 * distance + 948 - 60;
-		else pwm_pulse = 0;
+    // Fitting curve implementation
+    if(distance >= 0 && distance <= 20) pwm_pulse = pwm_lookup_table[(uint16_t)distance];
+    else if(distance > 20 && distance <= 100) pwm_pulse = - 9.9 * distance + 948 - 60; //Delta +- 60
+    else pwm_pulse = 0;
 	
     // PWM Duty Cycle
     uint16_t pwm_value = (uint16_t)(pwm_pulse / 849.0f * 100.0f); 
@@ -132,7 +132,7 @@ int main(void)
     TIM2_Config();
     NVIC_Config();
     LCD_Back_Init();
-		Init_PWM_LookupTable();
+    Init_PWM_LookupTable();
 
     while (1) {
         // Trigger the Ultrasonic Sensor

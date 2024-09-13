@@ -103,7 +103,7 @@
 
 但在转置的实践中发现，对于16X24的字模，盲目转置会导致显示缺少底部部分细节，进而我将转置后的字模拆分为两个12X16组成的高低位字模库，在渲染中能够最大程度的保留细节：
 
-![ ](https://link2hinar.fun/wp-content/uploads/2024/09/martix.jpg "Martix转置流程草图")
+![ ](https://images.weserv.nl/?url=https://101.132.75.60/wp-content/uploads/2024/09/martix.jpg "Martix转置流程草图")
 
 接下来，结合代码来详细说明：
 
@@ -117,30 +117,76 @@
     void LCD_VerticalDisplay(u8 Xpos, u16 Ypos, uint16_t input[CHAR_HEIGHT]);
 
 由于竖向打印较横向宽度短，自定义程度高，故顶层只封装到按字符打印而不是字符串
+
 而顶层函数通过调用下面两个部分的函数实现
 
+    /**
+    * @brief Transpose a character matrix for vertical display.
+    * 
+    * This function takes a horizontally-aligned character matrix (input) and transposes it 
+    * for vertical display. 
+    * 
+    * Each column is split into two 12-bit halves for drawing.
+    * 
+    * @param input The input character matrix (24x16).
+    * @param output The transposed output matrix (each element contains 12 bits for high and low parts).
+    */
+    void transposeMatrix(uint16_t input[CHAR_HEIGHT], uint16_t output[CHAR_HEIGHT / 2][2]);
 第一部分由矩阵转置模块实现，对字模进行转换后交给下一个函数进行绘制
 
 转置区别高位与低位，按位遍历转置时间复杂度O(CHAR_HEIGHT x CHAR_WIDTH)，不太能进一步降低时间复杂度至O(log(CHAR_HEIGHT) x log(CHAR_WIDTH))
+
 如遇性能瓶颈或可尝试空间换时间，将转换完成的字模库预存储减少性能消耗，但扩展为大型字模库后占用过大，如果同时兼容横向和竖向对单片机FLASH要求高，兼容性下降，故保持为原始矩阵转换不变
 
+    /**
+    * @brief Draw a character on the LCD screen.
+    * 
+    * output[i][0] 
+    * -> low pixel in i's column  
+    * 
+    * output[i][1] 
+    * -> high pixel in i's column 
+    * 
+    * Draw from low 12-bit to high 12-bit
+    * 
+    * @param Xpos The starting X coordinate for the character.
+    * @param Ypos The starting Y coordinate for the character.
+    * @param c A pointer to the character data (16 columns, 12 + 12 bits per column).
+    */
+    void PRO_DrawChar(u8 Xpos, u16 Ypos, uc16 *c);
 第二部分由绘制函数实现，通过对高低位区分实现细节保留
 
-
+#### 引入滤波优化的部分刷新机制
 
 字符的竖向处理固然有些棘手，接踵而至的显示刷新则是又提出了新的问题，如何保证内容完整的同时提高屏幕刷新率，看起来更加流畅？
-1.将I2C驱动改为SPI，传输速率自然上升
-2.配置DMA加速传输，缓解MCU压力
-3.将全部刷新改为部分刷新
-4.引入缓存机制
-不难发现优化的机制非常的多，但出于对这个项目的多次考量，我最终选择的组合方案如下：
 
-引入滤波优化的部分刷新机制
+1. 将I2C驱动改为SPI，传输速率自然上升
+2. 配置DMA加速传输，缓解MCU压力
+3. 将全部刷新改为部分刷新
+4. 引入缓存机制
+
+不难发现优化的机制非常的多，但出于对这个项目的多次考量，我最终选择的组合方案如标题所示：**引入滤波优化的部分刷新机制**
 
 项目中采用的多是静态显示，需要动态刷新的是代表距离及占空比的两个矩形条，显然在当前状态下，局部刷新足够应对显示问题
+
 为了进一步的优化，我再加入了滤波机制确保矩形条的丝滑变换，以确保得到最佳的显示
 
 接下来，结合代码来详细说明：
+
+    /**
+    * @brief Update the display of two octagons and their corresponding bar graphs based on distance and PWM pulse.
+    * 
+    * This function updates two vertical bar graphs, each associated with an octagon, based on the provided distance 
+    * and PWM pulse values. The bar graphs are drawn in blocks, and their height is updated incrementally to reflect 
+    * the new values. The bars are drawn or cleared incrementally based on the change in values.
+    * 
+    * The left-side bar represents the filtered distance, and the right-side bar represents the PWM duty cycle.
+    * Octagons are drawn once to surround the bars.
+    * 
+    * @param distance The current distance value to be represented on the left bar graph.
+    * @param pwm_pulse The current PWM pulse value to be represented on the right bar graph.
+    */
+    void Update_Octagons(float distance, float pwm_pulse);
 
 主更新函数包括了框架及更新逻辑
 
@@ -153,4 +199,15 @@
 
 滤波后进一步计算是否更新，通过快速响应机制改变矩形条的显示
 
+    /**
+    * @brief Filling a matrix bit-by-bit
+    * 
+    * @param x The X-coordinate of the start point.
+    * @param y The Y-coordinate of the start point.
+    * @param width The width of the martix.
+    * @param height The height of the martix.
+    * @param color The color of the martix.
+    */
+    void LCD_FillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color);
+    
 通过简单的 O(HEIGHT x WIDTH) 时间复杂度进行按点填充即可完成更新

@@ -54,7 +54,7 @@
 2. LCD屏幕显示精确/图形曲线表示
 3. LED流水灯抽象数据形式
 
-那么，做出各自的特色不就能够实现1 + 1 + 1 > 3了吗
+那么，做出各自的特色不就能够实现 1 + 1 + 1 > 3 了吗
 
 1. 蓝牙串口擅长数据高速传输------------精确数值管理
 2. LCD屏幕大而直观-----------------------绘制图形动态表示
@@ -103,9 +103,19 @@
 
 但在转置的实践中发现，对于16X24的字模，盲目转置会导致显示缺少底部部分细节，进而我将转置后的字模拆分为两个12X16组成的高低位字模库，在渲染中能够最大程度的保留细节：
 
+![ ](https://link2hinar.fun/wp-content/uploads/2024/09/martix.jpg "Martix转置流程草图")
 
 接下来，结合代码来详细说明：
- 
+
+    /**
+    * @brief Display a character in vertical mode on the LCD.
+    * 
+    * @param Xpos The starting X coordinate for the character.
+    * @param Ypos The starting Y coordinate for the character.
+    * @param input The input character matrix (24x16).
+    */
+    void LCD_VerticalDisplay(u8 Xpos, u16 Ypos, uint16_t input[CHAR_HEIGHT]);
+
 由于竖向打印较横向宽度短，自定义程度高，故顶层只封装到按字符打印而不是字符串
 而顶层函数通过调用下面两个部分的函数实现
 

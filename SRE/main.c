@@ -152,7 +152,7 @@ void Hardware_Init(void) {
     TIM2_Config();
     NVIC_Config();
 		InitSemaphore();
-    //LCD_Back_Init();
+    LCD_Back_Init();
     Init_PWM_LookupTable();
 }
 

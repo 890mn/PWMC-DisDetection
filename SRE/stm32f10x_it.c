@@ -1,7 +1,5 @@
 #include "stm32f10x_it.h"
 
-extern uint32_t TimingDelay;
-
 extern uint16_t rising_cnt;
 extern uint16_t falling_cnt;
 extern uint8_t echo_flag;
@@ -65,11 +63,6 @@ void UsageFault_Handler(void)
   while (1)
   {
   }
-}
-
-void SysTick_Handler(void)
-{
-  TimingDelay--;
 }
 
 void TIM3_IRQHandler(void)

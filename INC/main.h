@@ -427,11 +427,4 @@ void Motor_Control(float distance);
  */
 void Update_Octagons(float distance, float pwm_pulse);
 
-/**
- * @brief Delay with Millisecond precision
- * 
- * @param nTime Delay time
- */
-void Delay_Ms(uint32_t nTime);
-
 #endif

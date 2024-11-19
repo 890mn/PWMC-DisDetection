@@ -89,16 +89,16 @@ void REG_932X_Init(void)
 	LCD_WriteReg(R17 , 0x0007);   // DC1[2:0], DC0[2:0], VC[2:0]
 	LCD_WriteReg(R18 , 0x0000); // VREG1OUT voltage
 	LCD_WriteReg(R19 , 0x0000);   // VDV[4:0] for VCOM amplitude
-	for (int i = 0; i < 2000; ++i); // Delay 200 MS , Dis-charge capacitor power voltage
+	for (int i = 0; i < 1000; ++i); // Delay 200 MS , Dis-charge capacitor power voltage
 	LCD_WriteReg(R16 , 0x1690);   // SAP, BT[3:0], AP, DSTB, SLP, STB
 	LCD_WriteReg(R17 , 0x0227); // R11H=0x0221 at VCI=3.3V, DC1[2:0], DC0[2:0], VC[2:0]
-	for (int i = 0; i < 500; ++i);      // Delay 50ms
+	for (int i = 0; i < 300; ++i);      // Delay 50ms
 	LCD_WriteReg(R18 , 0x001D); // External reference voltage= Vci;
-	for (int i = 0; i < 500; ++i);      // Delay 50ms
+	for (int i = 0; i < 300; ++i);      // Delay 50ms
 	LCD_WriteReg(R19 , 0x0800); // R13H=1D00 when R12H=009D;VDV[4:0] for VCOM amplitude
 	LCD_WriteReg(R41 , 0x0014); // R29H=0013 when R12H=009D;VCM[5:0] for VCOMH
 	LCD_WriteReg(R43 , 0x000B);   // Frame Rate = 96Hz
-	for (int i = 0; i < 500; ++i);      // Delay 50ms
+	for (int i = 0; i < 300; ++i);      // Delay 50ms
 	LCD_WriteReg(R32 , 0x0000); // GRAM horizontal Address
 	LCD_WriteReg(R33 , 0x0000); // GRAM Vertical Address
 	/* ----------- Adjust the Gamma Curve ---------- */

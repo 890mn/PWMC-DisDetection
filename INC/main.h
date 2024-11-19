@@ -433,4 +433,8 @@ void Motor_Control(float distance);
  */
 void Update_Octagons(float distance, float pwm_pulse);
 
+void Hardware_Init(void);
+
+void UltrasonicTask(void *pvParameters);
+
 #endif

@@ -24,13 +24,10 @@ uint16_t pwm_lookup_table[201];
 
 SemaphoreHandle_t xEchoSemaphore;
 
-void Hardware_Init(void);
-void UltrasonicTask(void *pvParameters);
-
 void Init_PWM_LookupTable(void) 
 {
     for (uint16_t i = 0; i < 201; ++i) 
-        pwm_lookup_table[i] = (849 / 43) * sqrt(1849 - (i * i) / (STEP_01_10 * STEP_01_10)) - 30; // Delta +- 30
+        pwm_lookup_table[i] = (849 / 43) * sqrt(1849 - (i * i) / (STEP_01_10 * STEP_01_10)) - 20; // Delta +- 30
     
 }
 
@@ -55,7 +52,7 @@ void Motor_Control(float distance)
     USART_SendString((int8_t *)buf);
 
     LED_Control(LEDALL, 0);
-    LED_PWM(pwm_value);
+    LED_PWM(pwm_value - 48);
 }
 
 void Update_Octagons(float distance, float pwm_pulse)
@@ -85,21 +82,22 @@ void Update_Octagons(float distance, float pwm_pulse)
     static uint8_t last_duty_blocks = 0;
 
     // Update the bar graph
-    if (target_dis_blocks != last_dis_blocks)
+    if (target_dis_blocks != last_dis_blocks) {
         // Incrementally update the bar graph to ensure each block is drawn or cleared
         while (last_dis_blocks != target_dis_blocks)
             if (last_dis_blocks < target_dis_blocks) {
                 // Draw new blocks
                 LCD_FillRect(dis_x - bar_width / 2, dis_y - 60 - last_dis_blocks * block_height, bar_width, block_height, White);
                 ++last_dis_blocks;
-            }
-            else if (last_dis_blocks > target_dis_blocks) {
+            } 
+						else if (last_dis_blocks > target_dis_blocks) {
                 // Clear extra blocks
                 --last_dis_blocks;
                 LCD_FillRect(dis_x - bar_width / 2, dis_y - 60 - last_dis_blocks * block_height, bar_width, block_height, Black);
             }
-
-    if (target_duty_blocks != last_duty_blocks)
+		}
+		
+    if (target_duty_blocks != last_duty_blocks) {
         // Incrementally update the bar graph to ensure each block is drawn or cleared
         while (last_duty_blocks != target_duty_blocks)
             if (last_duty_blocks < target_duty_blocks) {
@@ -112,8 +110,9 @@ void Update_Octagons(float distance, float pwm_pulse)
                 last_duty_blocks--;
                 LCD_FillRect(dut_x - bar_width / 2, dut_y - 60 - last_duty_blocks * block_height, bar_width, block_height, Black);
             }
-
-    // Draw the octagons surrounding the bars
+		}
+    
+		// Draw the octagons surrounding the bars
     LCD_DrawOctagon(dis_x, dis_y, 22);
     LCD_DrawOctagon(dut_x, dut_y, 22);
 }
@@ -129,9 +128,7 @@ int main(void)
     // Start the FreeRTOS scheduler
     vTaskStartScheduler();
 
-    // Code should never reach here
-    while (1) {
-    }
+    while (1);
 }
 
 void InitSemaphore(void) {
@@ -143,7 +140,6 @@ void InitSemaphore(void) {
 }
 
 void Hardware_Init(void) {
-    // Configure system tick for 1ms
     SysTick_Config(SystemCoreClock / 1000);
 
     USART_Config();
@@ -187,7 +183,7 @@ void UltrasonicTask(void *pvParameters) {
 
                 // Control motor and update display
                 Motor_Control(distance);
-                Update_Octagons(distance, 1.0f - (distance / 40.0f));
+                Update_Octagons(distance, 1.0f - (distance / 50.0f));
                 break;
             }
             vTaskDelay(pdMS_TO_TICKS(5));
@@ -198,6 +194,6 @@ void UltrasonicTask(void *pvParameters) {
         TIM_Cmd(TIM3, DISABLE);
 
         // Delay before next measurement
-        vTaskDelay(pdMS_TO_TICKS(185));
+        //vTaskDelay(pdMS_TO_TICKS(185));
     }
 }

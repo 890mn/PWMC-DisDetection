@@ -5,13 +5,9 @@
 #include "usart.h"
 #include "gpio.h"
 #include "led.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
-#include "semphr.h"
 
-#define STEP_01_10 1     
-#define MAX_X_01_10 200  
+#define STEP_01_10 1     // STEP = 0.1 -> 1
+#define MAX_X_01_10 200  // MAX_X = 20 -> 200
 
 uint8_t echo_flag = 0;
 uint8_t rx_index = 0;
@@ -26,15 +22,16 @@ uint16_t Start_DutX = 195;
 uint16_t Start_DutY = 270;
 uint16_t pwm_lookup_table[201];
 
-// 全局变量
-QueueHandle_t distanceQueue; // 用于传递距离
-SemaphoreHandle_t lcdSemaphore = NULL; // 用于 LCD 显示资源保护
+SemaphoreHandle_t xEchoSemaphore;
 
-// 初始化 PWM 查找表
+void Hardware_Init(void);
+void UltrasonicTask(void *pvParameters);
+
 void Init_PWM_LookupTable(void) 
 {
     for (uint16_t i = 0; i < 201; ++i) 
         pwm_lookup_table[i] = (849 / 43) * sqrt(1849 - (i * i) / (STEP_01_10 * STEP_01_10)) - 30; // Delta +- 30
+    
 }
 
 void Motor_Control(float distance)
@@ -121,93 +118,86 @@ void Update_Octagons(float distance, float pwm_pulse)
     LCD_DrawOctagon(dut_x, dut_y, 22);
 }
 
-// 超声波测距任务
-void UltrasonicTask(void *pvParameters)
-{
-    float distance = 0;
-
-    while (1) {
-        // 触发超声波传感器
-        GPIO_SetBits(GPIOA, GPIO_Pin_7); 
-        vTaskDelay(pdMS_TO_TICKS(5));
-        GPIO_ResetBits(GPIOA, GPIO_Pin_7);
-
-        rising_cnt = 0;
-        falling_cnt = 0;
-        echo_flag = 0;
-        TIM_SetCounter(TIM3, 0);
-
-        TIM_ITConfig(TIM3, TIM_IT_CC1, ENABLE);
-        TIM_Cmd(TIM3, ENABLE);
-
-        for (uint16_t i = 0; i < 10; ++i) {
-            if (rising_cnt && falling_cnt) {
-                distance = (falling_cnt - rising_cnt) * 0.017f; // 计算距离
-                xQueueSend(distanceQueue, &distance, 0); // 将距离发送到队列
-                break;
-            }
-            vTaskDelay(pdMS_TO_TICKS(5));
-        }
-
-        TIM_ITConfig(TIM3, TIM_IT_CC1, DISABLE);
-        TIM_Cmd(TIM3, DISABLE);
-
-        vTaskDelay(pdMS_TO_TICKS(200)); // 每 200ms 测一次
-    }
-}
-
-// 电机控制任务
-void MotorControlTask(void *pvParameters)
-{
-    float distance = 0;
-
-    while (1) {
-        if (xQueueReceive(distanceQueue, &distance, portMAX_DELAY)) {
-            Motor_Control(distance); // 控制电机
-        }
-    }
-}
-
-// LCD 更新任务
-void LCDUpdateTask(void *pvParameters)
-{
-    float distance = 0;
-
-    while (1) {
-        if (xQueueReceive(distanceQueue, &distance, portMAX_DELAY)) {
-            if (xSemaphoreTake(lcdSemaphore, portMAX_DELAY)) {
-                Update_Octagons(distance, 1.0f - (distance / 40.0f)); // 更新显示
-                xSemaphoreGive(lcdSemaphore);
-            }
-        }
-    }
-}
-
 int main(void)
 {
-    // 硬件初始化
+    // Initialize hardware peripherals
+    Hardware_Init();
+
+    // Create a FreeRTOS task
+    xTaskCreate(UltrasonicTask, "Ultrasonic Task", 256, NULL, 1, NULL);
+
+    // Start the FreeRTOS scheduler
+    vTaskStartScheduler();
+
+    // Code should never reach here
+    while (1) {
+    }
+}
+
+void InitSemaphore(void) {
+    xEchoSemaphore = xSemaphoreCreateBinary();
+    if (xEchoSemaphore == NULL) {
+        // Handle semaphore creation failure
+        while (1);
+    }
+}
+
+void Hardware_Init(void) {
+    // Configure system tick for 1ms
     SysTick_Config(SystemCoreClock / 1000);
+
     USART_Config();
     GPIO_Config();
     TIM3_Config();
     TIM2_Config();
     NVIC_Config();
-    LCD_Back_Init();
+		InitSemaphore();
+    //LCD_Back_Init();
     Init_PWM_LookupTable();
+}
 
-    // 创建 RTOS 资源
-    distanceQueue = xQueueCreate(20, sizeof(float));
-    lcdSemaphore = xSemaphoreCreateMutex();
-
-    // 创建任务
-    xTaskCreate(UltrasonicTask, "Ultrasonic", 256, NULL, 2, NULL);
-    xTaskCreate(MotorControlTask, "MotorControl", 256, NULL, 2, NULL);
-    xTaskCreate(LCDUpdateTask, "LCDUpdate", 256, NULL, 1, NULL);
-
-    // 启动调度器
-    vTaskStartScheduler();
+// Ultrasonic sensor task
+void UltrasonicTask(void *pvParameters) {
+    uint8_t buf[50];
 
     while (1) {
-        // 如果运行到这里，说明调度器启动失败
+        // Trigger the Ultrasonic Sensor
+        GPIO_SetBits(GPIOA, GPIO_Pin_7); // PA7 - Trigger
+        vTaskDelay(pdMS_TO_TICKS(5));
+        GPIO_ResetBits(GPIOA, GPIO_Pin_7);
+
+        // Reset the status
+        rising_cnt = 0;
+        falling_cnt = 0;
+        echo_flag = 0;
+        TIM_SetCounter(TIM3, 0);
+
+        // Start the TIM IT
+        TIM_ITConfig(TIM3, TIM_IT_CC1, ENABLE);
+        TIM_Cmd(TIM3, ENABLE);
+
+        for (uint16_t i = 0; i < 10; ++i) {
+            // Wait for interrupt status
+            if (rising_cnt && falling_cnt) {
+                // Calculate distance
+                float distance = (falling_cnt - rising_cnt) * 0.017;
+
+                sprintf((char *)buf, "Distance: %.2f cm\r\n", distance);
+                USART_SendString((int8_t *)buf);
+
+                // Control motor and update display
+                Motor_Control(distance);
+                Update_Octagons(distance, 1.0f - (distance / 40.0f));
+                break;
+            }
+            vTaskDelay(pdMS_TO_TICKS(5));
+        }
+
+        // Stop the TIM IT
+        TIM_ITConfig(TIM3, TIM_IT_CC1, DISABLE);
+        TIM_Cmd(TIM3, DISABLE);
+
+        // Delay before next measurement
+        vTaskDelay(pdMS_TO_TICKS(185));
     }
 }

@@ -1,4 +1,3 @@
-
 #include "main.h"
 #include "lcd.h"
 #include "tim.h"
@@ -23,12 +22,12 @@ uint16_t Start_DutX = 195;
 uint16_t Start_DutY = 270;
 uint16_t pwm_lookup_table[201];
 
-uint32_t TimingDelay = 0;
+SemaphoreHandle_t xEchoSemaphore;
 
 void Init_PWM_LookupTable(void) 
 {
     for (uint16_t i = 0; i < 201; ++i) 
-        pwm_lookup_table[i] = (849 / 43) * sqrt(1849 - (i * i) / (STEP_01_10 * STEP_01_10)) - 30; // Delta +- 30
+        pwm_lookup_table[i] = (849 / 43) * sqrt(1849 - (i * i) / (STEP_01_10 * STEP_01_10)) - 20; // Delta +- 30
     
 }
 
@@ -53,7 +52,7 @@ void Motor_Control(float distance)
     USART_SendString((int8_t *)buf);
 
     LED_Control(LEDALL, 0);
-    LED_PWM(pwm_value);
+    LED_PWM(pwm_value - 48);
 }
 
 void Update_Octagons(float distance, float pwm_pulse)
@@ -83,21 +82,22 @@ void Update_Octagons(float distance, float pwm_pulse)
     static uint8_t last_duty_blocks = 0;
 
     // Update the bar graph
-    if (target_dis_blocks != last_dis_blocks)
+    if (target_dis_blocks != last_dis_blocks) {
         // Incrementally update the bar graph to ensure each block is drawn or cleared
         while (last_dis_blocks != target_dis_blocks)
             if (last_dis_blocks < target_dis_blocks) {
                 // Draw new blocks
                 LCD_FillRect(dis_x - bar_width / 2, dis_y - 60 - last_dis_blocks * block_height, bar_width, block_height, White);
                 ++last_dis_blocks;
-            }
-            else if (last_dis_blocks > target_dis_blocks) {
+            } 
+						else if (last_dis_blocks > target_dis_blocks) {
                 // Clear extra blocks
                 --last_dis_blocks;
                 LCD_FillRect(dis_x - bar_width / 2, dis_y - 60 - last_dis_blocks * block_height, bar_width, block_height, Black);
             }
-
-    if (target_duty_blocks != last_duty_blocks)
+		}
+		
+    if (target_duty_blocks != last_duty_blocks) {
         // Incrementally update the bar graph to ensure each block is drawn or cleared
         while (last_duty_blocks != target_duty_blocks)
             if (last_duty_blocks < target_duty_blocks) {
@@ -110,20 +110,36 @@ void Update_Octagons(float distance, float pwm_pulse)
                 last_duty_blocks--;
                 LCD_FillRect(dut_x - bar_width / 2, dut_y - 60 - last_duty_blocks * block_height, bar_width, block_height, Black);
             }
-
-    // Draw the octagons surrounding the bars
+		}
+    
+		// Draw the octagons surrounding the bars
     LCD_DrawOctagon(dis_x, dis_y, 22);
     LCD_DrawOctagon(dut_x, dut_y, 22);
 }
 
-void Delay_Ms(uint32_t nTime)
-{
-    TimingDelay = nTime;
-    while (TimingDelay) ;
-}
-
 int main(void)
 {
+    // Initialize hardware peripherals
+    Hardware_Init();
+
+    // Create a FreeRTOS task
+    xTaskCreate(UltrasonicTask, "Ultrasonic Task", 256, NULL, 1, NULL);
+
+    // Start the FreeRTOS scheduler
+    vTaskStartScheduler();
+
+    while (1);
+}
+
+void InitSemaphore(void) {
+    xEchoSemaphore = xSemaphoreCreateBinary();
+    if (xEchoSemaphore == NULL) {
+        // Handle semaphore creation failure
+        while (1);
+    }
+}
+
+void Hardware_Init(void) {
     SysTick_Config(SystemCoreClock / 1000);
 
     USART_Config();
@@ -131,13 +147,19 @@ int main(void)
     TIM3_Config();
     TIM2_Config();
     NVIC_Config();
+		InitSemaphore();
     LCD_Back_Init();
     Init_PWM_LookupTable();
+}
+
+// Ultrasonic sensor task
+void UltrasonicTask(void *pvParameters) {
+    uint8_t buf[50];
 
     while (1) {
         // Trigger the Ultrasonic Sensor
         GPIO_SetBits(GPIOA, GPIO_Pin_7); // PA7 - Trigger
-        Delay_Ms(5);
+        vTaskDelay(pdMS_TO_TICKS(5));
         GPIO_ResetBits(GPIOA, GPIO_Pin_7);
 
         // Reset the status
@@ -151,25 +173,27 @@ int main(void)
         TIM_Cmd(TIM3, ENABLE);
 
         for (uint16_t i = 0; i < 10; ++i) {
-            // wait for IT
+            // Wait for interrupt status
             if (rising_cnt && falling_cnt) {
-                // Ultrasonic get
+                // Calculate distance
                 float distance = (falling_cnt - rising_cnt) * 0.017;
 
                 sprintf((char *)buf, "Distance: %.2f cm\r\n", distance);
                 USART_SendString((int8_t *)buf);
 
+                // Control motor and update display
                 Motor_Control(distance);
-                Update_Octagons(distance, 1.0f - (distance / 40.0f));
+                Update_Octagons(distance, 1.0f - (distance / 50.0f));
                 break;
             }
-            Delay_Ms(5);
+            vTaskDelay(pdMS_TO_TICKS(5));
         }
 
         // Stop the TIM IT
         TIM_ITConfig(TIM3, TIM_IT_CC1, DISABLE);
         TIM_Cmd(TIM3, DISABLE);
 
-        Delay_Ms(185);
+        // Delay before next measurement
+        //vTaskDelay(pdMS_TO_TICKS(185));
     }
 }

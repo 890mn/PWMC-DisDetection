@@ -13,6 +13,12 @@
 #include "stdlib.h"
 #include "string.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+#include "timers.h"
+#include "queue.h"
+#include "semphr.h"
+
 uint16_t FontMartix[][24] = {
          /* Space ' ' */
          0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
@@ -427,11 +433,8 @@ void Motor_Control(float distance);
  */
 void Update_Octagons(float distance, float pwm_pulse);
 
-/**
- * @brief Delay with Millisecond precision
- * 
- * @param nTime Delay time
- */
-void Delay_Ms(uint32_t nTime);
+void Hardware_Init(void);
+
+void UltrasonicTask(void *pvParameters);
 
 #endif

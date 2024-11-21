@@ -78,15 +78,15 @@ PWM_Motor_Control Based on Distance_Detection, include
 屏幕本身为一块2.4寸的TFT(Thin-Film Transistor) LCD，驱动采用寄存器 R0 - R239 配置LCD的工作模式、绘制图像和字符，以及控制其他参数，通过调用LCD_WriteReg函数即可以对这些寄存器进行写入操作，以实现对屏幕的控制
 
 ```c
-    #define R0 0x00
-    #define R1 0x01
-    #define R2 0x02
-    #define R3 0x03
-    ...
-    #define R227 0xE3
-    #define R229 0xE5
-    #define R231 0xE7
-    #define R239 0xEF
+#define R0 0x00
+#define R1 0x01
+#define R2 0x02
+#define R3 0x03
+...
+#define R227 0xE3
+#define R229 0xE5
+#define R231 0xE7
+#define R239 0xEF
 ```
 
 将屏幕竖置，此时问题来了，怎么修改驱动可以适配？
@@ -115,14 +115,14 @@ PWM_Motor_Control Based on Distance_Detection, include
 接下来，结合代码来详细说明：
 
 ```c
-    /**
-    * @brief Display a character in vertical mode on the LCD.
-    * 
-    * @param Xpos The starting X coordinate for the character.
-    * @param Ypos The starting Y coordinate for the character.
-    * @param input The input character matrix (24x16).
-    */
-    void LCD_VerticalDisplay(u8 Xpos, u16 Ypos, uint16_t input[CHAR_HEIGHT]);
+/**
+* @brief Display a character in vertical mode on the LCD.
+* 
+* @param Xpos The starting X coordinate for the character.
+* @param Ypos The starting Y coordinate for the character.
+* @param input The input character matrix (24x16).
+*/
+void LCD_VerticalDisplay(u8 Xpos,u16 Ypos, uint16_t input[CHAR_HEIGHT]);
 ```
 
 由于竖向打印较横向宽度短，自定义程度高，故顶层只封装到按字符打印而不是字符串
@@ -130,18 +130,18 @@ PWM_Motor_Control Based on Distance_Detection, include
 而顶层函数通过调用下面两个部分的函数实现
 
 ```c
-    /**
-    * @brief Transpose a character matrix for vertical display.
-    * 
-    * This function takes a horizontally-aligned character matrix (input) and transposes it 
-    * for vertical display. 
-    * 
-    * Each column is split into two 12-bit halves for drawing.
-    * 
-    * @param input The input character matrix (24x16).
-    * @param output The transposed output matrix (each element contains 12 bits for high and low parts).
-    */
-    void transposeMatrix(uint16_t input[CHAR_HEIGHT], uint16_t output[CHAR_HEIGHT / 2][2]);
+/**
+* @brief Transpose a character matrix for vertical display.
+* 
+* This function takes a horizontally-aligned character matrix (input) and transposes it 
+* for vertical display. 
+* 
+* Each column is split into two 12-bit halves for drawing.
+* 
+* @param input The input character matrix (24x16).
+* @param output The transposed output matrix (each element contains 12 bits for high and low parts).
+*/
+void transposeMatrix(uint16_t input[CHAR_HEIGHT], uint16_t output[CHAR_HEIGHT / 2][2]);
 ```
 
 第一部分由矩阵转置模块实现，对字模进行转换后交给下一个函数进行绘制
@@ -151,22 +151,22 @@ PWM_Motor_Control Based on Distance_Detection, include
 如遇性能瓶颈或可尝试空间换时间，将转换完成的字模库预存储减少性能消耗，但扩展为大型字模库后占用过大，如果同时兼容横向和竖向对单片机FLASH要求高，兼容性下降，故保持为原始矩阵转换不变
 
 ```c
-    /**
-    * @brief Draw a character on the LCD screen.
-    * 
-    * output[i][0] 
-    * -> low pixel in i's column  
-    * 
-    * output[i][1] 
-    * -> high pixel in i's column 
-    * 
-    * Draw from low 12-bit to high 12-bit
-    * 
-    * @param Xpos The starting X coordinate for the character.
-    * @param Ypos The starting Y coordinate for the character.
-    * @param c A pointer to the character data (16 columns, 12 + 12 bits per column).
-    */
-    void PRO_DrawChar(u8 Xpos, u16 Ypos, uc16 *c);
+/**
+* @brief Draw a character on the LCD screen.
+* 
+* output[i][0] 
+* -> low pixel in i's column  
+* 
+* output[i][1] 
+* -> high pixel in i's column 
+* 
+* Draw from low 12-bit to high 12-bit
+* 
+* @param Xpos The starting X coordinate for the character.
+* @param Ypos The starting Y coordinate for the character.
+* @param c A pointer to the character data (16 columns, 12 + 12 bits per column).
+*/
+void PRO_DrawChar(u8 Xpos, u16 Ypos, uc16 *c);
 ```
 
 第二部分由绘制函数实现，通过对高低位区分实现细节保留
@@ -189,20 +189,20 @@ PWM_Motor_Control Based on Distance_Detection, include
 接下来，结合代码来详细说明：
 
 ```c
-    /**
-    * @brief Update the display of two octagons and their corresponding bar graphs based on distance and PWM pulse.
-    * 
-    * This function updates two vertical bar graphs, each associated with an octagon, based on the provided distance 
-    * and PWM pulse values. The bar graphs are drawn in blocks, and their height is updated incrementally to reflect 
-    * the new values. The bars are drawn or cleared incrementally based on the change in values.
-    * 
-    * The left-side bar represents the filtered distance, and the right-side bar represents the PWM duty cycle.
-    * Octagons are drawn once to surround the bars.
-    * 
-    * @param distance The current distance value to be represented on the left bar graph.
-    * @param pwm_pulse The current PWM pulse value to be represented on the right bar graph.
-    */
-    void Update_Octagons(float distance, float pwm_pulse);
+/**
+* @brief Update the display of two octagons and their corresponding bar graphs based on distance and PWM pulse.
+* 
+* This function updates two vertical bar graphs, each associated with an octagon, based on the provided distance 
+* and PWM pulse values. The bar graphs are drawn in blocks, and their height is updated incrementally to reflect 
+* the new values. The bars are drawn or cleared incrementally based on the change in values.
+* 
+* The left-side bar represents the filtered distance, and the right-side bar represents the PWM duty cycle.
+* Octagons are drawn once to surround the bars.
+* 
+* @param distance The current distance value to be represented on the left bar graph.
+* @param pwm_pulse The current PWM pulse value to be represented on the right bar graph.
+*/
+void Update_Octagons(float distance, float pwm_pulse);
 ```
 
 主更新函数包括了框架及更新逻辑
@@ -217,16 +217,16 @@ PWM_Motor_Control Based on Distance_Detection, include
 滤波后进一步计算是否更新，通过快速响应机制改变矩形条的显示
 
 ```c
-    /**
-    * @brief Filling a matrix bit-by-bit
-    * 
-    * @param x The X-coordinate of the start point.
-    * @param y The Y-coordinate of the start point.
-    * @param width The width of the martix.
-    * @param height The height of the martix.
-    * @param color The color of the martix.
+/**
+* @brief Filling a matrix bit-by-bit
+* 
+* @param x The X-coordinate of the start point.
+* @param y The Y-coordinate of the start point.
+* @param width The width of the martix.
+* @param height The height of the martix.
+* @param color The color of the martix.
     */
-    void LCD_FillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color);
+void LCD_FillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color);
 ```
 
 通过简单的 O(HEIGHT x WIDTH) 时间复杂度进行按点填充即可完成更新
@@ -241,8 +241,8 @@ PWM_Motor_Control Based on Distance_Detection, include
 对于精度问题，经过实测数据对比分析后，我最终保留了一部分刷新机制及电机控制的float，而在一些例如查表、缓存的低需求部分采用了缩放因子的等比转换，保证精度的同时提高了处理速度
 
 ```c
-    #define STEP_01_10 1     // STEP = 0.1 -> 1
-    #define MAX_X_01_10 200  // MAX_X = 20 -> 200
+#define STEP_01_10 1     // STEP = 0.1 -> 1
+#define MAX_X_01_10 200  // MAX_X = 20 -> 200
 ```
 
 而在低占空比的处理上，我又进一步设计了一套拟合函数贴合使用体验，通过数学处理表现出了非线性的细腻调速：

@@ -1,50 +1,53 @@
-# Ultrasonic Distance-Based Motor Controller System
+# PWMC / 测距调控电机驱动系统
 
-- CT117E 嵌入式竞赛板 搭载 STM32F103RBT6
-- 超声波测距模块 HC-SR04
-- 电机驱动模块 DRV8833
-- 蓝牙串口模块 DX-BT24
-- 代码遵循 Doxygen 注释规范，精简目录结构
+PWM_Motor_Control Based on Distance_Detection, include
 
----
+- MCU:
+  - STM32F103RBT6
+- Module:
+  - 超声波测距 HC-SR04
+  - 电机驱动 DRV8833
+  - 蓝牙串口 DX-BT24
+- System:
+  - Bare Metal (OLD VERSION)
+  - RTOS (NEW VERSION)
 
 ## 项目研究方向
 
-### 1. 信息在不同观测角度的抽象能力提升
-
-即使不用精确的数值也能让整体的状态一目了然，
-无论从何种角度都能有一定的信息获取，以设计易于理解的展示方式为目标
-
-### 2. 直流电机PWM低占空比降噪及存储结构优化
-
-针对低占空比电机空耗问题进行软件消抖，
-在测距和占空比之间设计测试一套拟合曲线用于最大程度的电机输出优化，
-对返回的数值进行精度保留并采用缩放因子进行整型保存
-
-### 3. LCD竖向显示及局部滤波更新状态系统
-
-设计字库转换、绘制图形等函数适配竖向LCD显示，
-刷新方式采用滤波局部更新减少闪烁使得总体框架更加流畅丝滑
-
----
+1. **信息在不同观测角度的抽象能力提升**
+  即使不用精确的数值也能让整体的状态一目了然，  
+  无论从何种角度都能有一定的信息获取，以设计易于理解的展示方式为目标
+2. **直流电机PWM低占空比降噪及存储结构优化**
+  针对低占空比电机空耗问题进行软件消抖，  
+  在测距和占空比之间设计测试一套拟合曲线用于最大程度的电机输出优化，
+  对返回的数值进行精度保留并采用缩放因子进行整型保存
+3. **LCD竖向显示及局部滤波更新状态系统**
+  设计字库转换、绘制图形等函数适配竖向LCD显示，  
+  刷新方式采用滤波局部更新减少闪烁使得总体框架更加流畅丝滑
 
 ## 项目部分展示
 
-### CT117E开发板与模块连接图
+### 模块接口 - 开发板
 
-|  Module  |     Pin-1     |   Pin-2    | GND | Vcc |
-| :------: | ------------: | ---------: | :-: | :-: |
-| HC-SR04  | Trigger - PA7 | Echo - PA6 |  -  |  5  |
-| DRV8833  | IN1     - PA1 | IN2  - NaN |  -  |  5  |
-| DX-BT24  | TX      - PA3 | RX   - PA2 |  -  |  5  |
+|  Module  |     Pin-1     |   Pin-2    |  Vcc  |
+| :------: | ------------: | ---------: | :---- |
+| HC-SR04  | Trigger - PA7 | Echo - PA6 |  3.3  |
+| DRV8833  | IN1     - PA1 | IN2  - NaN |  5    |
+| DX-BT24  | TX      - PA3 | RX   - PA2 |  3.3  |
 
-### 演示视频
+### 链接示意图
 
-![旧版组合图](https://images.weserv.nl/?url=https://101.132.75.60/wp-content/uploads/2024/09/Physical-picture.jpg "组合图")
+```plaintext
+  HR-SR04 ───[GPIO/TIM3]───┐    ┌────[TIM2]───── DRV8833
+                       STM32F103RBT6
+  LCD ────────[I2C]────────┘    └────[USART2]─── DX-BT24
+```
 
-[超声波测距演示](https://link2hinar.fun/wp-content/uploads/2024/09/Ultrasonic.mp4) | [蓝牙串口演示](https://link2hinar.fun/wp-content/uploads/2024/09/Bluetooth.mp4)
+### 实物展示
 
----
+![组合图](Video-Pic/AFTER-CM.jpg)
+
+[超声波测距演示](Video-Pic/NEW-VT.mp4) | [蓝牙串口演示](Video-Pic/Bluetooth.mp4)
 
 ## 项目细节
 
@@ -58,9 +61,9 @@
 
 那么，做出各自的特色不就能够实现 1 + 1 + 1 > 3 了吗
 
-1. 蓝牙串口擅长数据高速传输-------------精确数值管理
+1. 蓝牙串口擅长数据高速传输-----------精确数值管理
 2. LCD屏幕大而直观-----------------------绘制图形动态表示
-3. LED只有二象性状态---------------------类电量显示抽象数据
+3. LED只有二象性状态--------------------类电量显示抽象数据
 
 前两个设计在视频中有所涉及，而LED显示则是新引入的特性，从直接抽象占空比显示改为表示0-65%的占空比状态，由LCD表示66-100%的占空比状态
 
@@ -70,12 +73,11 @@
 
 这便是对于这个项目，我对信息抽象程度控制的理解，接下来的部分，你将会看到具体实现的一些思路、代码编写以及我的另一些想法
 
----
-
 ### LCD 竖置显示转换思路及实现
 
 屏幕本身为一块2.4寸的TFT(Thin-Film Transistor) LCD，驱动采用寄存器 R0 - R239 配置LCD的工作模式、绘制图像和字符，以及控制其他参数，通过调用LCD_WriteReg函数即可以对这些寄存器进行写入操作，以实现对屏幕的控制
 
+```c
     #define R0 0x00
     #define R1 0x01
     #define R2 0x02
@@ -85,6 +87,7 @@
     #define R229 0xE5
     #define R231 0xE7
     #define R239 0xEF
+```
 
 将屏幕竖置，此时问题来了，怎么修改驱动可以适配？
 
@@ -92,8 +95,6 @@
 2. 采用软件模拟实现渲染翻转，但性能消耗大，需要进一步优化
 
 显而易见，第二种方式更有研究性，且能够为未来其他研究作为底层方案作为适配支持
-
----
 
 #### 基于矩阵转置的TFT LCD竖置显示驱动修改
 
@@ -113,6 +114,7 @@
 
 接下来，结合代码来详细说明：
 
+```c
     /**
     * @brief Display a character in vertical mode on the LCD.
     * 
@@ -121,11 +123,13 @@
     * @param input The input character matrix (24x16).
     */
     void LCD_VerticalDisplay(u8 Xpos, u16 Ypos, uint16_t input[CHAR_HEIGHT]);
+```
 
 由于竖向打印较横向宽度短，自定义程度高，故顶层只封装到按字符打印而不是字符串
 
 而顶层函数通过调用下面两个部分的函数实现
 
+```c
     /**
     * @brief Transpose a character matrix for vertical display.
     * 
@@ -138,12 +142,15 @@
     * @param output The transposed output matrix (each element contains 12 bits for high and low parts).
     */
     void transposeMatrix(uint16_t input[CHAR_HEIGHT], uint16_t output[CHAR_HEIGHT / 2][2]);
+```
+
 第一部分由矩阵转置模块实现，对字模进行转换后交给下一个函数进行绘制
 
 转置区别高位与低位，按位遍历转置时间复杂度O(CHAR_HEIGHT x CHAR_WIDTH)，不太能进一步降低时间复杂度至O(log(CHAR_HEIGHT) x log(CHAR_WIDTH))
 
 如遇性能瓶颈或可尝试空间换时间，将转换完成的字模库预存储减少性能消耗，但扩展为大型字模库后占用过大，如果同时兼容横向和竖向对单片机FLASH要求高，兼容性下降，故保持为原始矩阵转换不变
 
+```c
     /**
     * @brief Draw a character on the LCD screen.
     * 
@@ -160,9 +167,9 @@
     * @param c A pointer to the character data (16 columns, 12 + 12 bits per column).
     */
     void PRO_DrawChar(u8 Xpos, u16 Ypos, uc16 *c);
-第二部分由绘制函数实现，通过对高低位区分实现细节保留
+```
 
----
+第二部分由绘制函数实现，通过对高低位区分实现细节保留
 
 #### 引入滤波优化的部分刷新机制
 
@@ -181,6 +188,7 @@
 
 接下来，结合代码来详细说明：
 
+```c
     /**
     * @brief Update the display of two octagons and their corresponding bar graphs based on distance and PWM pulse.
     * 
@@ -195,6 +203,7 @@
     * @param pwm_pulse The current PWM pulse value to be represented on the right bar graph.
     */
     void Update_Octagons(float distance, float pwm_pulse);
+```
 
 主更新函数包括了框架及更新逻辑
 
@@ -207,6 +216,7 @@
 
 滤波后进一步计算是否更新，通过快速响应机制改变矩形条的显示
 
+```c
     /**
     * @brief Filling a matrix bit-by-bit
     * 
@@ -217,10 +227,9 @@
     * @param color The color of the martix.
     */
     void LCD_FillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color);
+```
 
 通过简单的 O(HEIGHT x WIDTH) 时间复杂度进行按点填充即可完成更新
-
----
 
 ### 直流电机PWM低占空比优化及存储结构优化
 
@@ -231,8 +240,10 @@
 
 对于精度问题，经过实测数据对比分析后，我最终保留了一部分刷新机制及电机控制的float，而在一些例如查表、缓存的低需求部分采用了缩放因子的等比转换，保证精度的同时提高了处理速度
 
+```c
     #define STEP_01_10 1     // STEP = 0.1 -> 1
     #define MAX_X_01_10 200  // MAX_X = 20 -> 200
+```
 
 而在低占空比的处理上，我又进一步设计了一套拟合函数贴合使用体验，通过数学处理表现出了非线性的细腻调速：
 
@@ -243,10 +254,10 @@
 1. 高占空比时走势较陡，但延缓了中低占空比的比例，使得总体电机转速恒定在柔和档位附近
 2. 同时在PWM设置上提高了工作频率，减少了低频工作噪声
 
----
-
 ## 项目总结
 
 构建本项目前其实没有想那么多，利用手头的零散模块进行了一些小测试后逐渐有了想优化的点和想做的功能，在过程中也是对接线、配置等平时不起眼的地方有了更多的认识，对可能出现的问题也有方向去解决，给我带来的收获很多
+
+在逐步的学习中对RTOS有了更多的理解，结合专业课操作系统的内容很容易理解一些概念，结合官方文档为这个标准库编写的项目移植了基础的RTOS，区别于CubeMX自动生成确实在一步一步的实现中了解了很多
 
 后续再进行项目构建时还需要对数据结构的设计多留心，对于精度的控制还需要进行提前的构思、宏定义以便全局的更改以及优化

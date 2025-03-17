@@ -33,7 +33,7 @@ u8 carry_step = 0;
 
 //初始化传感器IO口
 void setup_sensor(void) {
-	setup_xunji();
+	//setup_xunji();
 	setup_csb();
 }
 
@@ -41,28 +41,27 @@ void setup_csb(void){
 	GPIO_InitTypeDef GPIO_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOA, ENABLE);  
 	
-	//初始化超声波IO口 Trig PB0  Echo PA2
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;  
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;  
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;	
-	GPIO_Init(GPIOB, &GPIO_InitStructure); 	
+	// 初始化超声波IO口
+	uint16_t trig_pins[] = {GPIO_Pin_1, GPIO_Pin_5, GPIO_Pin_1, GPIO_Pin_7, GPIO_Pin_3};  
+	uint16_t echo_pins[] = {GPIO_Pin_0, GPIO_Pin_4, GPIO_Pin_0, GPIO_Pin_6, GPIO_Pin_2};  
+	GPIO_TypeDef* trig_ports[] = {GPIOA, GPIOA, GPIOB, GPIOA, GPIOB};  
+	GPIO_TypeDef* echo_ports[] = {GPIOA, GPIOA, GPIOB, GPIOA, GPIOB};  
 	
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;   
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;  
-	GPIO_Init(GPIOA, &GPIO_InitStructure); 	
-	
-	//初始化超声波定时器
-	TIM3_Int_Init(30000, 71);
-}
+	for (int i = 0; i < 5; i++) {
+		// 配置Trig引脚
+		GPIO_InitStructure.GPIO_Pin = trig_pins[i];
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+		GPIO_Init(trig_ports[i], &GPIO_InitStructure);
+		
+		// 配置Echo引脚
+		GPIO_InitStructure.GPIO_Pin = echo_pins[i];
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+		GPIO_Init(echo_ports[i], &GPIO_InitStructure);
+	}
 
- // 循迹左 A0  A1  循迹右 B0 A2
-void setup_xunji(void) {
-	GPIO_InitTypeDef GPIO_InitStructure;
-	
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);  
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1; 
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;   
-	GPIO_Init(GPIOA, &GPIO_InitStructure); 	
+	// 初始化超声波定时器
+	TIM3_Int_Init(30000, 71);
 }
 
 void csb_Delay_Us(uint16_t time)  //延时函数
@@ -74,31 +73,46 @@ void csb_Delay_Us(uint16_t time)  //延时函数
 
 /*************************************************************
 函数名称：get_csb_value()
-功能介绍：采集超声波数据
-函数参数：无
-返回值：  采集的数据  
+功能介绍：采集超声波数据（支持 S3-S6 扫描，S2 定向测距）
+函数参数：sensor_id (0: S2, 1: S3, 2: S4, 3: S5, 4: S6)
+返回值：  采集的距离（cm），失败返回 0
 *************************************************************/
-int get_csb_value(void) {
+int get_csb_value(uint8_t sensor_id) {
 	u16 csb_t;
-	long timeout= 0;
-	Trig(1);
+	long timeout = 0;
+	
+	// 传感器引脚映射
+	uint16_t trig_pins[] = {GPIO_Pin_1, GPIO_Pin_5, GPIO_Pin_1, GPIO_Pin_7, GPIO_Pin_3};  
+	uint16_t echo_pins[] = {GPIO_Pin_0, GPIO_Pin_4, GPIO_Pin_0, GPIO_Pin_6, GPIO_Pin_2};  
+	GPIO_TypeDef* trig_ports[] = {GPIOA, GPIOA, GPIOB, GPIOA, GPIOB};  
+	GPIO_TypeDef* echo_ports[] = {GPIOA, GPIOA, GPIOB, GPIOA, GPIOB};  
+
+	if(sensor_id > 4) return 0;  // 防止数组越界
+
+	// 发送 Trig 信号
+	GPIO_SetBits(trig_ports[sensor_id], trig_pins[sensor_id]);
 	csb_Delay_Us(30);
-	Trig(0);
-	timeout= 0;
-	while(Echo() == 0&&(timeout++<10000)) //等待接收口高电平输出
-	if(timeout>=500000)return 0;
-	TIM_SetCounter(TIM3,0);//清除计数
-	TIM_Cmd(TIM3, ENABLE);  //使能TIMx外设
-	while(Echo() == 1&&(timeout++<10000))
-	if(timeout>=500000)return 0;
-	TIM_Cmd(TIM3, DISABLE);  //使能TIMx外设      
-	csb_t = TIM_GetCounter(TIM3);//获取时间,分辨率为1US
-	//340m/s = 0.017cm/us
-	if(csb_t < 25000) {
-		//sprintf((char *)cmd_return, "csb_time=%d\r\n", (int)(csb_t*0.17));
-		//uart1_send_str(cmd_return);
-		csb_t = csb_t*0.017;
-		return csb_t;
+	GPIO_ResetBits(trig_ports[sensor_id], trig_pins[sensor_id]);
+
+	// 等待 Echo 高电平
+	timeout = 0;
+	while (GPIO_ReadInputDataBit(echo_ports[sensor_id], echo_pins[sensor_id]) == 0 && timeout++ < 10000);
+	if (timeout >= 500000) return 0;  // 超时返回 0
+
+	TIM_SetCounter(TIM3, 0);  // 清除计数
+	TIM_Cmd(TIM3, ENABLE);    // 使能 TIM3
+
+	// 等待 Echo 低电平
+	timeout = 0;
+	while (GPIO_ReadInputDataBit(echo_ports[sensor_id], echo_pins[sensor_id]) == 1 && timeout++ < 10000);
+	if (timeout >= 500000) return 0;  // 超时返回 0
+
+	TIM_Cmd(TIM3, DISABLE);  // 关闭计时器
+	csb_t = TIM_GetCounter(TIM3); // 获取时间（us）
+
+	// 计算距离 (340m/s = 0.017cm/us)
+	if (csb_t < 25000) {
+		return (int)(csb_t * 0.017);
 	}
 	return 0;
 }
@@ -117,8 +131,7 @@ int get_adc_csb_middle() {
 // 	for(i=0;i<5;i++)ad_value[i] = ad_value_bak[i];
 	return myvalue;  
 }
-
-
+   
 /*************************************************************
 功能介绍：定距跟随：判断超声波检测的距离，小于20cm时后退；25-35cm或超过70cm时停止；40-60cm时前进
 函数参数：无
@@ -145,23 +158,55 @@ void dingju_gensui(){
 
 
 /*************************************************************
-功能介绍：自由避障：判断超声波检测的距离，小于20cm时右转避障，大于20cm时前进
+功能介绍：自由避障：根据四方向超声波数据选择最佳方向前进，若四向均阻挡则停止
 函数参数：无
 返回值：  无
 *************************************************************/
-void ziyou_bizhang(){
-	static u32 systick_ms_bak = 0;
-	int adc_csb;
-	if(millis() - systick_ms_bak > 100) {
-		systick_ms_bak = millis();
-		adc_csb = get_adc_csb_middle();//获取a0的ad值，计算出距离
-		if(adc_csb < 20) {//距离低于20cm就右转
-			car_run(600,-600,600,-600);
-			tb_delay_ms(500);
-		} else {
-			car_run(600,600,600,600);
-		}
-	}
+void ziyou_bizhang() {
+    static u32 systick_ms_bak = 0;
+    int dist_front, dist_left, dist_right, dist_back;
+
+    if (millis() - systick_ms_bak > 100) { // 每 100ms 进行一次避障判断
+        systick_ms_bak = millis();
+
+        // 读取四个方向超声波数据
+        dist_front = get_csb_value(1); // S3 - 前方
+        dist_left  = get_csb_value(2); // S4 - 左方
+        dist_right = get_csb_value(3); // S5 - 右方
+        dist_back  = get_csb_value(4); // S6 - 后方
+
+        if (dist_front >= 20) {
+            // 前方无障碍，继续前进
+            car_run(600, 600, 600, 600);
+        } 
+        else {
+            // 前方有障碍，选择左右方向
+            if (dist_left >= 20 && dist_right >= 20) {
+                // 左右都可行，选择距离更远的方向
+                if (dist_left > dist_right) {
+                    car_run(-600, 600, -600, 600); // 左转
+                } else {
+                    car_run(600, -600, 600, -600); // 右转
+                }
+            } 
+            else if (dist_left >= 20) {
+                car_run(-600, 600, -600, 600); // 左转
+            } 
+            else if (dist_right >= 20) {
+                car_run(600, -600, 600, -600); // 右转
+            } 
+            else {
+                // 四向均被挡住，尝试后退
+                if (dist_back >= 20) {
+                    car_run(-600, -600, -600, -600); // 后退
+                    tb_delay_ms(500); // 退一段时间
+                } else {
+                    car_run(0, 0, 0, 0); // 停止
+                }
+            }
+            tb_delay_ms(500); // 避障等待时间
+        }
+    }
 }
 
 

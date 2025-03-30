@@ -24,6 +24,7 @@ u8 ir_repeat=0,ir_repeat_flag=0;
 u8 ir_end_flag=0,ir_time_flag=0;
 u8 ir_data_count=0;
 
+
 /**
  * 初始化独立看门狗
  * prer:分频数:0~7(只有低 3 位有效!)
@@ -150,7 +151,38 @@ void TIM3_Int_Init(u16 arr,u16 psc) {
 
 
 void TIM3_Pwm_Init(u16 arr,u16 psc)
-{   
+{  
+	GPIO_InitTypeDef GPIO_InitStructure;
+	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+	TIM_OCInitTypeDef  TIM_OCInitStructure;
+
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);	 
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);  
+	
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;   //对应CH3通道PB0
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;   
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOB, &GPIO_InitStructure); 
+	
+	TIM_TimeBaseStructure.TIM_Period = arr;  
+	TIM_TimeBaseStructure.TIM_Prescaler =psc; 
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0; 
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  
+	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure); 
+
+	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1; 
+	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;  
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;  
+	TIM_OCInitStructure.TIM_Pulse=500; 
+	
+	TIM_OC3Init(TIM3, &TIM_OCInitStructure);        
+	TIM_OC3PreloadConfig(TIM3, TIM_OCPreload_Enable);
+
+	TIM_OC4Init(TIM3, &TIM_OCInitStructure);        
+	TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable); 
+
+	TIM_Cmd(TIM3, ENABLE);  
+
 }
 
 void TIM4_Pwm_Init(u16 arr,u16 psc) {  
@@ -187,13 +219,13 @@ void TIM4_Pwm_Init(u16 arr,u16 psc) {
 	TIM_Cmd(TIM4, ENABLE);  
 }
 
-void TIM1_UP_IRQHandler(void) {
-	if (TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET) //检查 TIM1 更新中断发生与否
-	{
-		TIM_ClearITPendingBit(TIM1, TIM_IT_Update); //清除 TIM1 更新中断标志
-		//systick_ms++;
-	}
-}
+//void TIM1_UP_IRQHandler(void) {
+//	if (TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET) //检查 TIM1 更新中断发生与否
+//	{
+//		TIM_ClearITPendingBit(TIM1, TIM_IT_Update); //清除 TIM1 更新中断标志
+//		//systick_ms++;
+//	}
+//}
 
 float abs_float(float value) {
 	if(value>0) {
@@ -203,12 +235,59 @@ float abs_float(float value) {
 }
 
 void duoji_inc_handle(u8 index) {	
+	int aim_temp;
 	
+	if(duoji_doing[index].inc != 0) {
+		
+		aim_temp = duoji_doing[index].aim;
+		
+		if(aim_temp > 2490){
+			aim_temp = 2490;
+		} else if(aim_temp < 500) {
+			aim_temp = 500;
+		}
+	
+		if(abs_float(aim_temp - duoji_doing[index].cur) <= abs_float(duoji_doing[index].inc + duoji_doing[index].inc)) {
+			duoji_doing[index].cur = aim_temp;
+			duoji_doing[index].inc = 0;
+		} else {
+			duoji_doing[index].cur += duoji_doing[index].inc;
+		}
+	}
 }
 
 void TIM2_IRQHandler(void) {
-	
+	static u8 flag = 0;
+	static u8 duoji_index1 = 0;
+	int temp;
+	if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET) //检查 TIM2 更新中断发生与否
+	{
+		TIM_ClearITPendingBit(TIM2, TIM_IT_Update ); //清除 TIM2 更新中断标志
+		
+		if(duoji_index1 == 8) {
+			duoji_index1 = 0;
+		}
+		
+		if(flag == 0) {
+			TIM2->ARR = ((unsigned int)(duoji_doing[duoji_index1].cur));
+			dj_io_set(duoji_index1, 1);	
+			duoji_inc_handle(duoji_index1);
+		} else {
+			temp = 2500 - (unsigned int)(duoji_doing[duoji_index1].cur);
+			TIM2->ARR = temp;
+			dj_io_set(duoji_index1, 0);
+			duoji_index1 ++;
+		}
+		flag = !flag;
+	}
 } 
+
+void TIM3_IRQHandler(void) {
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) //检查 TIM3 更新中断发生与否
+	{
+		TIM_ClearITPendingBit(TIM3 , TIM_IT_Update);
+	}
+}
 
 
 /***********************************************
@@ -263,6 +342,32 @@ void timer1_ir_init(u16 arr,u16 psc)
 	TIM_Cmd(TIM1, ENABLE);
 }
 
+
+/***********************************************
+	函数名称：	TIM1_UP_IRQHandler() 
+	功能介绍：	定时器1溢出中断 判断是否再无重复码
+	函数参数：	无
+	返回值：		无
+ ***********************************************/
+void TIM1_UP_IRQHandler(void) {
+	if (TIM_GetITStatus(TIM1, TIM_IT_Update) == SET) {
+		TIM_ClearFlag(TIM1, TIM_FLAG_Update);
+		if(ir_time_flag<2)  
+			ir_time_flag++;
+		else {
+			if(ir_data_count>31){
+				ir_start=0;
+				ir_start_flag=0;
+				ir_repeat=0;
+				ir_repeat_flag=0;
+				ir_end_flag=0;
+				ir_time_flag=0;
+				ir_data_count=0;
+				Timeout_OFF();
+			}
+		}
+	}
+}
 
 /***********************************************
 	函数名称：	TIM1_CC_IRQHandler() 

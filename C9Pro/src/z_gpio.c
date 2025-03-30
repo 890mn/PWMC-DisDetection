@@ -118,7 +118,17 @@ void dj_io_set(u8 index, u8 level) {
 }
 
 void sensor_init(void) {
+	GPIO_InitTypeDef GPIO_InitStructure;
 
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB, ENABLE);  
+	
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;   //PB11
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;   
+	GPIO_Init(GPIOB, &GPIO_InitStructure); 
+	
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;   //PA1
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;   
+	GPIO_Init(GPIOA, &GPIO_InitStructure); 
 }
 
 

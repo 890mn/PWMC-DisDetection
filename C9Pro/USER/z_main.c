@@ -44,11 +44,9 @@
 #include "z_timer.h"	  //存放定时器功能文件
 #include "z_ps2.h"		  //存放索尼手柄
 #include "z_w25q64.h"	  //存储芯片的操作
-#include "z_adc.h"		  //ADC初始化
 #include <stdio.h>		  //标准库文件
 #include <string.h>		  //标准库文件
 #include <math.h>		  //标准库文件
-#include "z_kinematics.h" //逆运动学算法
 #include "z_action.h"	  //动作组执行文件
 #include "stm32f10x_iwdg.h"
 #include "z_sensor.h"
@@ -72,13 +70,8 @@ ai_mode=3 时，左转
 ai_mode=4 时，右转
 ai_mode=5 时，左平移
 ai_mode=6 时，右平移
-ai_mode=11时，定距跟随
-ai_mode=12时，自由避障
-ai_mode=13时，智能循迹
-
 */
 
-kinematics_t kinematics;
 /*
 const char *pre_cmd_set_red[PSX_BUTTON_NUM] = {//红灯模式下按键的配置
 	"<PS2_RED01:#005P0600T2000!^#005PDST!>",	//L2
@@ -129,38 +122,63 @@ const char *pre_cmd_set_grn[PSX_BUTTON_NUM] = {//绿灯模式下按键的配置
 
 int main(void)
 {
+	char* buf;
 	setup_rcc();									  // 初始化时钟
 	setup_global();									  // 初始化全局变量
 	setup_gpio();									  // 初始化IO口
 	setup_nled();									  // 初始化工作指示灯
-	setup_beep();									  // 初始化定时器
 	setup_djio();									  // 初始化舵机IO口
 	setup_w25q64();									  // 初始化存储器W25Q64
-	setup_ps2();									  // 初始化PS2手柄
-	setup_ir();										  // 初始化红外遥控器，红外接收头接A8引脚
+	//setup_ps2();									  // 初始化PS2手柄
+	//setup_ir();										  // 初始化红外遥控器，红外接收头接A8引脚
 	setup_uart1();									  // 初始化串口1 用于下载动作组
 	setup_uart3();									  // 初始化串口3 用于底板总线、蓝牙、lora
 	setup_systick();								  // 初始化滴答时钟，1S增加一次millis()的值
-	setup_dj_timer();								  // 初始化定时器2 处理舵机PWM输出
+	//setup_dj_timer();								  // 初始化定时器2 处理舵机PWM输出
 	setup_interrupt();								  // 初始化总中断
-	setup_kinematics(110, 105, 75, 190, &kinematics); // kinematics 90mm 105mm 98mm 150mm
-	setup_servo_bias();								  // 初始化舵机，将偏差代入初始值
+	//setup_kinematics(110, 105, 75, 190, &kinematics); // kinematics 90mm 105mm 98mm 150mm
+	//setup_servo_bias();								  // 初始化舵机，将偏差代入初始值
 	IWDG_Init();									  // 初始化独立看门狗
 	setup_start();									  // 初始化启动信号
 	setup_do_group();								  // 开机动作
-	setup_sensor();
+	setup_csb();
+
+	/*
+	ai_mode=0 时，停止
+	ai_mode=1 时，前进
+	ai_mode=2 时，后退
+	ai_mode=3 时，左转
+	ai_mode=4 时，右转
+	ai_mode=5 时，左平移
+	ai_mode=6 时，右平移
+	*/
 
 	while (1)
 	{
-		loop_nled(); // 循环执行工作指示灯，500ms跳动一次
-		loop_uart(); // 串口数据接收处理
+	
+		//loop_nled(); // 循环执行工作指示灯，500ms跳动一次
+		//loop_uart(); // 串口数据接收处理
+		//sprintf(buf, "S3:%d", get_csb_value(0));
+		//sprintf(buf, "S3:%d",0);
+		tb_usart1_send_str("0");
+		tb_delay_ms(1000);
 		// loop_action();	  //动作组批量执行
+/*		
 		loop_ps2_data();   // 循环读取PS2手柄数据
 		loop_ps2_button(); // 处理手柄上的按钮
 		loop_ps2_car();	   // 处理手柄摇杆数据，控制电机转动
 		loop_ir();		   // 循环读取红外遥控器数据
 		// loop_monitor();  //定时保存一些变量
+		
+		uint16_t mode = ai_mode;
 		loop_AI(); // 执行对应功能
+		if (mode == 6) {
+			ai_mode = 0;
+		} else {
+			ai_mode = mode + 1;
+		}
+		tb_delay_ms(1000);
+*/		
 	}
 }
 
@@ -190,11 +208,6 @@ void setup_nled(void)
 	nled_off(); // 工作指示灯关闭
 }
 
-void setup_beep(void)
-{ // 初始化定时器蜂鸣器
-	beep_init();
-	beep_off(); // 关闭蜂鸣器
-}
 void setup_w25q64(void)
 { // 初始化存储器W25Q64
 	u8 i;
@@ -226,10 +239,6 @@ void setup_w25q64(void)
 	spiFlahsOn(0);
 }
 
-void setup_adc(void)
-{ // 初始化ADC采集 使用DMA初始化
-	ADC_init();
-}
 
 void setup_ps2(void)
 { // 初始化PS2手柄
@@ -281,25 +290,7 @@ void setup_systick(void)
 // 初始化启动信号
 void setup_start(void)
 {
-	// 蜂鸣器LED 名叫闪烁 示意系统启动
-	beep_on();
-	nled_on();
-	tb_delay_ms(100);
-	beep_off();
-	nled_off();
-	tb_delay_ms(100);
-	beep_on();
-	nled_on();
-	tb_delay_ms(100);
-	beep_off();
-	nled_off();
-	tb_delay_ms(100);
-	beep_on();
-	nled_on();
-	tb_delay_ms(100);
-	beep_off();
-	nled_off();
-	tb_delay_ms(100);
+
 }
 
 // 初始化总中断
@@ -726,39 +717,6 @@ void loop_AI(void)
 	{
 		xunji_bizhang();
 	}
-}
-
-int kinematics_move(float x, float y, float z, int time)
-{
-	int i, j, min = 0, flag = 0;
-
-	if (y < 0)
-		return 0;
-
-	// 寻找最佳角度
-	flag = 0;
-	for (i = 0; i >= -135; i--)
-	{
-		if (0 == kinematics_analysis(x, y, z, i, &kinematics))
-		{
-			if (i < min)
-				min = i;
-			flag = 1;
-		}
-	}
-
-	// 用3号舵机与水平最大的夹角作为最佳值
-	if (flag)
-	{
-		kinematics_analysis(x, y, z, min, &kinematics);
-		for (j = 0; j < 4; j++)
-		{
-			set_servo(j, kinematics.servo_pwm[j], time);
-		}
-		return 1;
-	}
-
-	return 0;
 }
 
 // 处理小车电机摇杆控制

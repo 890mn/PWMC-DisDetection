@@ -23,11 +23,9 @@
 #include "z_timer.h"	//存放定时器功能文件
 #include "z_ps2.h"		//存放索尼手柄
 #include "z_w25q64.h"	//存储芯片的操作
-#include "z_adc.h"		//ADC初始化
 #include <stdio.h>		//标准库文件
 #include <string.h>		//标准库文件
 #include <math.h>		//标准库文件
-#include "z_kinematics.h"	//逆运动学算法
 #include "stm32f10x_iwdg.h"
 #include "z_action.h"
 

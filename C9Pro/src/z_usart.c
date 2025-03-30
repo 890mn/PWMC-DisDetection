@@ -56,10 +56,10 @@ void tb_usart1_init(u32 rate) {
     NVIC_Init(&NVIC_InitStructure); 
 	
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
-    //USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
+    USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
 	
-//	USART_ITConfig(USART1, USART_IT_PE, ENABLE);
-//	USART_ITConfig(USART1, USART_IT_ERR, ENABLE);
+	USART_ITConfig(USART1, USART_IT_PE, ENABLE);
+	USART_ITConfig(USART1, USART_IT_ERR, ENABLE);
 
 	USART_Cmd(USART1, ENABLE);  
 }  
@@ -267,7 +267,7 @@ int USART1_IRQHandler(void) {
 	
 	//发送中断 用前在初始化的时候请打开
 	//if(USART_GetITStatus(USART1, USART_IT_TXE) != RESET) {   
-		//USART_SendData(USARTy, TxBuffer1[TxCounter1++]);
+	//	USART_SendData(USARTy, TxBuffer1[TxCounter1++]);
 	//}   
 	return 0;
 }

@@ -10,3 +10,74 @@
 [2022-11-26 14:31:Program Success:53FF70065083495748341887 E:\li\027-智能小车C3\05-鸿蒙小车C3-Harmony\003-源码例程\STM32源码\02 源码程序\智能小车C3-STM32出厂程序\OUT\Carbot-32.hex
 [2022-11-26 14:36:Program Success:53FF70065083495748341887 E:\li\027-智能小车C3\05-鸿蒙小车C3-Harmony\003-源码例程\STM32源码\02 源码程序\智能小车C3-STM32出厂程序\OUT\Carbot-32.hex
 [2025-02-25 18:11:Program Success:31FF6C063042593626410943 D:\download program\BaiduNetdisk\002-智能小车（C3-STM32）\002-源码例程\02-出厂程序源码\智能小车C3-STM32出厂程序-20221126\OUT\Carbot-32.hex
+[2025-03-17 13:30:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-20 23:07:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-20 23:08:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-23 12:49:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-23 12:53:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-23 12:57:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-23 12:59:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-23 15:59:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-23 16:00:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 21:35:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 21:41:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 21:42:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 21:44:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 21:55:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 21:56:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 21:58:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 22:00:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 22:04:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 22:06:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 22:11:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 22:33:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 22:35:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 22:36:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 22:42:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 22:44:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 22:44:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 22:46:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 22:47:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 22:51:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 22:52:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 22:54:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 22:55:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 22:57:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:01:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:03:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:04:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:06:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:07:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 23:08:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 23:10:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:10:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:11:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:13:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:18:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:19:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:20:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:22:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:24:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:25:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:27:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-24 23:31:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 23:33:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 23:35:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 23:37:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 23:38:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 23:38:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 23:40:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-24 23:41:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-25 23:19:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-25 23:21:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-25 23:21:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-25 23:23:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-25 23:24:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-25 23:25:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-25 23:27:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-25 23:29:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-25 23:37:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-25 23:38:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-25 23:39:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-03-25 23:46:日志记录不属免费功能,请注册支持作者改进软件
+[2025-03-30 17:17:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex

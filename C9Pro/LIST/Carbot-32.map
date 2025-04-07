@@ -133,34 +133,34 @@ Section Cross References
     z_main.o(.text) refers to _printf_percent.o(.ARM.Collect$$_printf_percent$$00000000) for _printf_percent
     z_main.o(.text) refers to _printf_d.o(.ARM.Collect$$_printf_percent$$00000009) for _printf_d
     z_main.o(.text) refers to _printf_dec.o(.text) for _printf_int_dec
-    z_main.o(.text) refers to noretval__2sprintf.o(.text) for __2sprintf
-    z_main.o(.text) refers to z_usart.o(.text) for zx_uart_send_str
-    z_main.o(.text) refers to z_sensor.o(.text) for xunji_bizhang
-    z_main.o(.text) refers to z_delay.o(.text) for tb_delay_ms
-    z_main.o(.text) refers to z_ir.o(.text) for ir_function
-    z_main.o(.text) refers to z_global.o(.text) for abs_int
-    z_main.o(.text) refers to rt_memclr.o(.text) for __aeabi_memclr
-    z_main.o(.text) refers to stm32f10x_usart.o(.text) for USART_ITConfig
-    z_main.o(.text) refers to strcpy.o(.text) for strcpy
-    z_main.o(.text) refers to z_global.o(.bss) for cmd_return
-    z_main.o(.text) refers to z_main.o(.data) for .data
-    z_main.o(.text) refers to z_main.o(.bss) for .bss
-    z_main.o(.text) refers to z_global.o(.data) for uart1_get_ok
-    z_main.o(.text) refers to z_global.o(.bss) for uart_receive_buf
-    z_main.o(.text) refers to z_global.o(.data) for uart1_mode
-    z_main.o(.text) refers to strlen.o(.text) for strlen
+    z_main.o(.text) refers to z_global.o(.text) for str_contain_str
     z_main.o(.text) refers to z_action.o(.text) for parse_group_cmd
     z_main.o(.text) refers to z_gpio.o(.text) for beep_on_times
+    z_main.o(.text) refers to stm32f10x_usart.o(.text) for USART_ITConfig
     z_main.o(.text) refers to z_timer.o(.text) for millis
-    z_main.o(.text) refers to z_ps2.o(.text) for psx_write_read
+    z_main.o(.text) refers to z_delay.o(.text) for tb_delay_ms
+    z_main.o(.text) refers to z_usart.o(.text) for tb_usart3_init
+    z_main.o(.text) refers to z_ps2.o(.text) for PSX_init
     z_main.o(.text) refers to z_w25q64.o(.text) for spiFlahsOn
     z_main.o(.text) refers to fflt_clz.o(x$fpl$fflt) for __aeabi_i2f
     z_main.o(.text) refers to z_rcc.o(.text) for tb_rcc_init
     z_main.o(.text) refers to z_kinematics.o(.text) for setup_kinematics
+    z_main.o(.text) refers to z_sensor.o(.text) for setup_sensor
     z_main.o(.text) refers to z_adc.o(.text) for ADC_init
+    z_main.o(.text) refers to rt_memclr.o(.text) for __aeabi_memclr
+    z_main.o(.text) refers to z_main.o(.data) for .data
+    z_main.o(.text) refers to z_global.o(.data) for uart1_get_ok
+    z_main.o(.text) refers to z_global.o(.data) for uart1_mode
+    z_main.o(.text) refers to z_global.o(.bss) for uart_receive_buf
     z_main.o(.text) refers to z_global.o(.bss) for eeprom_info
     z_main.o(.text) refers to z_global.o(.bss) for duoji_doing
+    z_main.o(.text) refers to z_main.o(.bss) for .bss
+    z_main.o(.text) refers to strcpy.o(.text) for strcpy
+    z_main.o(.text) refers to strlen.o(.text) for strlen
+    z_main.o(.text) refers to noretval__2sprintf.o(.text) for __2sprintf
     z_main.o(.text) refers to ffix.o(x$fpl$ffix) for __aeabi_f2iz
+    z_main.o(.text) refers to z_global.o(.bss) for cmd_return
+    z_main.o(.text) refers to z_ir.o(.text) for ir_function
     z_sensor.o(.text) refers to _printf_percent.o(.ARM.Collect$$_printf_percent$$00000000) for _printf_percent
     z_sensor.o(.text) refers to _printf_d.o(.ARM.Collect$$_printf_percent$$00000009) for _printf_d
     z_sensor.o(.text) refers to _printf_dec.o(.text) for _printf_int_dec
@@ -172,7 +172,7 @@ Section Cross References
     z_sensor.o(.text) refers to dmul.o(x$fpl$dmul) for __aeabi_dmul
     z_sensor.o(.text) refers to dfixu.o(x$fpl$dfixu) for __aeabi_d2uiz
     z_sensor.o(.text) refers to noretval__2sprintf.o(.text) for __2sprintf
-    z_sensor.o(.text) refers to z_usart.o(.text) for uart1_send_str
+    z_sensor.o(.text) refers to z_usart.o(.text) for uart3_send_str
     z_sensor.o(.text) refers to z_global.o(.text) for selection_sort
     z_sensor.o(.text) refers to z_main.o(.text) for car_run
     z_sensor.o(.text) refers to z_delay.o(.text) for tb_delay_ms
@@ -855,119 +855,119 @@ Image Symbol Table
     .text                                    0x08003b6c   Section        0  z_action.o(.text)
     .text                                    0x08004598   Section        0  z_ir.o(.text)
     .text                                    0x08004794   Section        0  z_main.o(.text)
-    .text                                    0x08005174   Section        0  z_sensor.o(.text)
-    .text                                    0x0800553c   Section        0  noretval__2sprintf.o(.text)
-    .text                                    0x08005564   Section        0  _printf_pad.o(.text)
-    .text                                    0x080055b4   Section        0  _printf_dec.o(.text)
-    .text                                    0x0800562c   Section        0  __printf_flags_wp.o(.text)
-    .text                                    0x08005764   Section        0  __0sscanf.o(.text)
-    .text                                    0x080057a0   Section        0  _scanf_int.o(.text)
-    .text                                    0x080058ec   Section        0  strcpy.o(.text)
-    .text                                    0x08005934   Section        0  strlen.o(.text)
-    .text                                    0x08005972   Section       68  rt_memclr.o(.text)
-    .text                                    0x080059b6   Section       78  rt_memclr_w.o(.text)
-    .text                                    0x08005a04   Section        0  heapauxi.o(.text)
-    .text                                    0x08005a0a   Section        0  _rserrno.o(.text)
-    .text                                    0x08005a20   Section        0  _printf_intcommon.o(.text)
-    .text                                    0x08005ad4   Section        0  _printf_char_common.o(.text)
-    _printf_input_char                       0x08005ad5   Thumb Code    10  _printf_char_common.o(.text)
-    .text                                    0x08005b04   Section        0  _sputc.o(.text)
-    .text                                    0x08005b0e   Section        0  _chval.o(.text)
-    .text                                    0x08005b2c   Section        0  scanf_char.o(.text)
-    _scanf_char_input                        0x08005b2d   Thumb Code    12  scanf_char.o(.text)
-    .text                                    0x08005b58   Section        0  _sgetc.o(.text)
-    .text                                    0x08005b98   Section        8  rt_errno_addr_intlibspace.o(.text)
-    .text                                    0x08005ba0   Section        0  isspace.o(.text)
-    .text                                    0x08005bb4   Section        0  _scanf.o(.text)
-    .text                                    0x08005f28   Section        8  libspace.o(.text)
-    .text                                    0x08005f30   Section       74  sys_stackheap_outer.o(.text)
-    .text                                    0x08005f7c   Section       16  rt_ctype_table.o(.text)
-    .text                                    0x08005f8c   Section        0  exit.o(.text)
-    .text                                    0x08005fa0   Section        8  rt_locale_intlibspace.o(.text)
-    .text                                    0x08005fa8   Section      128  strcmpv7m.o(.text)
-    .text                                    0x08006028   Section        0  sys_exit.o(.text)
-    .text                                    0x08006034   Section        2  use_no_semi.o(.text)
-    .text                                    0x08006036   Section        0  indicate_semi.o(.text)
-    i.__ARM_fpclassify                       0x08006036   Section        0  fpclassify.o(i.__ARM_fpclassify)
-    i.__ieee754_rem_pio2                     0x08006060   Section        0  rred.o(i.__ieee754_rem_pio2)
-    i.__kernel_cos                           0x080063e8   Section        0  cos_i.o(i.__kernel_cos)
-    i.__kernel_poly                          0x080064e4   Section        0  poly.o(i.__kernel_poly)
-    i.__kernel_sin                           0x08006590   Section        0  sin_i.o(i.__kernel_sin)
-    i.__mathlib_dbl_infnan                   0x0800667c   Section        0  dunder.o(i.__mathlib_dbl_infnan)
-    i.__mathlib_dbl_invalid                  0x08006682   Section        0  dunder.o(i.__mathlib_dbl_invalid)
-    i.__mathlib_dbl_underflow                0x08006690   Section        0  dunder.o(i.__mathlib_dbl_underflow)
-    i._is_digit                              0x080066a0   Section        0  __printf_wp.o(i._is_digit)
-    i.acos                                   0x080066b0   Section        0  acos.o(i.acos)
-    i.atan                                   0x0800692c   Section        0  atan.o(i.atan)
-    i.cos                                    0x08006b4c   Section        0  cos.o(i.cos)
-    i.sin                                    0x08006be8   Section        0  sin.o(i.sin)
-    i.sqrt                                   0x08006c88   Section        0  sqrt.o(i.sqrt)
-    locale$$code                             0x08006cd4   Section       44  lc_ctype_c.o(locale$$code)
-    x$fpl$d2f                                0x08006d00   Section       98  d2f.o(x$fpl$d2f)
-    x$fpl$dadd                               0x08006d64   Section      336  daddsub_clz.o(x$fpl$dadd)
-    _dadd1                                   0x08006d75   Thumb Code     0  daddsub_clz.o(x$fpl$dadd)
-    x$fpl$dcheck1                            0x08006eb4   Section       16  dcheck1.o(x$fpl$dcheck1)
-    x$fpl$dcmpinf                            0x08006ec4   Section       24  dcmpi.o(x$fpl$dcmpinf)
-    x$fpl$ddiv                               0x08006edc   Section      688  ddiv.o(x$fpl$ddiv)
-    ddiv_entry                               0x08006ee3   Thumb Code     0  ddiv.o(x$fpl$ddiv)
-    x$fpl$dfix                               0x0800718c   Section       94  dfix.o(x$fpl$dfix)
-    x$fpl$dfixu                              0x080071ec   Section       90  dfixu.o(x$fpl$dfixu)
-    x$fpl$dflt                               0x08007246   Section       46  dflt_clz.o(x$fpl$dflt)
-    x$fpl$dfltu                              0x08007274   Section       38  dflt_clz.o(x$fpl$dfltu)
-    x$fpl$dleqf                              0x0800729c   Section      120  dleqf.o(x$fpl$dleqf)
-    x$fpl$dmul                               0x08007314   Section      340  dmul.o(x$fpl$dmul)
-    x$fpl$dnaninf                            0x08007468   Section      156  dnaninf.o(x$fpl$dnaninf)
-    x$fpl$dretinf                            0x08007504   Section       12  dretinf.o(x$fpl$dretinf)
-    x$fpl$drleqf                             0x08007510   Section      108  drleqf.o(x$fpl$drleqf)
-    x$fpl$drsb                               0x0800757c   Section       22  daddsub_clz.o(x$fpl$drsb)
-    x$fpl$dsqrt                              0x08007594   Section      460  dsqrt_noumaal.o(x$fpl$dsqrt)
-    x$fpl$dsub                               0x08007760   Section      468  daddsub_clz.o(x$fpl$dsub)
-    _dsub1                                   0x08007771   Thumb Code     0  daddsub_clz.o(x$fpl$dsub)
-    x$fpl$f2d                                0x08007934   Section       86  f2d.o(x$fpl$f2d)
-    x$fpl$fadd                               0x0800798c   Section      196  faddsub_clz.o(x$fpl$fadd)
-    _fadd1                                   0x0800799b   Thumb Code     0  faddsub_clz.o(x$fpl$fadd)
-    x$fpl$fcheck1                            0x08007a50   Section       12  fcheck1.o(x$fpl$fcheck1)
-    x$fpl$fcmpinf                            0x08007a5c   Section       24  fcmpi.o(x$fpl$fcmpinf)
-    x$fpl$fdiv                               0x08007a74   Section      388  fdiv.o(x$fpl$fdiv)
-    _fdiv1                                   0x08007a75   Thumb Code     0  fdiv.o(x$fpl$fdiv)
-    x$fpl$ffix                               0x08007bf8   Section       54  ffix.o(x$fpl$ffix)
-    x$fpl$ffixu                              0x08007c30   Section       62  ffixu.o(x$fpl$ffixu)
-    x$fpl$fflt                               0x08007c70   Section       48  fflt_clz.o(x$fpl$fflt)
-    x$fpl$ffltu                              0x08007ca0   Section       38  fflt_clz.o(x$fpl$ffltu)
-    x$fpl$fleqf                              0x08007cc8   Section      104  fleqf.o(x$fpl$fleqf)
-    x$fpl$fmul                               0x08007d30   Section      258  fmul.o(x$fpl$fmul)
-    x$fpl$fnaninf                            0x08007e32   Section      140  fnaninf.o(x$fpl$fnaninf)
-    x$fpl$fretinf                            0x08007ebe   Section       10  fretinf.o(x$fpl$fretinf)
-    x$fpl$frleqf                             0x08007ec8   Section       98  frleqf.o(x$fpl$frleqf)
-    x$fpl$frsb                               0x08007f2a   Section       20  faddsub_clz.o(x$fpl$frsb)
-    x$fpl$fsub                               0x08007f40   Section      234  faddsub_clz.o(x$fpl$fsub)
-    _fsub1                                   0x08007f4f   Thumb Code     0  faddsub_clz.o(x$fpl$fsub)
-    x$fpl$retnan                             0x0800802a   Section      100  retnan.o(x$fpl$retnan)
-    x$fpl$scalbn                             0x0800808e   Section       92  scalbn.o(x$fpl$scalbn)
-    x$fpl$scalbnf                            0x080080ea   Section       76  scalbnf.o(x$fpl$scalbnf)
-    x$fpl$trapveneer                         0x08008136   Section       48  trapv.o(x$fpl$trapveneer)
-    .constdata                               0x08008166   Section       17  __printf_flags_wp.o(.constdata)
-    x$fpl$usenofp                            0x08008166   Section        0  usenofp.o(x$fpl$usenofp)
-    maptable                                 0x08008166   Data          17  __printf_flags_wp.o(.constdata)
-    .constdata                               0x08008178   Section       80  acos.o(.constdata)
-    pS                                       0x08008178   Data          48  acos.o(.constdata)
-    qS                                       0x080081a8   Data          32  acos.o(.constdata)
-    .constdata                               0x080081c8   Section      152  atan.o(.constdata)
-    atanhi                                   0x080081c8   Data          32  atan.o(.constdata)
-    atanlo                                   0x080081e8   Data          32  atan.o(.constdata)
-    aTodd                                    0x08008208   Data          40  atan.o(.constdata)
-    aTeven                                   0x08008230   Data          48  atan.o(.constdata)
-    .constdata                               0x08008260   Section       48  cos_i.o(.constdata)
-    C                                        0x08008260   Data          48  cos_i.o(.constdata)
-    .constdata                               0x08008290   Section      200  rred.o(.constdata)
-    pio2s                                    0x08008290   Data          48  rred.o(.constdata)
-    twooverpi                                0x080082c0   Data         152  rred.o(.constdata)
-    .constdata                               0x08008358   Section       40  sin_i.o(.constdata)
-    S                                        0x08008358   Data          40  sin_i.o(.constdata)
-    locale$$data                             0x080083a0   Section      272  lc_ctype_c.o(locale$$data)
-    __lcctype_c_name                         0x080083a4   Data           2  lc_ctype_c.o(locale$$data)
-    __lcctype_c_start                        0x080083ac   Data           0  lc_ctype_c.o(locale$$data)
-    __lcctype_c_end                          0x080084b0   Data           0  lc_ctype_c.o(locale$$data)
+    .text                                    0x08005150   Section        0  z_sensor.o(.text)
+    .text                                    0x08005570   Section        0  noretval__2sprintf.o(.text)
+    .text                                    0x08005598   Section        0  _printf_pad.o(.text)
+    .text                                    0x080055e8   Section        0  _printf_dec.o(.text)
+    .text                                    0x08005660   Section        0  __printf_flags_wp.o(.text)
+    .text                                    0x08005798   Section        0  __0sscanf.o(.text)
+    .text                                    0x080057d4   Section        0  _scanf_int.o(.text)
+    .text                                    0x08005920   Section        0  strcpy.o(.text)
+    .text                                    0x08005968   Section        0  strlen.o(.text)
+    .text                                    0x080059a6   Section       68  rt_memclr.o(.text)
+    .text                                    0x080059ea   Section       78  rt_memclr_w.o(.text)
+    .text                                    0x08005a38   Section        0  heapauxi.o(.text)
+    .text                                    0x08005a3e   Section        0  _rserrno.o(.text)
+    .text                                    0x08005a54   Section        0  _printf_intcommon.o(.text)
+    .text                                    0x08005b08   Section        0  _printf_char_common.o(.text)
+    _printf_input_char                       0x08005b09   Thumb Code    10  _printf_char_common.o(.text)
+    .text                                    0x08005b38   Section        0  _sputc.o(.text)
+    .text                                    0x08005b42   Section        0  _chval.o(.text)
+    .text                                    0x08005b60   Section        0  scanf_char.o(.text)
+    _scanf_char_input                        0x08005b61   Thumb Code    12  scanf_char.o(.text)
+    .text                                    0x08005b8c   Section        0  _sgetc.o(.text)
+    .text                                    0x08005bcc   Section        8  rt_errno_addr_intlibspace.o(.text)
+    .text                                    0x08005bd4   Section        0  isspace.o(.text)
+    .text                                    0x08005be8   Section        0  _scanf.o(.text)
+    .text                                    0x08005f5c   Section        8  libspace.o(.text)
+    .text                                    0x08005f64   Section       74  sys_stackheap_outer.o(.text)
+    .text                                    0x08005fb0   Section       16  rt_ctype_table.o(.text)
+    .text                                    0x08005fc0   Section        0  exit.o(.text)
+    .text                                    0x08005fd4   Section        8  rt_locale_intlibspace.o(.text)
+    .text                                    0x08005fdc   Section      128  strcmpv7m.o(.text)
+    .text                                    0x0800605c   Section        0  sys_exit.o(.text)
+    .text                                    0x08006068   Section        2  use_no_semi.o(.text)
+    .text                                    0x0800606a   Section        0  indicate_semi.o(.text)
+    i.__ARM_fpclassify                       0x0800606a   Section        0  fpclassify.o(i.__ARM_fpclassify)
+    i.__ieee754_rem_pio2                     0x08006094   Section        0  rred.o(i.__ieee754_rem_pio2)
+    i.__kernel_cos                           0x0800641c   Section        0  cos_i.o(i.__kernel_cos)
+    i.__kernel_poly                          0x08006518   Section        0  poly.o(i.__kernel_poly)
+    i.__kernel_sin                           0x080065c4   Section        0  sin_i.o(i.__kernel_sin)
+    i.__mathlib_dbl_infnan                   0x080066b0   Section        0  dunder.o(i.__mathlib_dbl_infnan)
+    i.__mathlib_dbl_invalid                  0x080066b6   Section        0  dunder.o(i.__mathlib_dbl_invalid)
+    i.__mathlib_dbl_underflow                0x080066c4   Section        0  dunder.o(i.__mathlib_dbl_underflow)
+    i._is_digit                              0x080066d4   Section        0  __printf_wp.o(i._is_digit)
+    i.acos                                   0x080066e4   Section        0  acos.o(i.acos)
+    i.atan                                   0x08006960   Section        0  atan.o(i.atan)
+    i.cos                                    0x08006b80   Section        0  cos.o(i.cos)
+    i.sin                                    0x08006c1c   Section        0  sin.o(i.sin)
+    i.sqrt                                   0x08006cbc   Section        0  sqrt.o(i.sqrt)
+    locale$$code                             0x08006d08   Section       44  lc_ctype_c.o(locale$$code)
+    x$fpl$d2f                                0x08006d34   Section       98  d2f.o(x$fpl$d2f)
+    x$fpl$dadd                               0x08006d98   Section      336  daddsub_clz.o(x$fpl$dadd)
+    _dadd1                                   0x08006da9   Thumb Code     0  daddsub_clz.o(x$fpl$dadd)
+    x$fpl$dcheck1                            0x08006ee8   Section       16  dcheck1.o(x$fpl$dcheck1)
+    x$fpl$dcmpinf                            0x08006ef8   Section       24  dcmpi.o(x$fpl$dcmpinf)
+    x$fpl$ddiv                               0x08006f10   Section      688  ddiv.o(x$fpl$ddiv)
+    ddiv_entry                               0x08006f17   Thumb Code     0  ddiv.o(x$fpl$ddiv)
+    x$fpl$dfix                               0x080071c0   Section       94  dfix.o(x$fpl$dfix)
+    x$fpl$dfixu                              0x08007220   Section       90  dfixu.o(x$fpl$dfixu)
+    x$fpl$dflt                               0x0800727a   Section       46  dflt_clz.o(x$fpl$dflt)
+    x$fpl$dfltu                              0x080072a8   Section       38  dflt_clz.o(x$fpl$dfltu)
+    x$fpl$dleqf                              0x080072d0   Section      120  dleqf.o(x$fpl$dleqf)
+    x$fpl$dmul                               0x08007348   Section      340  dmul.o(x$fpl$dmul)
+    x$fpl$dnaninf                            0x0800749c   Section      156  dnaninf.o(x$fpl$dnaninf)
+    x$fpl$dretinf                            0x08007538   Section       12  dretinf.o(x$fpl$dretinf)
+    x$fpl$drleqf                             0x08007544   Section      108  drleqf.o(x$fpl$drleqf)
+    x$fpl$drsb                               0x080075b0   Section       22  daddsub_clz.o(x$fpl$drsb)
+    x$fpl$dsqrt                              0x080075c8   Section      460  dsqrt_noumaal.o(x$fpl$dsqrt)
+    x$fpl$dsub                               0x08007794   Section      468  daddsub_clz.o(x$fpl$dsub)
+    _dsub1                                   0x080077a5   Thumb Code     0  daddsub_clz.o(x$fpl$dsub)
+    x$fpl$f2d                                0x08007968   Section       86  f2d.o(x$fpl$f2d)
+    x$fpl$fadd                               0x080079c0   Section      196  faddsub_clz.o(x$fpl$fadd)
+    _fadd1                                   0x080079cf   Thumb Code     0  faddsub_clz.o(x$fpl$fadd)
+    x$fpl$fcheck1                            0x08007a84   Section       12  fcheck1.o(x$fpl$fcheck1)
+    x$fpl$fcmpinf                            0x08007a90   Section       24  fcmpi.o(x$fpl$fcmpinf)
+    x$fpl$fdiv                               0x08007aa8   Section      388  fdiv.o(x$fpl$fdiv)
+    _fdiv1                                   0x08007aa9   Thumb Code     0  fdiv.o(x$fpl$fdiv)
+    x$fpl$ffix                               0x08007c2c   Section       54  ffix.o(x$fpl$ffix)
+    x$fpl$ffixu                              0x08007c64   Section       62  ffixu.o(x$fpl$ffixu)
+    x$fpl$fflt                               0x08007ca4   Section       48  fflt_clz.o(x$fpl$fflt)
+    x$fpl$ffltu                              0x08007cd4   Section       38  fflt_clz.o(x$fpl$ffltu)
+    x$fpl$fleqf                              0x08007cfc   Section      104  fleqf.o(x$fpl$fleqf)
+    x$fpl$fmul                               0x08007d64   Section      258  fmul.o(x$fpl$fmul)
+    x$fpl$fnaninf                            0x08007e66   Section      140  fnaninf.o(x$fpl$fnaninf)
+    x$fpl$fretinf                            0x08007ef2   Section       10  fretinf.o(x$fpl$fretinf)
+    x$fpl$frleqf                             0x08007efc   Section       98  frleqf.o(x$fpl$frleqf)
+    x$fpl$frsb                               0x08007f5e   Section       20  faddsub_clz.o(x$fpl$frsb)
+    x$fpl$fsub                               0x08007f74   Section      234  faddsub_clz.o(x$fpl$fsub)
+    _fsub1                                   0x08007f83   Thumb Code     0  faddsub_clz.o(x$fpl$fsub)
+    x$fpl$retnan                             0x0800805e   Section      100  retnan.o(x$fpl$retnan)
+    x$fpl$scalbn                             0x080080c2   Section       92  scalbn.o(x$fpl$scalbn)
+    x$fpl$scalbnf                            0x0800811e   Section       76  scalbnf.o(x$fpl$scalbnf)
+    x$fpl$trapveneer                         0x0800816a   Section       48  trapv.o(x$fpl$trapveneer)
+    .constdata                               0x0800819a   Section       17  __printf_flags_wp.o(.constdata)
+    x$fpl$usenofp                            0x0800819a   Section        0  usenofp.o(x$fpl$usenofp)
+    maptable                                 0x0800819a   Data          17  __printf_flags_wp.o(.constdata)
+    .constdata                               0x080081b0   Section       80  acos.o(.constdata)
+    pS                                       0x080081b0   Data          48  acos.o(.constdata)
+    qS                                       0x080081e0   Data          32  acos.o(.constdata)
+    .constdata                               0x08008200   Section      152  atan.o(.constdata)
+    atanhi                                   0x08008200   Data          32  atan.o(.constdata)
+    atanlo                                   0x08008220   Data          32  atan.o(.constdata)
+    aTodd                                    0x08008240   Data          40  atan.o(.constdata)
+    aTeven                                   0x08008268   Data          48  atan.o(.constdata)
+    .constdata                               0x08008298   Section       48  cos_i.o(.constdata)
+    C                                        0x08008298   Data          48  cos_i.o(.constdata)
+    .constdata                               0x080082c8   Section      200  rred.o(.constdata)
+    pio2s                                    0x080082c8   Data          48  rred.o(.constdata)
+    twooverpi                                0x080082f8   Data         152  rred.o(.constdata)
+    .constdata                               0x08008390   Section       40  sin_i.o(.constdata)
+    S                                        0x08008390   Data          40  sin_i.o(.constdata)
+    locale$$data                             0x080083d8   Section      272  lc_ctype_c.o(locale$$data)
+    __lcctype_c_name                         0x080083dc   Data           2  lc_ctype_c.o(locale$$data)
+    __lcctype_c_start                        0x080083e4   Data           0  lc_ctype_c.o(locale$$data)
+    __lcctype_c_end                          0x080084e8   Data           0  lc_ctype_c.o(locale$$data)
     .data                                    0x20000000   Section       20  system_stm32f10x.o(.data)
     .data                                    0x20000014   Section       20  stm32f10x_rcc.o(.data)
     ADCPrescTable                            0x20000014   Data           4  stm32f10x_rcc.o(.data)
@@ -1559,171 +1559,171 @@ Image Symbol Table
     save_action                              0x080042ef   Thumb Code   550  z_action.o(.text)
     set_servo                                0x08004515   Thumb Code    98  z_action.o(.text)
     ir_function                              0x08004599   Thumb Code   286  z_ir.o(.text)
-    car_run                                  0x08004795   Thumb Code    44  z_main.o(.text)
-    loop_AI                                  0x080047c1   Thumb Code   212  z_main.o(.text)
-    loop_ir                                  0x08004895   Thumb Code    20  z_main.o(.text)
-    loop_ps2_car                             0x080048a9   Thumb Code   170  z_main.o(.text)
-    parse_cmd                                0x08004953   Thumb Code   208  z_main.o(.text)
-    parse_psx_buf                            0x08004a23   Thumb Code   782  z_main.o(.text)
-    loop_ps2_button                          0x08004d31   Thumb Code    40  z_main.o(.text)
-    loop_ps2_data                            0x08004d59   Thumb Code    36  z_main.o(.text)
-    loop_uart                                0x08004d7d   Thumb Code    92  z_main.o(.text)
-    loop_nled                                0x08004dd9   Thumb Code    50  z_main.o(.text)
-    setup_start                              0x08004e0b   Thumb Code   138  z_main.o(.text)
-    setup_interrupt                          0x08004e95   Thumb Code     4  z_main.o(.text)
-    setup_systick                            0x08004e99   Thumb Code     4  z_main.o(.text)
-    setup_uart3                              0x08004e9d   Thumb Code    38  z_main.o(.text)
-    setup_uart1                              0x08004ec3   Thumb Code    32  z_main.o(.text)
-    setup_ir                                 0x08004ee3   Thumb Code    10  z_main.o(.text)
-    setup_ps2                                0x08004eed   Thumb Code     4  z_main.o(.text)
-    setup_w25q64                             0x08004ef1   Thumb Code   124  z_main.o(.text)
-    setup_nled                               0x08004f6d   Thumb Code    18  z_main.o(.text)
-    setup_gpio                               0x08004f7f   Thumb Code     4  z_main.o(.text)
-    setup_global                             0x08004f83   Thumb Code     4  z_main.o(.text)
-    setup_rcc                                0x08004f87   Thumb Code     4  z_main.o(.text)
-    main                                     0x08004f8b   Thumb Code   136  z_main.o(.text)
-    setup_beep                               0x08005013   Thumb Code    18  z_main.o(.text)
-    setup_adc                                0x08005025   Thumb Code     4  z_main.o(.text)
-    setup_uart2                              0x08005029   Thumb Code   164  z_main.o(.text)
-    soft_reset                               0x080050cd   Thumb Code    26  z_main.o(.text)
-    kinematics_move                          0x080050e7   Thumb Code   128  z_main.o(.text)
-    setup_csb                                0x08005175   Thumb Code   118  z_sensor.o(.text)
-    setup_xunji                              0x080051eb   Thumb Code    32  z_sensor.o(.text)
-    setup_sensor                             0x0800520b   Thumb Code    12  z_sensor.o(.text)
-    csb_Delay_Us                             0x08005217   Thumb Code    24  z_sensor.o(.text)
-    get_csb_value                            0x0800522f   Thumb Code   204  z_sensor.o(.text)
-    get_adc_csb_middle                       0x080052fb   Thumb Code    42  z_sensor.o(.text)
-    dingju_gensui                            0x08005325   Thumb Code    90  z_sensor.o(.text)
-    ziyou_bizhang                            0x0800537f   Thumb Code    76  z_sensor.o(.text)
-    xun_ji                                   0x080053cb   Thumb Code   136  z_sensor.o(.text)
-    xunji_bizhang                            0x08005453   Thumb Code   168  z_sensor.o(.text)
-    __2sprintf                               0x0800553d   Thumb Code    34  noretval__2sprintf.o(.text)
-    _printf_pre_padding                      0x08005565   Thumb Code    44  _printf_pad.o(.text)
-    _printf_post_padding                     0x08005591   Thumb Code    34  _printf_pad.o(.text)
-    _printf_int_dec                          0x080055b5   Thumb Code   104  _printf_dec.o(.text)
-    __printf                                 0x0800562d   Thumb Code   308  __printf_flags_wp.o(.text)
-    __0sscanf                                0x08005765   Thumb Code    52  __0sscanf.o(.text)
-    _scanf_int                               0x080057a1   Thumb Code   332  _scanf_int.o(.text)
-    strcpy                                   0x080058ed   Thumb Code    72  strcpy.o(.text)
-    strlen                                   0x08005935   Thumb Code    62  strlen.o(.text)
-    __aeabi_memclr                           0x08005973   Thumb Code     0  rt_memclr.o(.text)
-    __rt_memclr                              0x08005973   Thumb Code    68  rt_memclr.o(.text)
-    _memset                                  0x08005977   Thumb Code     0  rt_memclr.o(.text)
-    __aeabi_memclr4                          0x080059b7   Thumb Code     0  rt_memclr_w.o(.text)
-    __aeabi_memclr8                          0x080059b7   Thumb Code     0  rt_memclr_w.o(.text)
-    __rt_memclr_w                            0x080059b7   Thumb Code    78  rt_memclr_w.o(.text)
-    _memset_w                                0x080059bb   Thumb Code     0  rt_memclr_w.o(.text)
-    __use_two_region_memory                  0x08005a05   Thumb Code     2  heapauxi.o(.text)
-    __rt_heap_escrow$2region                 0x08005a07   Thumb Code     2  heapauxi.o(.text)
-    __rt_heap_expand$2region                 0x08005a09   Thumb Code     2  heapauxi.o(.text)
-    __read_errno                             0x08005a0b   Thumb Code    10  _rserrno.o(.text)
-    __set_errno                              0x08005a15   Thumb Code    12  _rserrno.o(.text)
-    _printf_int_common                       0x08005a21   Thumb Code   178  _printf_intcommon.o(.text)
-    _printf_char_common                      0x08005adf   Thumb Code    32  _printf_char_common.o(.text)
-    _sputc                                   0x08005b05   Thumb Code    10  _sputc.o(.text)
-    _chval                                   0x08005b0f   Thumb Code    28  _chval.o(.text)
-    __vfscanf_char                           0x08005b39   Thumb Code    24  scanf_char.o(.text)
-    _sgetc                                   0x08005b59   Thumb Code    30  _sgetc.o(.text)
-    _sbackspace                              0x08005b77   Thumb Code    34  _sgetc.o(.text)
-    __aeabi_errno_addr                       0x08005b99   Thumb Code     8  rt_errno_addr_intlibspace.o(.text)
-    __errno$intlibspace                      0x08005b99   Thumb Code     0  rt_errno_addr_intlibspace.o(.text)
-    __rt_errno_addr$intlibspace              0x08005b99   Thumb Code     0  rt_errno_addr_intlibspace.o(.text)
-    isspace                                  0x08005ba1   Thumb Code    18  isspace.o(.text)
-    __vfscanf                                0x08005bb5   Thumb Code   880  _scanf.o(.text)
-    __user_libspace                          0x08005f29   Thumb Code     8  libspace.o(.text)
-    __user_perproc_libspace                  0x08005f29   Thumb Code     0  libspace.o(.text)
-    __user_perthread_libspace                0x08005f29   Thumb Code     0  libspace.o(.text)
-    __user_setup_stackheap                   0x08005f31   Thumb Code    74  sys_stackheap_outer.o(.text)
-    __rt_ctype_table                         0x08005f7d   Thumb Code    16  rt_ctype_table.o(.text)
-    exit                                     0x08005f8d   Thumb Code    18  exit.o(.text)
-    __rt_locale                              0x08005fa1   Thumb Code     8  rt_locale_intlibspace.o(.text)
-    strcmp                                   0x08005fa9   Thumb Code   128  strcmpv7m.o(.text)
-    _sys_exit                                0x08006029   Thumb Code     8  sys_exit.o(.text)
-    __I$use$semihosting                      0x08006035   Thumb Code     0  use_no_semi.o(.text)
-    __use_no_semihosting_swi                 0x08006035   Thumb Code     2  use_no_semi.o(.text)
-    __ARM_fpclassify                         0x08006037   Thumb Code    40  fpclassify.o(i.__ARM_fpclassify)
-    __semihosting_library_function           0x08006037   Thumb Code     0  indicate_semi.o(.text)
-    __ieee754_rem_pio2                       0x08006061   Thumb Code   828  rred.o(i.__ieee754_rem_pio2)
-    __kernel_cos                             0x080063e9   Thumb Code   230  cos_i.o(i.__kernel_cos)
-    __kernel_poly                            0x080064e5   Thumb Code   170  poly.o(i.__kernel_poly)
-    __kernel_sin                             0x08006591   Thumb Code   224  sin_i.o(i.__kernel_sin)
-    __mathlib_dbl_infnan                     0x0800667d   Thumb Code     6  dunder.o(i.__mathlib_dbl_infnan)
-    __mathlib_dbl_invalid                    0x08006683   Thumb Code    12  dunder.o(i.__mathlib_dbl_invalid)
-    __mathlib_dbl_underflow                  0x08006691   Thumb Code    10  dunder.o(i.__mathlib_dbl_underflow)
-    _is_digit                                0x080066a1   Thumb Code    14  __printf_wp.o(i._is_digit)
-    acos                                     0x080066b1   Thumb Code   574  acos.o(i.acos)
-    atan                                     0x0800692d   Thumb Code   474  atan.o(i.atan)
-    cos                                      0x08006b4d   Thumb Code   148  cos.o(i.cos)
-    sin                                      0x08006be9   Thumb Code   150  sin.o(i.sin)
-    sqrt                                     0x08006c89   Thumb Code    76  sqrt.o(i.sqrt)
-    _get_lc_ctype                            0x08006cd5   Thumb Code    44  lc_ctype_c.o(locale$$code)
-    __aeabi_d2f                              0x08006d01   Thumb Code     0  d2f.o(x$fpl$d2f)
-    _d2f                                     0x08006d01   Thumb Code    98  d2f.o(x$fpl$d2f)
-    __aeabi_dadd                             0x08006d65   Thumb Code     0  daddsub_clz.o(x$fpl$dadd)
-    _dadd                                    0x08006d65   Thumb Code   332  daddsub_clz.o(x$fpl$dadd)
-    __fpl_dcheck_NaN1                        0x08006eb5   Thumb Code    10  dcheck1.o(x$fpl$dcheck1)
-    __fpl_dcmp_Inf                           0x08006ec5   Thumb Code    24  dcmpi.o(x$fpl$dcmpinf)
-    __aeabi_ddiv                             0x08006edd   Thumb Code     0  ddiv.o(x$fpl$ddiv)
-    _ddiv                                    0x08006edd   Thumb Code   552  ddiv.o(x$fpl$ddiv)
-    __aeabi_d2iz                             0x0800718d   Thumb Code     0  dfix.o(x$fpl$dfix)
-    _dfix                                    0x0800718d   Thumb Code    94  dfix.o(x$fpl$dfix)
-    __aeabi_d2uiz                            0x080071ed   Thumb Code     0  dfixu.o(x$fpl$dfixu)
-    _dfixu                                   0x080071ed   Thumb Code    90  dfixu.o(x$fpl$dfixu)
-    __aeabi_i2d                              0x08007247   Thumb Code     0  dflt_clz.o(x$fpl$dflt)
-    _dflt                                    0x08007247   Thumb Code    46  dflt_clz.o(x$fpl$dflt)
-    __aeabi_ui2d                             0x08007275   Thumb Code     0  dflt_clz.o(x$fpl$dfltu)
-    _dfltu                                   0x08007275   Thumb Code    38  dflt_clz.o(x$fpl$dfltu)
-    __aeabi_cdcmple                          0x0800729d   Thumb Code     0  dleqf.o(x$fpl$dleqf)
-    _dcmple                                  0x0800729d   Thumb Code   120  dleqf.o(x$fpl$dleqf)
-    __fpl_dcmple_InfNaN                      0x080072ff   Thumb Code     0  dleqf.o(x$fpl$dleqf)
-    __aeabi_dmul                             0x08007315   Thumb Code     0  dmul.o(x$fpl$dmul)
-    _dmul                                    0x08007315   Thumb Code   332  dmul.o(x$fpl$dmul)
-    __fpl_dnaninf                            0x08007469   Thumb Code   156  dnaninf.o(x$fpl$dnaninf)
-    __fpl_dretinf                            0x08007505   Thumb Code    12  dretinf.o(x$fpl$dretinf)
-    __aeabi_cdrcmple                         0x08007511   Thumb Code     0  drleqf.o(x$fpl$drleqf)
-    _drcmple                                 0x08007511   Thumb Code   108  drleqf.o(x$fpl$drleqf)
-    __aeabi_drsub                            0x0800757d   Thumb Code     0  daddsub_clz.o(x$fpl$drsb)
-    _drsb                                    0x0800757d   Thumb Code    22  daddsub_clz.o(x$fpl$drsb)
-    _dsqrt                                   0x08007595   Thumb Code   456  dsqrt_noumaal.o(x$fpl$dsqrt)
-    __aeabi_dsub                             0x08007761   Thumb Code     0  daddsub_clz.o(x$fpl$dsub)
-    _dsub                                    0x08007761   Thumb Code   464  daddsub_clz.o(x$fpl$dsub)
-    __aeabi_f2d                              0x08007935   Thumb Code     0  f2d.o(x$fpl$f2d)
-    _f2d                                     0x08007935   Thumb Code    86  f2d.o(x$fpl$f2d)
-    __aeabi_fadd                             0x0800798d   Thumb Code     0  faddsub_clz.o(x$fpl$fadd)
-    _fadd                                    0x0800798d   Thumb Code   196  faddsub_clz.o(x$fpl$fadd)
-    __fpl_fcheck_NaN1                        0x08007a51   Thumb Code     6  fcheck1.o(x$fpl$fcheck1)
-    __fpl_fcmp_Inf                           0x08007a5d   Thumb Code    24  fcmpi.o(x$fpl$fcmpinf)
-    __aeabi_fdiv                             0x08007a75   Thumb Code     0  fdiv.o(x$fpl$fdiv)
-    _fdiv                                    0x08007a75   Thumb Code   384  fdiv.o(x$fpl$fdiv)
-    __aeabi_f2iz                             0x08007bf9   Thumb Code     0  ffix.o(x$fpl$ffix)
-    _ffix                                    0x08007bf9   Thumb Code    54  ffix.o(x$fpl$ffix)
-    __aeabi_f2uiz                            0x08007c31   Thumb Code     0  ffixu.o(x$fpl$ffixu)
-    _ffixu                                   0x08007c31   Thumb Code    62  ffixu.o(x$fpl$ffixu)
-    __aeabi_i2f                              0x08007c71   Thumb Code     0  fflt_clz.o(x$fpl$fflt)
-    _fflt                                    0x08007c71   Thumb Code    48  fflt_clz.o(x$fpl$fflt)
-    __aeabi_ui2f                             0x08007ca1   Thumb Code     0  fflt_clz.o(x$fpl$ffltu)
-    _ffltu                                   0x08007ca1   Thumb Code    38  fflt_clz.o(x$fpl$ffltu)
-    __aeabi_cfcmple                          0x08007cc9   Thumb Code     0  fleqf.o(x$fpl$fleqf)
-    _fcmple                                  0x08007cc9   Thumb Code   104  fleqf.o(x$fpl$fleqf)
-    __fpl_fcmple_InfNaN                      0x08007d1b   Thumb Code     0  fleqf.o(x$fpl$fleqf)
-    __aeabi_fmul                             0x08007d31   Thumb Code     0  fmul.o(x$fpl$fmul)
-    _fmul                                    0x08007d31   Thumb Code   258  fmul.o(x$fpl$fmul)
-    __fpl_fnaninf                            0x08007e33   Thumb Code   140  fnaninf.o(x$fpl$fnaninf)
-    __fpl_fretinf                            0x08007ebf   Thumb Code    10  fretinf.o(x$fpl$fretinf)
-    __aeabi_cfrcmple                         0x08007ec9   Thumb Code     0  frleqf.o(x$fpl$frleqf)
-    _frcmple                                 0x08007ec9   Thumb Code    98  frleqf.o(x$fpl$frleqf)
-    __aeabi_frsub                            0x08007f2b   Thumb Code     0  faddsub_clz.o(x$fpl$frsb)
-    _frsb                                    0x08007f2b   Thumb Code    20  faddsub_clz.o(x$fpl$frsb)
-    __aeabi_fsub                             0x08007f41   Thumb Code     0  faddsub_clz.o(x$fpl$fsub)
-    _fsub                                    0x08007f41   Thumb Code   234  faddsub_clz.o(x$fpl$fsub)
-    __fpl_return_NaN                         0x0800802b   Thumb Code   100  retnan.o(x$fpl$retnan)
-    __ARM_scalbn                             0x0800808f   Thumb Code    92  scalbn.o(x$fpl$scalbn)
-    __ARM_scalbnf                            0x080080eb   Thumb Code    76  scalbnf.o(x$fpl$scalbnf)
-    __fpl_cmpreturn                          0x08008137   Thumb Code    48  trapv.o(x$fpl$trapveneer)
-    __I$use$fp                               0x08008166   Number         0  usenofp.o(x$fpl$usenofp)
-    Region$$Table$$Base                      0x08008380   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x080083a0   Number         0  anon$$obj.o(Region$$Table)
-    __ctype                                  0x080083ad   Data           0  lc_ctype_c.o(locale$$data)
+    parse_cmd                                0x08004795   Thumb Code   210  z_main.o(.text)
+    loop_uart                                0x08004867   Thumb Code    92  z_main.o(.text)
+    loop_nled                                0x080048c3   Thumb Code    48  z_main.o(.text)
+    setup_start                              0x080048f3   Thumb Code   138  z_main.o(.text)
+    setup_interrupt                          0x0800497d   Thumb Code     4  z_main.o(.text)
+    setup_systick                            0x08004981   Thumb Code     4  z_main.o(.text)
+    setup_uart3                              0x08004985   Thumb Code    38  z_main.o(.text)
+    setup_uart1                              0x080049ab   Thumb Code    32  z_main.o(.text)
+    setup_ir                                 0x080049cb   Thumb Code    10  z_main.o(.text)
+    setup_ps2                                0x080049d5   Thumb Code     4  z_main.o(.text)
+    setup_w25q64                             0x080049d9   Thumb Code   124  z_main.o(.text)
+    setup_nled                               0x08004a55   Thumb Code    18  z_main.o(.text)
+    setup_gpio                               0x08004a67   Thumb Code     4  z_main.o(.text)
+    setup_global                             0x08004a6b   Thumb Code     4  z_main.o(.text)
+    setup_rcc                                0x08004a6f   Thumb Code     4  z_main.o(.text)
+    main                                     0x08004a73   Thumb Code   114  z_main.o(.text)
+    setup_beep                               0x08004ae5   Thumb Code    18  z_main.o(.text)
+    setup_adc                                0x08004af7   Thumb Code     4  z_main.o(.text)
+    setup_uart2                              0x08004afb   Thumb Code    32  z_main.o(.text)
+    loop_ps2_data                            0x08004b1b   Thumb Code    36  z_main.o(.text)
+    parse_psx_buf                            0x08004b3f   Thumb Code   794  z_main.o(.text)
+    loop_ps2_button                          0x08004e59   Thumb Code    40  z_main.o(.text)
+    soft_reset                               0x08004e81   Thumb Code    26  z_main.o(.text)
+    car_run                                  0x08004e9b   Thumb Code    44  z_main.o(.text)
+    loop_AI                                  0x08004ec7   Thumb Code   212  z_main.o(.text)
+    kinematics_move                          0x08004f9b   Thumb Code   132  z_main.o(.text)
+    loop_ps2_car                             0x0800501f   Thumb Code   282  z_main.o(.text)
+    loop_ir                                  0x08005139   Thumb Code    20  z_main.o(.text)
+    setup_csb                                0x08005151   Thumb Code   118  z_sensor.o(.text)
+    setup_xunji                              0x080051c7   Thumb Code    32  z_sensor.o(.text)
+    setup_sensor                             0x080051e7   Thumb Code    12  z_sensor.o(.text)
+    csb_Delay_Us                             0x080051f3   Thumb Code    24  z_sensor.o(.text)
+    get_csb_value                            0x0800520b   Thumb Code   204  z_sensor.o(.text)
+    get_adc_csb_middle                       0x080052d7   Thumb Code    42  z_sensor.o(.text)
+    dingju_gensui                            0x08005301   Thumb Code    90  z_sensor.o(.text)
+    ziyou_bizhang                            0x0800535b   Thumb Code   164  z_sensor.o(.text)
+    xun_ji                                   0x080053ff   Thumb Code   136  z_sensor.o(.text)
+    xunji_bizhang                            0x08005487   Thumb Code   168  z_sensor.o(.text)
+    __2sprintf                               0x08005571   Thumb Code    34  noretval__2sprintf.o(.text)
+    _printf_pre_padding                      0x08005599   Thumb Code    44  _printf_pad.o(.text)
+    _printf_post_padding                     0x080055c5   Thumb Code    34  _printf_pad.o(.text)
+    _printf_int_dec                          0x080055e9   Thumb Code   104  _printf_dec.o(.text)
+    __printf                                 0x08005661   Thumb Code   308  __printf_flags_wp.o(.text)
+    __0sscanf                                0x08005799   Thumb Code    52  __0sscanf.o(.text)
+    _scanf_int                               0x080057d5   Thumb Code   332  _scanf_int.o(.text)
+    strcpy                                   0x08005921   Thumb Code    72  strcpy.o(.text)
+    strlen                                   0x08005969   Thumb Code    62  strlen.o(.text)
+    __aeabi_memclr                           0x080059a7   Thumb Code     0  rt_memclr.o(.text)
+    __rt_memclr                              0x080059a7   Thumb Code    68  rt_memclr.o(.text)
+    _memset                                  0x080059ab   Thumb Code     0  rt_memclr.o(.text)
+    __aeabi_memclr4                          0x080059eb   Thumb Code     0  rt_memclr_w.o(.text)
+    __aeabi_memclr8                          0x080059eb   Thumb Code     0  rt_memclr_w.o(.text)
+    __rt_memclr_w                            0x080059eb   Thumb Code    78  rt_memclr_w.o(.text)
+    _memset_w                                0x080059ef   Thumb Code     0  rt_memclr_w.o(.text)
+    __use_two_region_memory                  0x08005a39   Thumb Code     2  heapauxi.o(.text)
+    __rt_heap_escrow$2region                 0x08005a3b   Thumb Code     2  heapauxi.o(.text)
+    __rt_heap_expand$2region                 0x08005a3d   Thumb Code     2  heapauxi.o(.text)
+    __read_errno                             0x08005a3f   Thumb Code    10  _rserrno.o(.text)
+    __set_errno                              0x08005a49   Thumb Code    12  _rserrno.o(.text)
+    _printf_int_common                       0x08005a55   Thumb Code   178  _printf_intcommon.o(.text)
+    _printf_char_common                      0x08005b13   Thumb Code    32  _printf_char_common.o(.text)
+    _sputc                                   0x08005b39   Thumb Code    10  _sputc.o(.text)
+    _chval                                   0x08005b43   Thumb Code    28  _chval.o(.text)
+    __vfscanf_char                           0x08005b6d   Thumb Code    24  scanf_char.o(.text)
+    _sgetc                                   0x08005b8d   Thumb Code    30  _sgetc.o(.text)
+    _sbackspace                              0x08005bab   Thumb Code    34  _sgetc.o(.text)
+    __aeabi_errno_addr                       0x08005bcd   Thumb Code     8  rt_errno_addr_intlibspace.o(.text)
+    __errno$intlibspace                      0x08005bcd   Thumb Code     0  rt_errno_addr_intlibspace.o(.text)
+    __rt_errno_addr$intlibspace              0x08005bcd   Thumb Code     0  rt_errno_addr_intlibspace.o(.text)
+    isspace                                  0x08005bd5   Thumb Code    18  isspace.o(.text)
+    __vfscanf                                0x08005be9   Thumb Code   880  _scanf.o(.text)
+    __user_libspace                          0x08005f5d   Thumb Code     8  libspace.o(.text)
+    __user_perproc_libspace                  0x08005f5d   Thumb Code     0  libspace.o(.text)
+    __user_perthread_libspace                0x08005f5d   Thumb Code     0  libspace.o(.text)
+    __user_setup_stackheap                   0x08005f65   Thumb Code    74  sys_stackheap_outer.o(.text)
+    __rt_ctype_table                         0x08005fb1   Thumb Code    16  rt_ctype_table.o(.text)
+    exit                                     0x08005fc1   Thumb Code    18  exit.o(.text)
+    __rt_locale                              0x08005fd5   Thumb Code     8  rt_locale_intlibspace.o(.text)
+    strcmp                                   0x08005fdd   Thumb Code   128  strcmpv7m.o(.text)
+    _sys_exit                                0x0800605d   Thumb Code     8  sys_exit.o(.text)
+    __I$use$semihosting                      0x08006069   Thumb Code     0  use_no_semi.o(.text)
+    __use_no_semihosting_swi                 0x08006069   Thumb Code     2  use_no_semi.o(.text)
+    __ARM_fpclassify                         0x0800606b   Thumb Code    40  fpclassify.o(i.__ARM_fpclassify)
+    __semihosting_library_function           0x0800606b   Thumb Code     0  indicate_semi.o(.text)
+    __ieee754_rem_pio2                       0x08006095   Thumb Code   828  rred.o(i.__ieee754_rem_pio2)
+    __kernel_cos                             0x0800641d   Thumb Code   230  cos_i.o(i.__kernel_cos)
+    __kernel_poly                            0x08006519   Thumb Code   170  poly.o(i.__kernel_poly)
+    __kernel_sin                             0x080065c5   Thumb Code   224  sin_i.o(i.__kernel_sin)
+    __mathlib_dbl_infnan                     0x080066b1   Thumb Code     6  dunder.o(i.__mathlib_dbl_infnan)
+    __mathlib_dbl_invalid                    0x080066b7   Thumb Code    12  dunder.o(i.__mathlib_dbl_invalid)
+    __mathlib_dbl_underflow                  0x080066c5   Thumb Code    10  dunder.o(i.__mathlib_dbl_underflow)
+    _is_digit                                0x080066d5   Thumb Code    14  __printf_wp.o(i._is_digit)
+    acos                                     0x080066e5   Thumb Code   574  acos.o(i.acos)
+    atan                                     0x08006961   Thumb Code   474  atan.o(i.atan)
+    cos                                      0x08006b81   Thumb Code   148  cos.o(i.cos)
+    sin                                      0x08006c1d   Thumb Code   150  sin.o(i.sin)
+    sqrt                                     0x08006cbd   Thumb Code    76  sqrt.o(i.sqrt)
+    _get_lc_ctype                            0x08006d09   Thumb Code    44  lc_ctype_c.o(locale$$code)
+    __aeabi_d2f                              0x08006d35   Thumb Code     0  d2f.o(x$fpl$d2f)
+    _d2f                                     0x08006d35   Thumb Code    98  d2f.o(x$fpl$d2f)
+    __aeabi_dadd                             0x08006d99   Thumb Code     0  daddsub_clz.o(x$fpl$dadd)
+    _dadd                                    0x08006d99   Thumb Code   332  daddsub_clz.o(x$fpl$dadd)
+    __fpl_dcheck_NaN1                        0x08006ee9   Thumb Code    10  dcheck1.o(x$fpl$dcheck1)
+    __fpl_dcmp_Inf                           0x08006ef9   Thumb Code    24  dcmpi.o(x$fpl$dcmpinf)
+    __aeabi_ddiv                             0x08006f11   Thumb Code     0  ddiv.o(x$fpl$ddiv)
+    _ddiv                                    0x08006f11   Thumb Code   552  ddiv.o(x$fpl$ddiv)
+    __aeabi_d2iz                             0x080071c1   Thumb Code     0  dfix.o(x$fpl$dfix)
+    _dfix                                    0x080071c1   Thumb Code    94  dfix.o(x$fpl$dfix)
+    __aeabi_d2uiz                            0x08007221   Thumb Code     0  dfixu.o(x$fpl$dfixu)
+    _dfixu                                   0x08007221   Thumb Code    90  dfixu.o(x$fpl$dfixu)
+    __aeabi_i2d                              0x0800727b   Thumb Code     0  dflt_clz.o(x$fpl$dflt)
+    _dflt                                    0x0800727b   Thumb Code    46  dflt_clz.o(x$fpl$dflt)
+    __aeabi_ui2d                             0x080072a9   Thumb Code     0  dflt_clz.o(x$fpl$dfltu)
+    _dfltu                                   0x080072a9   Thumb Code    38  dflt_clz.o(x$fpl$dfltu)
+    __aeabi_cdcmple                          0x080072d1   Thumb Code     0  dleqf.o(x$fpl$dleqf)
+    _dcmple                                  0x080072d1   Thumb Code   120  dleqf.o(x$fpl$dleqf)
+    __fpl_dcmple_InfNaN                      0x08007333   Thumb Code     0  dleqf.o(x$fpl$dleqf)
+    __aeabi_dmul                             0x08007349   Thumb Code     0  dmul.o(x$fpl$dmul)
+    _dmul                                    0x08007349   Thumb Code   332  dmul.o(x$fpl$dmul)
+    __fpl_dnaninf                            0x0800749d   Thumb Code   156  dnaninf.o(x$fpl$dnaninf)
+    __fpl_dretinf                            0x08007539   Thumb Code    12  dretinf.o(x$fpl$dretinf)
+    __aeabi_cdrcmple                         0x08007545   Thumb Code     0  drleqf.o(x$fpl$drleqf)
+    _drcmple                                 0x08007545   Thumb Code   108  drleqf.o(x$fpl$drleqf)
+    __aeabi_drsub                            0x080075b1   Thumb Code     0  daddsub_clz.o(x$fpl$drsb)
+    _drsb                                    0x080075b1   Thumb Code    22  daddsub_clz.o(x$fpl$drsb)
+    _dsqrt                                   0x080075c9   Thumb Code   456  dsqrt_noumaal.o(x$fpl$dsqrt)
+    __aeabi_dsub                             0x08007795   Thumb Code     0  daddsub_clz.o(x$fpl$dsub)
+    _dsub                                    0x08007795   Thumb Code   464  daddsub_clz.o(x$fpl$dsub)
+    __aeabi_f2d                              0x08007969   Thumb Code     0  f2d.o(x$fpl$f2d)
+    _f2d                                     0x08007969   Thumb Code    86  f2d.o(x$fpl$f2d)
+    __aeabi_fadd                             0x080079c1   Thumb Code     0  faddsub_clz.o(x$fpl$fadd)
+    _fadd                                    0x080079c1   Thumb Code   196  faddsub_clz.o(x$fpl$fadd)
+    __fpl_fcheck_NaN1                        0x08007a85   Thumb Code     6  fcheck1.o(x$fpl$fcheck1)
+    __fpl_fcmp_Inf                           0x08007a91   Thumb Code    24  fcmpi.o(x$fpl$fcmpinf)
+    __aeabi_fdiv                             0x08007aa9   Thumb Code     0  fdiv.o(x$fpl$fdiv)
+    _fdiv                                    0x08007aa9   Thumb Code   384  fdiv.o(x$fpl$fdiv)
+    __aeabi_f2iz                             0x08007c2d   Thumb Code     0  ffix.o(x$fpl$ffix)
+    _ffix                                    0x08007c2d   Thumb Code    54  ffix.o(x$fpl$ffix)
+    __aeabi_f2uiz                            0x08007c65   Thumb Code     0  ffixu.o(x$fpl$ffixu)
+    _ffixu                                   0x08007c65   Thumb Code    62  ffixu.o(x$fpl$ffixu)
+    __aeabi_i2f                              0x08007ca5   Thumb Code     0  fflt_clz.o(x$fpl$fflt)
+    _fflt                                    0x08007ca5   Thumb Code    48  fflt_clz.o(x$fpl$fflt)
+    __aeabi_ui2f                             0x08007cd5   Thumb Code     0  fflt_clz.o(x$fpl$ffltu)
+    _ffltu                                   0x08007cd5   Thumb Code    38  fflt_clz.o(x$fpl$ffltu)
+    __aeabi_cfcmple                          0x08007cfd   Thumb Code     0  fleqf.o(x$fpl$fleqf)
+    _fcmple                                  0x08007cfd   Thumb Code   104  fleqf.o(x$fpl$fleqf)
+    __fpl_fcmple_InfNaN                      0x08007d4f   Thumb Code     0  fleqf.o(x$fpl$fleqf)
+    __aeabi_fmul                             0x08007d65   Thumb Code     0  fmul.o(x$fpl$fmul)
+    _fmul                                    0x08007d65   Thumb Code   258  fmul.o(x$fpl$fmul)
+    __fpl_fnaninf                            0x08007e67   Thumb Code   140  fnaninf.o(x$fpl$fnaninf)
+    __fpl_fretinf                            0x08007ef3   Thumb Code    10  fretinf.o(x$fpl$fretinf)
+    __aeabi_cfrcmple                         0x08007efd   Thumb Code     0  frleqf.o(x$fpl$frleqf)
+    _frcmple                                 0x08007efd   Thumb Code    98  frleqf.o(x$fpl$frleqf)
+    __aeabi_frsub                            0x08007f5f   Thumb Code     0  faddsub_clz.o(x$fpl$frsb)
+    _frsb                                    0x08007f5f   Thumb Code    20  faddsub_clz.o(x$fpl$frsb)
+    __aeabi_fsub                             0x08007f75   Thumb Code     0  faddsub_clz.o(x$fpl$fsub)
+    _fsub                                    0x08007f75   Thumb Code   234  faddsub_clz.o(x$fpl$fsub)
+    __fpl_return_NaN                         0x0800805f   Thumb Code   100  retnan.o(x$fpl$retnan)
+    __ARM_scalbn                             0x080080c3   Thumb Code    92  scalbn.o(x$fpl$scalbn)
+    __ARM_scalbnf                            0x0800811f   Thumb Code    76  scalbnf.o(x$fpl$scalbnf)
+    __fpl_cmpreturn                          0x0800816b   Thumb Code    48  trapv.o(x$fpl$trapveneer)
+    __I$use$fp                               0x0800819a   Number         0  usenofp.o(x$fpl$usenofp)
+    Region$$Table$$Base                      0x080083b8   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x080083d8   Number         0  anon$$obj.o(Region$$Table)
+    __ctype                                  0x080083e5   Data           0  lc_ctype_c.o(locale$$data)
     SystemCoreClock                          0x20000000   Data           4  system_stm32f10x.o(.data)
     AHBPrescTable                            0x20000004   Data          16  system_stm32f10x.o(.data)
     group_do_ok                              0x20000028   Data           1  z_global.o(.data)
@@ -1775,9 +1775,9 @@ Memory Map of the image
 
   Image Entry point : 0x08000131
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x000085a4, Max: 0x00010000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x000085dc, Max: 0x00010000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x000084b0, Max: 0x00010000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x000084e8, Max: 0x00010000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -1860,149 +1860,149 @@ Memory Map of the image
     0x08003754   0x08003754   0x00000418   Code   RO          447    .text               z_kinematics.o
     0x08003b6c   0x08003b6c   0x00000a2c   Code   RO          462    .text               z_action.o
     0x08004598   0x08004598   0x000001fc   Code   RO          487    .text               z_ir.o
-    0x08004794   0x08004794   0x000009e0   Code   RO          499    .text               z_main.o
-    0x08005174   0x08005174   0x000003c8   Code   RO          529    .text               z_sensor.o
-    0x0800553c   0x0800553c   0x00000028   Code   RO          553    .text               c_w.l(noretval__2sprintf.o)
-    0x08005564   0x08005564   0x0000004e   Code   RO          557    .text               c_w.l(_printf_pad.o)
-    0x080055b2   0x080055b2   0x00000002   PAD
-    0x080055b4   0x080055b4   0x00000078   Code   RO          559    .text               c_w.l(_printf_dec.o)
-    0x0800562c   0x0800562c   0x00000138   Code   RO          573    .text               c_w.l(__printf_flags_wp.o)
-    0x08005764   0x08005764   0x0000003c   Code   RO          583    .text               c_w.l(__0sscanf.o)
-    0x080057a0   0x080057a0   0x0000014c   Code   RO          585    .text               c_w.l(_scanf_int.o)
-    0x080058ec   0x080058ec   0x00000048   Code   RO          587    .text               c_w.l(strcpy.o)
-    0x08005934   0x08005934   0x0000003e   Code   RO          589    .text               c_w.l(strlen.o)
-    0x08005972   0x08005972   0x00000044   Code   RO          591    .text               c_w.l(rt_memclr.o)
-    0x080059b6   0x080059b6   0x0000004e   Code   RO          593    .text               c_w.l(rt_memclr_w.o)
-    0x08005a04   0x08005a04   0x00000006   Code   RO          595    .text               c_w.l(heapauxi.o)
-    0x08005a0a   0x08005a0a   0x00000016   Code   RO          708    .text               c_w.l(_rserrno.o)
-    0x08005a20   0x08005a20   0x000000b2   Code   RO          710    .text               c_w.l(_printf_intcommon.o)
-    0x08005ad2   0x08005ad2   0x00000002   PAD
-    0x08005ad4   0x08005ad4   0x00000030   Code   RO          712    .text               c_w.l(_printf_char_common.o)
-    0x08005b04   0x08005b04   0x0000000a   Code   RO          714    .text               c_w.l(_sputc.o)
-    0x08005b0e   0x08005b0e   0x0000001c   Code   RO          717    .text               c_w.l(_chval.o)
-    0x08005b2a   0x08005b2a   0x00000002   PAD
-    0x08005b2c   0x08005b2c   0x0000002c   Code   RO          719    .text               c_w.l(scanf_char.o)
-    0x08005b58   0x08005b58   0x00000040   Code   RO          721    .text               c_w.l(_sgetc.o)
-    0x08005b98   0x08005b98   0x00000008   Code   RO          792    .text               c_w.l(rt_errno_addr_intlibspace.o)
-    0x08005ba0   0x08005ba0   0x00000012   Code   RO          794    .text               c_w.l(isspace.o)
-    0x08005bb2   0x08005bb2   0x00000002   PAD
-    0x08005bb4   0x08005bb4   0x00000374   Code   RO          798    .text               c_w.l(_scanf.o)
-    0x08005f28   0x08005f28   0x00000008   Code   RO          806    .text               c_w.l(libspace.o)
-    0x08005f30   0x08005f30   0x0000004a   Code   RO          809    .text               c_w.l(sys_stackheap_outer.o)
-    0x08005f7a   0x08005f7a   0x00000002   PAD
-    0x08005f7c   0x08005f7c   0x00000010   Code   RO          811    .text               c_w.l(rt_ctype_table.o)
-    0x08005f8c   0x08005f8c   0x00000012   Code   RO          813    .text               c_w.l(exit.o)
-    0x08005f9e   0x08005f9e   0x00000002   PAD
-    0x08005fa0   0x08005fa0   0x00000008   Code   RO          828    .text               c_w.l(rt_locale_intlibspace.o)
-    0x08005fa8   0x08005fa8   0x00000080   Code   RO          885    .text               c_w.l(strcmpv7m.o)
-    0x08006028   0x08006028   0x0000000c   Code   RO          891    .text               c_w.l(sys_exit.o)
-    0x08006034   0x08006034   0x00000002   Code   RO          902    .text               c_w.l(use_no_semi.o)
-    0x08006036   0x08006036   0x00000000   Code   RO          904    .text               c_w.l(indicate_semi.o)
-    0x08006036   0x08006036   0x00000028   Code   RO          759    i.__ARM_fpclassify  m_ws.l(fpclassify.o)
-    0x0800605e   0x0800605e   0x00000002   PAD
-    0x08006060   0x08006060   0x00000388   Code   RO          763    i.__ieee754_rem_pio2  m_ws.l(rred.o)
-    0x080063e8   0x080063e8   0x000000fc   Code   RO          742    i.__kernel_cos      m_ws.l(cos_i.o)
-    0x080064e4   0x080064e4   0x000000aa   Code   RO          761    i.__kernel_poly     m_ws.l(poly.o)
-    0x0800658e   0x0800658e   0x00000002   PAD
-    0x08006590   0x08006590   0x000000ec   Code   RO          768    i.__kernel_sin      m_ws.l(sin_i.o)
-    0x0800667c   0x0800667c   0x00000006   Code   RO          746    i.__mathlib_dbl_infnan  m_ws.l(dunder.o)
-    0x08006682   0x08006682   0x0000000c   Code   RO          748    i.__mathlib_dbl_invalid  m_ws.l(dunder.o)
-    0x0800668e   0x0800668e   0x00000002   PAD
-    0x08006690   0x08006690   0x00000010   Code   RO          751    i.__mathlib_dbl_underflow  m_ws.l(dunder.o)
-    0x080066a0   0x080066a0   0x0000000e   Code   RO          571    i._is_digit         c_w.l(__printf_wp.o)
-    0x080066ae   0x080066ae   0x00000002   PAD
-    0x080066b0   0x080066b0   0x0000027c   Code   RO          664    i.acos              m_ws.l(acos.o)
-    0x0800692c   0x0800692c   0x00000220   Code   RO          674    i.atan              m_ws.l(atan.o)
-    0x08006b4c   0x08006b4c   0x0000009c   Code   RO          684    i.cos               m_ws.l(cos.o)
-    0x08006be8   0x08006be8   0x000000a0   Code   RO          692    i.sin               m_ws.l(sin.o)
-    0x08006c88   0x08006c88   0x0000004c   Code   RO          700    i.sqrt              m_ws.l(sqrt.o)
-    0x08006cd4   0x08006cd4   0x0000002c   Code   RO          831    locale$$code        c_w.l(lc_ctype_c.o)
-    0x08006d00   0x08006d00   0x00000062   Code   RO          599    x$fpl$d2f           fz_ws.l(d2f.o)
-    0x08006d62   0x08006d62   0x00000002   PAD
-    0x08006d64   0x08006d64   0x00000150   Code   RO          601    x$fpl$dadd          fz_ws.l(daddsub_clz.o)
-    0x08006eb4   0x08006eb4   0x00000010   Code   RO          800    x$fpl$dcheck1       fz_ws.l(dcheck1.o)
-    0x08006ec4   0x08006ec4   0x00000018   Code   RO          802    x$fpl$dcmpinf       fz_ws.l(dcmpi.o)
-    0x08006edc   0x08006edc   0x000002b0   Code   RO          608    x$fpl$ddiv          fz_ws.l(ddiv.o)
-    0x0800718c   0x0800718c   0x0000005e   Code   RO          611    x$fpl$dfix          fz_ws.l(dfix.o)
-    0x080071ea   0x080071ea   0x00000002   PAD
-    0x080071ec   0x080071ec   0x0000005a   Code   RO          615    x$fpl$dfixu         fz_ws.l(dfixu.o)
-    0x08007246   0x08007246   0x0000002e   Code   RO          620    x$fpl$dflt          fz_ws.l(dflt_clz.o)
-    0x08007274   0x08007274   0x00000026   Code   RO          619    x$fpl$dfltu         fz_ws.l(dflt_clz.o)
-    0x0800729a   0x0800729a   0x00000002   PAD
-    0x0800729c   0x0800729c   0x00000078   Code   RO          723    x$fpl$dleqf         fz_ws.l(dleqf.o)
-    0x08007314   0x08007314   0x00000154   Code   RO          625    x$fpl$dmul          fz_ws.l(dmul.o)
-    0x08007468   0x08007468   0x0000009c   Code   RO          725    x$fpl$dnaninf       fz_ws.l(dnaninf.o)
-    0x08007504   0x08007504   0x0000000c   Code   RO          727    x$fpl$dretinf       fz_ws.l(dretinf.o)
-    0x08007510   0x08007510   0x0000006c   Code   RO          627    x$fpl$drleqf        fz_ws.l(drleqf.o)
-    0x0800757c   0x0800757c   0x00000016   Code   RO          602    x$fpl$drsb          fz_ws.l(daddsub_clz.o)
-    0x08007592   0x08007592   0x00000002   PAD
-    0x08007594   0x08007594   0x000001cc   Code   RO          729    x$fpl$dsqrt         fz_ws.l(dsqrt_noumaal.o)
-    0x08007760   0x08007760   0x000001d4   Code   RO          603    x$fpl$dsub          fz_ws.l(daddsub_clz.o)
-    0x08007934   0x08007934   0x00000056   Code   RO          629    x$fpl$f2d           fz_ws.l(f2d.o)
-    0x0800798a   0x0800798a   0x00000002   PAD
-    0x0800798c   0x0800798c   0x000000c4   Code   RO          631    x$fpl$fadd          fz_ws.l(faddsub_clz.o)
-    0x08007a50   0x08007a50   0x0000000c   Code   RO          731    x$fpl$fcheck1       fz_ws.l(fcheck1.o)
-    0x08007a5c   0x08007a5c   0x00000018   Code   RO          733    x$fpl$fcmpinf       fz_ws.l(fcmpi.o)
-    0x08007a74   0x08007a74   0x00000184   Code   RO          638    x$fpl$fdiv          fz_ws.l(fdiv.o)
-    0x08007bf8   0x08007bf8   0x00000036   Code   RO          641    x$fpl$ffix          fz_ws.l(ffix.o)
-    0x08007c2e   0x08007c2e   0x00000002   PAD
-    0x08007c30   0x08007c30   0x0000003e   Code   RO          645    x$fpl$ffixu         fz_ws.l(ffixu.o)
-    0x08007c6e   0x08007c6e   0x00000002   PAD
-    0x08007c70   0x08007c70   0x00000030   Code   RO          650    x$fpl$fflt          fz_ws.l(fflt_clz.o)
-    0x08007ca0   0x08007ca0   0x00000026   Code   RO          649    x$fpl$ffltu         fz_ws.l(fflt_clz.o)
-    0x08007cc6   0x08007cc6   0x00000002   PAD
-    0x08007cc8   0x08007cc8   0x00000068   Code   RO          655    x$fpl$fleqf         fz_ws.l(fleqf.o)
-    0x08007d30   0x08007d30   0x00000102   Code   RO          657    x$fpl$fmul          fz_ws.l(fmul.o)
-    0x08007e32   0x08007e32   0x0000008c   Code   RO          735    x$fpl$fnaninf       fz_ws.l(fnaninf.o)
-    0x08007ebe   0x08007ebe   0x0000000a   Code   RO          737    x$fpl$fretinf       fz_ws.l(fretinf.o)
-    0x08007ec8   0x08007ec8   0x00000062   Code   RO          659    x$fpl$frleqf        fz_ws.l(frleqf.o)
-    0x08007f2a   0x08007f2a   0x00000014   Code   RO          632    x$fpl$frsb          fz_ws.l(faddsub_clz.o)
-    0x08007f3e   0x08007f3e   0x00000002   PAD
-    0x08007f40   0x08007f40   0x000000ea   Code   RO          633    x$fpl$fsub          fz_ws.l(faddsub_clz.o)
-    0x0800802a   0x0800802a   0x00000064   Code   RO          804    x$fpl$retnan        fz_ws.l(retnan.o)
-    0x0800808e   0x0800808e   0x0000005c   Code   RO          739    x$fpl$scalbn        fz_ws.l(scalbn.o)
-    0x080080ea   0x080080ea   0x0000004c   Code   RO          661    x$fpl$scalbnf       fz_ws.l(scalbnf.o)
-    0x08008136   0x08008136   0x00000030   Code   RO          821    x$fpl$trapveneer    fz_ws.l(trapv.o)
-    0x08008166   0x08008166   0x00000000   Code   RO          741    x$fpl$usenofp       fz_ws.l(usenofp.o)
-    0x08008166   0x08008166   0x00000011   Data   RO          574    .constdata          c_w.l(__printf_flags_wp.o)
-    0x08008177   0x08008177   0x00000001   PAD
-    0x08008178   0x08008178   0x00000050   Data   RO          665    .constdata          m_ws.l(acos.o)
-    0x080081c8   0x080081c8   0x00000098   Data   RO          675    .constdata          m_ws.l(atan.o)
-    0x08008260   0x08008260   0x00000030   Data   RO          743    .constdata          m_ws.l(cos_i.o)
-    0x08008290   0x08008290   0x000000c8   Data   RO          765    .constdata          m_ws.l(rred.o)
-    0x08008358   0x08008358   0x00000028   Data   RO          769    .constdata          m_ws.l(sin_i.o)
-    0x08008380   0x08008380   0x00000020   Data   RO          959    Region$$Table       anon$$obj.o
-    0x080083a0   0x080083a0   0x00000110   Data   RO          830    locale$$data        c_w.l(lc_ctype_c.o)
+    0x08004794   0x08004794   0x000009bc   Code   RO          499    .text               z_main.o
+    0x08005150   0x08005150   0x00000420   Code   RO          529    .text               z_sensor.o
+    0x08005570   0x08005570   0x00000028   Code   RO          553    .text               c_w.l(noretval__2sprintf.o)
+    0x08005598   0x08005598   0x0000004e   Code   RO          557    .text               c_w.l(_printf_pad.o)
+    0x080055e6   0x080055e6   0x00000002   PAD
+    0x080055e8   0x080055e8   0x00000078   Code   RO          559    .text               c_w.l(_printf_dec.o)
+    0x08005660   0x08005660   0x00000138   Code   RO          573    .text               c_w.l(__printf_flags_wp.o)
+    0x08005798   0x08005798   0x0000003c   Code   RO          583    .text               c_w.l(__0sscanf.o)
+    0x080057d4   0x080057d4   0x0000014c   Code   RO          585    .text               c_w.l(_scanf_int.o)
+    0x08005920   0x08005920   0x00000048   Code   RO          587    .text               c_w.l(strcpy.o)
+    0x08005968   0x08005968   0x0000003e   Code   RO          589    .text               c_w.l(strlen.o)
+    0x080059a6   0x080059a6   0x00000044   Code   RO          591    .text               c_w.l(rt_memclr.o)
+    0x080059ea   0x080059ea   0x0000004e   Code   RO          593    .text               c_w.l(rt_memclr_w.o)
+    0x08005a38   0x08005a38   0x00000006   Code   RO          595    .text               c_w.l(heapauxi.o)
+    0x08005a3e   0x08005a3e   0x00000016   Code   RO          708    .text               c_w.l(_rserrno.o)
+    0x08005a54   0x08005a54   0x000000b2   Code   RO          710    .text               c_w.l(_printf_intcommon.o)
+    0x08005b06   0x08005b06   0x00000002   PAD
+    0x08005b08   0x08005b08   0x00000030   Code   RO          712    .text               c_w.l(_printf_char_common.o)
+    0x08005b38   0x08005b38   0x0000000a   Code   RO          714    .text               c_w.l(_sputc.o)
+    0x08005b42   0x08005b42   0x0000001c   Code   RO          717    .text               c_w.l(_chval.o)
+    0x08005b5e   0x08005b5e   0x00000002   PAD
+    0x08005b60   0x08005b60   0x0000002c   Code   RO          719    .text               c_w.l(scanf_char.o)
+    0x08005b8c   0x08005b8c   0x00000040   Code   RO          721    .text               c_w.l(_sgetc.o)
+    0x08005bcc   0x08005bcc   0x00000008   Code   RO          792    .text               c_w.l(rt_errno_addr_intlibspace.o)
+    0x08005bd4   0x08005bd4   0x00000012   Code   RO          794    .text               c_w.l(isspace.o)
+    0x08005be6   0x08005be6   0x00000002   PAD
+    0x08005be8   0x08005be8   0x00000374   Code   RO          798    .text               c_w.l(_scanf.o)
+    0x08005f5c   0x08005f5c   0x00000008   Code   RO          806    .text               c_w.l(libspace.o)
+    0x08005f64   0x08005f64   0x0000004a   Code   RO          809    .text               c_w.l(sys_stackheap_outer.o)
+    0x08005fae   0x08005fae   0x00000002   PAD
+    0x08005fb0   0x08005fb0   0x00000010   Code   RO          811    .text               c_w.l(rt_ctype_table.o)
+    0x08005fc0   0x08005fc0   0x00000012   Code   RO          813    .text               c_w.l(exit.o)
+    0x08005fd2   0x08005fd2   0x00000002   PAD
+    0x08005fd4   0x08005fd4   0x00000008   Code   RO          828    .text               c_w.l(rt_locale_intlibspace.o)
+    0x08005fdc   0x08005fdc   0x00000080   Code   RO          885    .text               c_w.l(strcmpv7m.o)
+    0x0800605c   0x0800605c   0x0000000c   Code   RO          891    .text               c_w.l(sys_exit.o)
+    0x08006068   0x08006068   0x00000002   Code   RO          902    .text               c_w.l(use_no_semi.o)
+    0x0800606a   0x0800606a   0x00000000   Code   RO          904    .text               c_w.l(indicate_semi.o)
+    0x0800606a   0x0800606a   0x00000028   Code   RO          759    i.__ARM_fpclassify  m_ws.l(fpclassify.o)
+    0x08006092   0x08006092   0x00000002   PAD
+    0x08006094   0x08006094   0x00000388   Code   RO          763    i.__ieee754_rem_pio2  m_ws.l(rred.o)
+    0x0800641c   0x0800641c   0x000000fc   Code   RO          742    i.__kernel_cos      m_ws.l(cos_i.o)
+    0x08006518   0x08006518   0x000000aa   Code   RO          761    i.__kernel_poly     m_ws.l(poly.o)
+    0x080065c2   0x080065c2   0x00000002   PAD
+    0x080065c4   0x080065c4   0x000000ec   Code   RO          768    i.__kernel_sin      m_ws.l(sin_i.o)
+    0x080066b0   0x080066b0   0x00000006   Code   RO          746    i.__mathlib_dbl_infnan  m_ws.l(dunder.o)
+    0x080066b6   0x080066b6   0x0000000c   Code   RO          748    i.__mathlib_dbl_invalid  m_ws.l(dunder.o)
+    0x080066c2   0x080066c2   0x00000002   PAD
+    0x080066c4   0x080066c4   0x00000010   Code   RO          751    i.__mathlib_dbl_underflow  m_ws.l(dunder.o)
+    0x080066d4   0x080066d4   0x0000000e   Code   RO          571    i._is_digit         c_w.l(__printf_wp.o)
+    0x080066e2   0x080066e2   0x00000002   PAD
+    0x080066e4   0x080066e4   0x0000027c   Code   RO          664    i.acos              m_ws.l(acos.o)
+    0x08006960   0x08006960   0x00000220   Code   RO          674    i.atan              m_ws.l(atan.o)
+    0x08006b80   0x08006b80   0x0000009c   Code   RO          684    i.cos               m_ws.l(cos.o)
+    0x08006c1c   0x08006c1c   0x000000a0   Code   RO          692    i.sin               m_ws.l(sin.o)
+    0x08006cbc   0x08006cbc   0x0000004c   Code   RO          700    i.sqrt              m_ws.l(sqrt.o)
+    0x08006d08   0x08006d08   0x0000002c   Code   RO          831    locale$$code        c_w.l(lc_ctype_c.o)
+    0x08006d34   0x08006d34   0x00000062   Code   RO          599    x$fpl$d2f           fz_ws.l(d2f.o)
+    0x08006d96   0x08006d96   0x00000002   PAD
+    0x08006d98   0x08006d98   0x00000150   Code   RO          601    x$fpl$dadd          fz_ws.l(daddsub_clz.o)
+    0x08006ee8   0x08006ee8   0x00000010   Code   RO          800    x$fpl$dcheck1       fz_ws.l(dcheck1.o)
+    0x08006ef8   0x08006ef8   0x00000018   Code   RO          802    x$fpl$dcmpinf       fz_ws.l(dcmpi.o)
+    0x08006f10   0x08006f10   0x000002b0   Code   RO          608    x$fpl$ddiv          fz_ws.l(ddiv.o)
+    0x080071c0   0x080071c0   0x0000005e   Code   RO          611    x$fpl$dfix          fz_ws.l(dfix.o)
+    0x0800721e   0x0800721e   0x00000002   PAD
+    0x08007220   0x08007220   0x0000005a   Code   RO          615    x$fpl$dfixu         fz_ws.l(dfixu.o)
+    0x0800727a   0x0800727a   0x0000002e   Code   RO          620    x$fpl$dflt          fz_ws.l(dflt_clz.o)
+    0x080072a8   0x080072a8   0x00000026   Code   RO          619    x$fpl$dfltu         fz_ws.l(dflt_clz.o)
+    0x080072ce   0x080072ce   0x00000002   PAD
+    0x080072d0   0x080072d0   0x00000078   Code   RO          723    x$fpl$dleqf         fz_ws.l(dleqf.o)
+    0x08007348   0x08007348   0x00000154   Code   RO          625    x$fpl$dmul          fz_ws.l(dmul.o)
+    0x0800749c   0x0800749c   0x0000009c   Code   RO          725    x$fpl$dnaninf       fz_ws.l(dnaninf.o)
+    0x08007538   0x08007538   0x0000000c   Code   RO          727    x$fpl$dretinf       fz_ws.l(dretinf.o)
+    0x08007544   0x08007544   0x0000006c   Code   RO          627    x$fpl$drleqf        fz_ws.l(drleqf.o)
+    0x080075b0   0x080075b0   0x00000016   Code   RO          602    x$fpl$drsb          fz_ws.l(daddsub_clz.o)
+    0x080075c6   0x080075c6   0x00000002   PAD
+    0x080075c8   0x080075c8   0x000001cc   Code   RO          729    x$fpl$dsqrt         fz_ws.l(dsqrt_noumaal.o)
+    0x08007794   0x08007794   0x000001d4   Code   RO          603    x$fpl$dsub          fz_ws.l(daddsub_clz.o)
+    0x08007968   0x08007968   0x00000056   Code   RO          629    x$fpl$f2d           fz_ws.l(f2d.o)
+    0x080079be   0x080079be   0x00000002   PAD
+    0x080079c0   0x080079c0   0x000000c4   Code   RO          631    x$fpl$fadd          fz_ws.l(faddsub_clz.o)
+    0x08007a84   0x08007a84   0x0000000c   Code   RO          731    x$fpl$fcheck1       fz_ws.l(fcheck1.o)
+    0x08007a90   0x08007a90   0x00000018   Code   RO          733    x$fpl$fcmpinf       fz_ws.l(fcmpi.o)
+    0x08007aa8   0x08007aa8   0x00000184   Code   RO          638    x$fpl$fdiv          fz_ws.l(fdiv.o)
+    0x08007c2c   0x08007c2c   0x00000036   Code   RO          641    x$fpl$ffix          fz_ws.l(ffix.o)
+    0x08007c62   0x08007c62   0x00000002   PAD
+    0x08007c64   0x08007c64   0x0000003e   Code   RO          645    x$fpl$ffixu         fz_ws.l(ffixu.o)
+    0x08007ca2   0x08007ca2   0x00000002   PAD
+    0x08007ca4   0x08007ca4   0x00000030   Code   RO          650    x$fpl$fflt          fz_ws.l(fflt_clz.o)
+    0x08007cd4   0x08007cd4   0x00000026   Code   RO          649    x$fpl$ffltu         fz_ws.l(fflt_clz.o)
+    0x08007cfa   0x08007cfa   0x00000002   PAD
+    0x08007cfc   0x08007cfc   0x00000068   Code   RO          655    x$fpl$fleqf         fz_ws.l(fleqf.o)
+    0x08007d64   0x08007d64   0x00000102   Code   RO          657    x$fpl$fmul          fz_ws.l(fmul.o)
+    0x08007e66   0x08007e66   0x0000008c   Code   RO          735    x$fpl$fnaninf       fz_ws.l(fnaninf.o)
+    0x08007ef2   0x08007ef2   0x0000000a   Code   RO          737    x$fpl$fretinf       fz_ws.l(fretinf.o)
+    0x08007efc   0x08007efc   0x00000062   Code   RO          659    x$fpl$frleqf        fz_ws.l(frleqf.o)
+    0x08007f5e   0x08007f5e   0x00000014   Code   RO          632    x$fpl$frsb          fz_ws.l(faddsub_clz.o)
+    0x08007f72   0x08007f72   0x00000002   PAD
+    0x08007f74   0x08007f74   0x000000ea   Code   RO          633    x$fpl$fsub          fz_ws.l(faddsub_clz.o)
+    0x0800805e   0x0800805e   0x00000064   Code   RO          804    x$fpl$retnan        fz_ws.l(retnan.o)
+    0x080080c2   0x080080c2   0x0000005c   Code   RO          739    x$fpl$scalbn        fz_ws.l(scalbn.o)
+    0x0800811e   0x0800811e   0x0000004c   Code   RO          661    x$fpl$scalbnf       fz_ws.l(scalbnf.o)
+    0x0800816a   0x0800816a   0x00000030   Code   RO          821    x$fpl$trapveneer    fz_ws.l(trapv.o)
+    0x0800819a   0x0800819a   0x00000000   Code   RO          741    x$fpl$usenofp       fz_ws.l(usenofp.o)
+    0x0800819a   0x0800819a   0x00000011   Data   RO          574    .constdata          c_w.l(__printf_flags_wp.o)
+    0x080081ab   0x080081ab   0x00000005   PAD
+    0x080081b0   0x080081b0   0x00000050   Data   RO          665    .constdata          m_ws.l(acos.o)
+    0x08008200   0x08008200   0x00000098   Data   RO          675    .constdata          m_ws.l(atan.o)
+    0x08008298   0x08008298   0x00000030   Data   RO          743    .constdata          m_ws.l(cos_i.o)
+    0x080082c8   0x080082c8   0x000000c8   Data   RO          765    .constdata          m_ws.l(rred.o)
+    0x08008390   0x08008390   0x00000028   Data   RO          769    .constdata          m_ws.l(sin_i.o)
+    0x080083b8   0x080083b8   0x00000020   Data   RO          959    Region$$Table       anon$$obj.o
+    0x080083d8   0x080083d8   0x00000110   Data   RO          830    locale$$data        c_w.l(lc_ctype_c.o)
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x080084b0, Size: 0x00002120, Max: 0x00005000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x080084e8, Size: 0x00002120, Max: 0x00005000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x080084b0   0x00000014   Data   RW           97    .data               system_stm32f10x.o
-    0x20000014   0x080084c4   0x00000014   Data   RW          127    .data               stm32f10x_rcc.o
-    0x20000028   0x080084d8   0x00000001   Data   RW          300    .data               z_global.o
-    0x20000029   0x080084d9   0x00000001   Data   RW          301    .data               z_global.o
-    0x2000002a   0x080084da   0x00000001   Data   RW          302    .data               z_global.o
-    0x2000002b   0x080084db   0x00000001   Data   RW          324    .data               z_gpio.o
-    0x2000002c   0x080084dc   0x00000018   Data   RW          368    .data               z_timer.o
-    0x20000044   0x080084f4   0x00000006   Data   RW          395    .data               z_usart.o
-    0x2000004a   0x080084fa   0x00000006   Data   RW          410    .data               z_w25q64.o
-    0x20000050   0x08008500   0x00000002   Data   RW          429    .data               z_adc.o
-    0x20000052   0x08008502   0x00000002   PAD
-    0x20000054   0x08008504   0x00000020   Data   RW          465    .data               z_action.o
-    0x20000074   0x08008524   0x00000001   Data   RW          501    .data               z_main.o
-    0x20000075   0x08008525   0x00000003   PAD
-    0x20000078   0x08008528   0x00000024   Data   RW          502    .data               z_main.o
-    0x2000009c   0x0800854c   0x00000004   Data   RW          503    .data               z_main.o
-    0x200000a0   0x08008550   0x00000004   Data   RW          504    .data               z_main.o
-    0x200000a4   0x08008554   0x00000050   Data   RW          534    .data               z_sensor.o
+    0x20000000   0x080084e8   0x00000014   Data   RW           97    .data               system_stm32f10x.o
+    0x20000014   0x080084fc   0x00000014   Data   RW          127    .data               stm32f10x_rcc.o
+    0x20000028   0x08008510   0x00000001   Data   RW          300    .data               z_global.o
+    0x20000029   0x08008511   0x00000001   Data   RW          301    .data               z_global.o
+    0x2000002a   0x08008512   0x00000001   Data   RW          302    .data               z_global.o
+    0x2000002b   0x08008513   0x00000001   Data   RW          324    .data               z_gpio.o
+    0x2000002c   0x08008514   0x00000018   Data   RW          368    .data               z_timer.o
+    0x20000044   0x0800852c   0x00000006   Data   RW          395    .data               z_usart.o
+    0x2000004a   0x08008532   0x00000006   Data   RW          410    .data               z_w25q64.o
+    0x20000050   0x08008538   0x00000002   Data   RW          429    .data               z_adc.o
+    0x20000052   0x0800853a   0x00000002   PAD
+    0x20000054   0x0800853c   0x00000020   Data   RW          465    .data               z_action.o
+    0x20000074   0x0800855c   0x00000001   Data   RW          501    .data               z_main.o
+    0x20000075   0x0800855d   0x00000003   PAD
+    0x20000078   0x08008560   0x00000024   Data   RW          502    .data               z_main.o
+    0x2000009c   0x08008584   0x00000004   Data   RW          503    .data               z_main.o
+    0x200000a0   0x08008588   0x00000004   Data   RW          504    .data               z_main.o
+    0x200000a4   0x0800858c   0x00000050   Data   RW          534    .data               z_sensor.o
     0x200000f4        -       0x00000080   Zero   RW          295    .bss                z_global.o
     0x20000174        -       0x00000400   Zero   RW          296    .bss                z_global.o
     0x20000574        -       0x00000400   Zero   RW          297    .bss                z_global.o
     0x20000974        -       0x000000c0   Zero   RW          298    .bss                z_global.o
     0x20000a34        -       0x00001012   Zero   RW          409    .bss                z_w25q64.o
-    0x20001a46   0x080085a4   0x00000002   PAD
+    0x20001a46   0x080085dc   0x00000002   PAD
     0x20001a48        -       0x00000064   Zero   RW          500    .bss                z_main.o
     0x20001aac        -       0x00000014   Zero   RW          530    .bss                z_sensor.o
     0x20001ac0        -       0x00000060   Zero   RW          807    .bss                c_w.l(libspace.o)
@@ -2018,35 +2018,35 @@ Image component sizes
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
          0          0          0          0          0         32   core_cm3.o
-       176         14          0          0          0       1977   misc.o
-        64         26        304          0       1536        852   startup_stm32f10x_hd.o
-       816         24          0          0          0      11365   stm32f10x_adc.o
-       456         10          0          0          0       4762   stm32f10x_dma.o
-       620         36          0          0          0       5941   stm32f10x_gpio.o
-        16          0          0          0          0     279358   stm32f10x_it.o
-        60          6          0          0          0       1377   stm32f10x_iwdg.o
-       692         32          0         20          0       9168   stm32f10x_rcc.o
-       628         14          0          0          0       7082   stm32f10x_spi.o
-      2804         86          0          0          0      23062   stm32f10x_tim.o
-       808         22          0          0          0       8860   stm32f10x_usart.o
-       340         32          0         20          0       2243   system_stm32f10x.o
-      2604        406          0         32          0       7230   z_action.o
-       276         18          0          2          0       1955   z_adc.o
-        60          0          0          0          0       1631   z_delay.o
-       180          8          0          3       2368       3455   z_global.o
-       472         26          0          1          0       3053   z_gpio.o
-       508        222          0          0          0        758   z_ir.o
-      1048         58          0          0          0       2967   z_kinematics.o
-      2528        368          0         45        100      23720   z_main.o
-       344          8          0          0          0       1313   z_ps2.o
-        86          0          0          0          0        606   z_rcc.o
-       968         66          0         80         20       4361   z_sensor.o
-      1724         52          0         24          0       6661   z_timer.o
-      1412         58          0          6          0       6802   z_usart.o
-      1640         26          0          6       4114       7775   z_w25q64.o
+       176         14          0          0          0       1801   misc.o
+        64         26        304          0       1536        788   startup_stm32f10x_hd.o
+       816         24          0          0          0      11189   stm32f10x_adc.o
+       456         10          0          0          0       4586   stm32f10x_dma.o
+       620         36          0          0          0       5765   stm32f10x_gpio.o
+        16          0          0          0          0     278478   stm32f10x_it.o
+        60          6          0          0          0       1289   stm32f10x_iwdg.o
+       692         32          0         20          0       8904   stm32f10x_rcc.o
+       628         14          0          0          0       6906   stm32f10x_spi.o
+      2804         86          0          0          0      22886   stm32f10x_tim.o
+       808         22          0          0          0       8684   stm32f10x_usart.o
+       340         32          0         20          0       1979   system_stm32f10x.o
+      2604        406          0         32          0       6966   z_action.o
+       276         18          0          2          0       1691   z_adc.o
+        60          0          0          0          0       1455   z_delay.o
+       180          8          0          3       2368       3103   z_global.o
+       472         26          0          1          0       2877   z_gpio.o
+       508        222          0          0          0        670   z_ir.o
+      1048         58          0          0          0       2703   z_kinematics.o
+      2492        356          0         45        100      23312   z_main.o
+       344          8          0          0          0       1225   z_ps2.o
+        86          0          0          0          0        518   z_rcc.o
+      1056         66          0         80         20       4349   z_sensor.o
+      1724         52          0         24          0       6397   z_timer.o
+      1412         58          0          6          0       6626   z_usart.o
+      1640         26          0          6       4114       7511   z_w25q64.o
 
     ----------------------------------------------------------------------
-     21334       1618        336        244       8140     428366   Object Totals
+     21386       1606        336        244       8140     422690   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          4          0          0          5          2          0   (incl. Padding)
 
@@ -2147,8 +2147,8 @@ Image component sizes
         76          0          0          0          0         84   sqrt.o
 
     ----------------------------------------------------------------------
-     11488        716        810          0         96       7176   Library Totals
-        40          0          1          0          0          0   (incl. Padding)
+     11488        716        814          0         96       7176   Library Totals
+        40          0          5          0          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -2159,7 +2159,7 @@ Image component sizes
       3208        266        520          0          0       1368   m_ws.l
 
     ----------------------------------------------------------------------
-     11488        716        810          0         96       7176   Library Totals
+     11488        716        814          0         96       7176   Library Totals
 
     ----------------------------------------------------------------------
 
@@ -2168,15 +2168,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     32822       2334       1146        244       8236     428310   Grand Totals
-     32822       2334       1146        244       8236     428310   ELF Image Totals
-     32822       2334       1146        244          0          0   ROM Totals
+     32874       2322       1150        244       8236     422634   Grand Totals
+     32874       2322       1150        244       8236     422634   ELF Image Totals
+     32874       2322       1150        244          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                33968 (  33.17kB)
+    Total RO  Size (Code + RO Data)                34024 (  33.23kB)
     Total RW  Size (RW Data + ZI Data)              8480 (   8.28kB)
-    Total ROM Size (Code + RO Data + RW Data)      34212 (  33.41kB)
+    Total ROM Size (Code + RO Data + RW Data)      34268 (  33.46kB)
 
 ==============================================================================
 

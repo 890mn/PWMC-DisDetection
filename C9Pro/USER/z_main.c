@@ -154,16 +154,17 @@ int main(void) {
 		loop_nled();	  	//循环执行工作指示灯，500ms跳动一次
 		loop_uart();		  //串口数据接收处理
 		//loop_action();	  //动作组批量执行
-		loop_ps2_data();  //循环读取PS2手柄数据
-		loop_ps2_button();//处理手柄上的按钮
-		loop_ps2_car();   //处理手柄摇杆数据，控制电机转动
-		loop_ir();	      //循环读取红外遥控器数据
+		//loop_ps2_data();  //循环读取PS2手柄数据
+		//loop_ps2_button();//处理手柄上的按钮
+		//loop_ps2_car();   //处理手柄摇杆数据，控制电机转动
+		//loop_ir();	      //循环读取红外遥控器数据
 		//loop_monitor();  //定时保存一些变量
-		loop_AI();		    //执行对应功能
-		for (num = 1; num < 2; ++num) {
-			get_csb_value(num);
-		}
-		tb_delay_ms(1000);
+		//loop_AI();		    //执行对应功能
+		//for (num = 1; num < 5; ++num) {
+		//	get_csb_value(num);
+		//}
+		ziyou_bizhang();
+		tb_delay_ms(2000);
 	}
 }
 

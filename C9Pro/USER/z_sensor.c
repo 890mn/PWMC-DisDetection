@@ -103,7 +103,7 @@ int get_csb_value(uint8_t sensor_id) {
 	//340m/s = 0.017cm/us
 	csb_t = csb_t*0.017;
 	sprintf((char *)cmd_return, "\n[%d]csb_time=%d\r\n",sensor_id, (int)(csb_t));
-	uart1_send_str(cmd_return);
+	uart3_send_str(cmd_return);
 	if(csb_t < 25000) {
 		return csb_t;
 	}
@@ -158,17 +158,49 @@ void dingju_gensui(){
 *************************************************************/
 void ziyou_bizhang(){
 	static u32 systick_ms_bak = 0;
-	int adc_csb;
-	if(millis() - systick_ms_bak > 100) {
-		systick_ms_bak = millis();
-		adc_csb = get_adc_csb_middle();//获取a0的ad值，计算出距离
-		if(adc_csb < 20) {//距离低于20cm就右转
-			car_run(600,-600,600,-600);
-			tb_delay_ms(500);
-		} else {
-			car_run(600,600,600,600);
-		}
-	}
+    int dist_front, dist_left, dist_right, dist_back;
+
+    if (millis() - systick_ms_bak > 100) { // 每 100ms 进行一次避障判断
+        systick_ms_bak = millis();
+
+        // 读取四个方向超声波数据
+        dist_front = get_csb_value(1); // S3 - 前方
+        dist_left  = get_csb_value(2); // S4 - 左方
+        dist_right = get_csb_value(3); // S5 - 右方
+        dist_back  = get_csb_value(4); // S6 - 后方
+
+        if (dist_front >= 20) {
+            // 前方无障碍，继续前进
+            car_run(600, 600, 600, 600);
+        } 
+        else {
+            // 前方有障碍，选择左右方向
+            if (dist_left >= 20 && dist_right >= 20) {
+                // 左右都可行，选择距离更远的方向
+                if (dist_left > dist_right) {
+                    car_run(-600, 600, -600, 600); // 左转
+                } else {
+                    car_run(600, -600, 600, -600); // 右转
+                }
+            } 
+            else if (dist_left >= 20) {
+                car_run(-600, 600, -600, 600); // 左转
+            } 
+            else if (dist_right >= 20) {
+                car_run(600, -600, 600, -600); // 右转
+            } 
+            else {
+                // 四向均被挡住，尝试后退
+                if (dist_back >= 20) {
+                    car_run(-600, -600, -600, -600); // 后退
+                    tb_delay_ms(500); // 退一段时间
+                } else {
+                    car_run(0, 0, 0, 0); // 停止
+                }
+            }
+            tb_delay_ms(500); // 避障等待时间
+        }
+    }
 }
 
 

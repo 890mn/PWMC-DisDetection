@@ -366,7 +366,7 @@ int USART3_IRQHandler(void) {
 	
 	//发送中断 用前在初始化的时候请打开
 	//if(USART_GetITStatus(USART3, USART_IT_TXE) != RESET) {   
-	//	USART_SendData(USARTy, TxBuffer1[TxCounter1++]);
+	//	USART_SendData(USART3, 1);
 	//}  
 	return 0;
 }

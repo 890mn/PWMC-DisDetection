@@ -70,6 +70,9 @@ void auto_avoid_obstacle(void) {
             MOVE_STOP;
         }
     }
+	tb_delay_ms(1000);
+	MOVE_STOP;
+	tb_delay_ms(1000);
 }
 
 int main(void) {	
@@ -109,7 +112,6 @@ int main(void) {
 		//}
 		//ziyou_bizhang();
 		auto_avoid_obstacle();
-		tb_delay_ms(2000);
 	}
 }
 

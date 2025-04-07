@@ -111,22 +111,6 @@ int get_csb_value(uint8_t sensor_id) {
 }
 
 /*************************************************************
-功能介绍：处理超声波采集到的数据，取采集到的中间值
-函数参数：无
-返回值：  处理后的超声波数据  
-*************************************************************/
-int get_adc_csb_middle() {
-	u8 i;
-	static int ad_value[5] = {0}, myvalue;// ad_value_bak[5] = {0}, 
-	for(i=0;i<5;i++)ad_value[i] = get_csb_value(0);
-	selection_sort(ad_value, 5);
-	myvalue = ad_value[2];
-// 	for(i=0;i<5;i++)ad_value[i] = ad_value_bak[i];
-	return myvalue;  
-}
-
-
-/*************************************************************
 功能介绍：定距跟随：判断超声波检测的距离，小于20cm时后退；25-35cm或超过70cm时停止；40-60cm时前进
 函数参数：无
 返回值：  无
@@ -136,7 +120,7 @@ void dingju_gensui(){
 	int adc_csb;
 	if(millis() - systick_ms_bak > 100) {
 		systick_ms_bak = millis();
-		adc_csb = get_adc_csb_middle();             //获取a0的ad值，计算出距离
+		//adc_csb = get_adc_csb_middle();             //获取a0的ad值，计算出距离
 		if(adc_csb < 20) {                          //距离小于20cm时后退
 			car_run(-600,-600,-600,-600);
 			tb_delay_ms(100);
@@ -201,50 +185,4 @@ void ziyou_bizhang(){
             tb_delay_ms(500); // 避障等待时间
         }
     }
-}
-
-
-/*************************************************************
-功能介绍：智能循迹：循迹传感器探测部位在黑线上时返回0，不在线上返回1
-函数参数：无
-返回值：  无
-*************************************************************/
-void xun_ji(){
-	static u32 systick_ms_bak = 0;	
-	if(millis() - systick_ms_bak > 50){
-		systick_ms_bak = millis();
-		if(xj_l() == 0 && xj_r() == 0){
-			car_run(xunji_speed+100,xunji_speed+100,xunji_speed+100,xunji_speed+100);		
-		}else if (xj_l() == 1 && xj_r() == 0){
-			car_run(0,xunji_speed,0,xunji_speed);		
-		}else if (xj_l() == 0 && xj_r() == 1){
-			car_run(xunji_speed,0,xunji_speed,0);		
-		}
-	}
-}
-
-/*************************************************************
-功能介绍：循迹避障：前方20cm内没有障碍物时，循迹；前方20cm内有障碍物时，停止
-函数参数：无
-返回值：  无
-*************************************************************/
-void xunji_bizhang(){
-	static u32 systick_ms_bak = 0;
-	int adc_csb;
-	if(millis() - systick_ms_bak > 50) {
-		systick_ms_bak = millis();
-		adc_csb = get_adc_csb_middle();//获取a0的ad值，计算出距离
-		if(adc_csb < 20) {//距离低于20cm就停止
-			car_run(0,0,0,0);
-			tb_delay_ms(500);
-		} else {          //否则循迹
-			if(xj_l() == 0 && xj_r() == 0){
-				car_run(xunji_speed+100,xunji_speed+100,xunji_speed+100,xunji_speed+100);		
-			}else if (xj_l() == 1 && xj_r() == 0){
-				car_run(0,xunji_speed,0,xunji_speed);		
-			}else if (xj_l() == 0 && xj_r() == 1){
-				car_run(xunji_speed,0,xunji_speed,0);		
-			}
-		}
-	}
 }

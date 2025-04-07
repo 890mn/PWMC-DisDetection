@@ -1,40 +1,3 @@
-/***************************************************************
-	*	@笔者	：	tacbo
-	*	@日期	：	2020年08月23日
-	*	@所属	：	杭州众灵科技
-	*	@论坛	：	www.ZL-robot.com
-	*	@功能	：	ZL-KPZ32控制板
-
-	智能小车C3出厂程序
-	实现的功能：
-	1、功能：
-				前进、后退、左转、右转、左平移、右平移、停止
-				定距跟随、自由避障、智能循迹、循迹避障
-	2、控制方式：
-				红外遥控器、手柄、微信小程序、语音控制、wifi摄像头模块手机app控制
-	
-	传感器引脚:
-		循迹（S1-PA0 PA1） 
-		超声波(S3-PB0 PA2) 
-	蜂鸣器引脚：
-		BEEP-PB5
-	LED引脚：
-		NLED-PB13
-  PS2手柄引脚：	
-	  PS1-DAT-PA15
-	  PS2-CMD-PA14
-	  PS6-ATT-PA13
-	  PS7-CLK-PA12
-	按键引脚：
-	  KEY1-PA8 KEY2-PA11
-	
-	统一总线口： TX3 RX3
-	
-	主频：72M
-	单片机型号：STM32F103C8T6
-	
-***************************************************************/
-
 #include "z_rcc.h"		//配置时钟文件
 #include "z_gpio.h"		//配置IO口文件
 #include "z_global.h"	//存放全局变量
@@ -55,80 +18,61 @@
 
 #define MODULE "Jibot1-32"
 
-/*
-	全局变量定义
-*/
 u8 i = 0;
 u8 ir_data[4],ir_flag;
 u8 psx_buf[9]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}; //存储手柄的数据 	
 u8 voice_flag = 0;      //用于控制语音识别时小车的基本动作执行时间为2秒
 int xunji_speed = 300;  //循迹速度,范围（0-1000），可根据实际情况修改循迹速度
 u8 ai_mode = 0;
-/*
-ai_mode=0 时，停止
-ai_mode=1 时，前进
-ai_mode=2 时，后退
-ai_mode=3 时，左转
-ai_mode=4 时，右转
-ai_mode=5 时，左平移
-ai_mode=6 时，右平移
-ai_mode=11时，定距跟随
-ai_mode=12时，自由避障
-ai_mode=13时，智能循迹
 
-*/
+#define SENSOR_FRONT  2
+#define SENSOR_RIGHT  4
+#define SENSOR_BACK   3
+#define SENSOR_LEFT   1
 
-kinematics_t kinematics;
-/*
-const char *pre_cmd_set_red[PSX_BUTTON_NUM] = {//红灯模式下按键的配置			
-	"<PS2_RED01:#005P0600T2000!^#005PDST!>",	//L2						  
-	"<PS2_RED02:#005P2400T2000!^#005PDST!>",	//R2						  
-	"<PS2_RED03:#004P0600T2000!^#004PDST!>",	//L1						  
-	"<PS2_RED04:#004P2400T2000!^#004PDST!>",	//R1			
-	"<PS2_RED05:#002P2400T2000!^#002PDST!>",	//RU						  
-	"<PS2_RED06:#003P2400T2000!^#003PDST!>",	//RR						  
-	"<PS2_RED07:#002P0600T2000!^#002PDST!>",	//RD						  
-	"<PS2_RED08:#003P0600T2000!^#003PDST!>",	//RL				
-	"<PS2_RED09:$MODE!>",					            //SE    				  
-	"<PS2_RED10:>",					                  //AL						   
-	"<PS2_RED11:>",					                  //AR						  
-	"<PS2_RED12:$DJR!>",					            //ST		
-	"<PS2_RED13:#001P0600T2000!^#001PDST!>",	//LU						  
-	"<PS2_RED14:#000P0600T2000!^#000PDST!>",	//LR								  
-	"<PS2_RED15:#001P2400T2000!^#001PDST!>",	//LD						  
-	"<PS2_RED16:#000P2400T2000!^#000PDST!>",	//LL								
-};
-*/
+#define MOVE_FORWARD car_run(600,600,600,600)
+#define MOVE_BACK car_run(-600,-600,-600,-600)
 
-//绿灯模式下，摇杆会映射到按键，防止影响，去掉绿灯模式功能
-/*
-const char *pre_cmd_set_grn[PSX_BUTTON_NUM] = {//绿灯模式下按键的配置			
-	"<PS2_GRN01:#005P0600T2000!^#005PDST!>",	 //L2						  
-	"<PS2_GRN02:#005P2400T2000!^#005PDST!>",	 //R2						  
-	"<PS2_GRN03:#004P0600T2000!^#004PDST!>",	 //L1						  
-	"<PS2_GRN04:#004P2400T2000!^#004PDST!>",	 //R1			
-	"<PS2_GRN05:#002P2400T2000!^#002PDST!>",	 //RU						  
-	"<PS2_GRN06:#003P2400T2000!^#003PDST!>",	 //RR						  
-	"<PS2_GRN07:#002P0600T2000!^#002PDST!>",	 //RD						  
-	"<PS2_GRN08:#003P0600T2000!^#003PDST!>",	 //RL				
-	"<PS2_GRN09:$DJR!>",					             //SE    				  
-	"<PS2_GRN10:>",					                   //AL						   
-	"<PS2_GRN11:>",					                   //AR						  
-	"<PS2_GRN12:$DJR!>",					             //ST		
-	"<PS2_GRN13:#001P0600T2000!^#001PDST!>",	 //LU						  
-	"<PS2_GRN14:#000P0600T2000!^#000PDST!>",	 //LR								  
-	"<PS2_GRN15:#001P2400T2000!^#001PDST!>",	 //LD						  
-	"<PS2_GRN16:#000P2400T2000!^#000PDST!>",	 //LL								
-};
-*/
+#define MOVE_LEFT car_run(-600,600,-600,600)
+#define MOVE_RIGHT car_run(600,-600,600,-600)
 
-/*-------------------------------------------------------------------------------------------------------
-*  程序从这里执行				
-*  这个启动代码 完成时钟配置 使用外部晶振作为STM32的运行时钟 并倍频到72M
--------------------------------------------------------------------------------------------------------*/
+#define MOVE_LEFT_BACK car_run(-600,-600,600,600)
+#define MOVE_RIGHT_BACK car_run(600,600,-600,-600)
+
+#define MOVE_LEFT_FORWARD car_run(600,-600,-600,600)
+#define MOVE_RIGHT_FORWARD car_run(-600,600,600,-600)
+
+#define MOVE_STOP car_run(0,0,0,0)
+
+#define MOVE_LEFT_STOP car_run(0,600,0,600)
+#define MOVE_RIGHT_STOP car_run(600,0,600,0)
+
+#define MOVE_BACK_STOP car_run(-600,0,-600,0)
+#define MOVE_FORWARD_STOP car_run(0,600,0,600)
+
+void auto_avoid_obstacle(void) {
+    int front = get_csb_value(SENSOR_FRONT);
+    int right = get_csb_value(SENSOR_RIGHT);
+    int back = get_csb_value(SENSOR_BACK);
+    int left = get_csb_value(SENSOR_LEFT);
+
+    if(front > 30) {
+        MOVE_FORWARD;
+    } else {
+        // 前方有障碍，优先右转 -> 左转 -> 后退
+        if(right > 30) {
+            MOVE_RIGHT;
+        } else if(left > 30) {
+            MOVE_LEFT;
+        } else if(back > 30) {
+            MOVE_BACK;
+        } else {
+            MOVE_STOP;
+        }
+    }
+}
 
 int main(void) {	
-	int num = 0;
 	setup_rcc();		  //初始化时钟
 	setup_global();		//初始化全局变量
 	setup_gpio();		  //初始化IO口
@@ -143,7 +87,7 @@ int main(void) {
 	setup_systick();	//初始化滴答时钟，1S增加一次millis()的值
 	setup_dj_timer();	//初始化定时器2 处理舵机PWM输出	
 	setup_interrupt();//初始化总中断		
-	setup_kinematics(110, 105, 75, 190, &kinematics); //kinematics 90mm 105mm 98mm 150mm
+	//setup_kinematics(110, 105, 75, 190, &kinematics); //kinematics 90mm 105mm 98mm 150mm
 	setup_servo_bias();  //初始化舵机，将偏差代入初始值
 	IWDG_Init();       //初始化独立看门狗
 	setup_start();		//初始化启动信号
@@ -163,7 +107,8 @@ int main(void) {
 		//for (num = 1; num < 5; ++num) {
 		//	get_csb_value(num);
 		//}
-		ziyou_bizhang();
+		//ziyou_bizhang();
+		auto_avoid_obstacle();
 		tb_delay_ms(2000);
 	}
 }
@@ -580,38 +525,7 @@ void loop_AI(void) {
 			dingju_gensui();		
 	}else if(ai_mode == 12){
 			ziyou_bizhang();
-	}else if(ai_mode == 13){
-			xun_ji();
-	}else if(ai_mode == 14){
-			xunji_bizhang();
 	}
-}
-
-
-int kinematics_move(float x, float y, float z, int time) {
-	int i,j, min = 0, flag = 0;
-	
-	if(y < 0)return 0;
-	
-	//寻找最佳角度
-	flag = 0;
-	for(i=0;i>=-135;i--) {
-		if(0 == kinematics_analysis(x,y,z,i,&kinematics)){
-			if(i<min)min = i;
-			flag = 1;
-		}
-	}
-	
-	//用3号舵机与水平最大的夹角作为最佳值
-	if(flag) {
-		kinematics_analysis(x,y,z,min,&kinematics);
-		for(j=0;j<4;j++) {
-			set_servo(j, kinematics.servo_pwm[j], time);
-		}
-		return 1;
-	}
-	
-	return 0;
 }
 
 //处理小车电机摇杆控制

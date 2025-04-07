@@ -13,3 +13,9 @@
 [2025-04-07 18:42:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
 [2025-04-07 18:43:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
 [2025-04-07 18:44:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-07 19:34:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-07 19:41:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-07 20:07:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-07 20:16:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-07 20:18:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-07 20:22:日志记录不属免费功能,请注册支持作者改进软件

@@ -17,9 +17,6 @@ void setup_csb(void);
 
 void dingju_gensui(void);
 void ziyou_bizhang(void);
-void xun_ji(void);
-void xunji_bizhang(void);
-int get_csb_value(uint8_t sensor_id);
-int get_adc_csb_middle();   
+int get_csb_value(uint8_t sensor_id);  
 
 #endif

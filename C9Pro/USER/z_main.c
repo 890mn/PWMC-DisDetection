@@ -25,10 +25,10 @@ u8 voice_flag = 0;      //用于控制语音识别时小车的基本动作执行
 int xunji_speed = 300;  //循迹速度,范围（0-1000），可根据实际情况修改循迹速度
 u8 ai_mode = 0;
 
-#define SENSOR_FRONT  2
-#define SENSOR_RIGHT  4
-#define SENSOR_BACK   3
 #define SENSOR_LEFT   1
+#define SENSOR_FRONT  2
+#define SENSOR_RIGHT  3
+#define SENSOR_BACK   4
 
 #define MOVE_FORWARD car_run(600,600,600,600)
 #define MOVE_BACK car_run(-600,-600,-600,-600)
@@ -49,31 +49,6 @@ u8 ai_mode = 0;
 
 #define MOVE_BACK_STOP car_run(-600,0,-600,0)
 #define MOVE_FORWARD_STOP car_run(0,600,0,600)
-
-void auto_avoid_obstacle(void) {
-    int front = get_csb_value(SENSOR_FRONT);
-    int right = get_csb_value(SENSOR_RIGHT);
-    int back = get_csb_value(SENSOR_BACK);
-    int left = get_csb_value(SENSOR_LEFT);
-
-    if(front > 30) {
-        MOVE_FORWARD;
-    } else {
-        // 前方有障碍，优先右转 -> 左转 -> 后退
-        if(right > 30) {
-            MOVE_RIGHT;
-        } else if(left > 30) {
-            MOVE_LEFT;
-        } else if(back > 30) {
-            MOVE_BACK;
-        } else {
-            MOVE_STOP;
-        }
-    }
-	tb_delay_ms(1000);
-	MOVE_STOP;
-	tb_delay_ms(1000);
-}
 
 int main(void) {	
 	setup_rcc();		  //初始化时钟
@@ -100,18 +75,33 @@ int main(void) {
 	while(1) {
 		loop_nled();	  	//循环执行工作指示灯，500ms跳动一次
 		loop_uart();		  //串口数据接收处理
-		//loop_action();	  //动作组批量执行
-		//loop_ps2_data();  //循环读取PS2手柄数据
-		//loop_ps2_button();//处理手柄上的按钮
-		//loop_ps2_car();   //处理手柄摇杆数据，控制电机转动
-		//loop_ir();	      //循环读取红外遥控器数据
-		//loop_monitor();  //定时保存一些变量
-		//loop_AI();		    //执行对应功能
-		//for (num = 1; num < 5; ++num) {
-		//	get_csb_value(num);
-		//}
-		//ziyou_bizhang();
-		auto_avoid_obstacle();
+		loop_AI();		    //执行对应功能
+		
+		int left = get_csb_value(SENSOR_LEFT);
+		//tb_delay_ms(5);
+    	int front = get_csb_value(SENSOR_FRONT);
+		//tb_delay_ms(5);
+    	int right = get_csb_value(SENSOR_RIGHT);
+		//tb_delay_ms(5);
+    	int back = get_csb_value(SENSOR_BACK);
+		tb_delay_ms(10);
+		
+		if(front > 30) {
+        MOVE_FORWARD;
+		} else {
+			// 前方有障碍，优先右转 -> 左转 -> 后退
+			if(right > 30) {
+				MOVE_RIGHT;
+			} else if(left > 30) {
+				MOVE_LEFT;
+			} else if(back > 30) {
+				MOVE_BACK;
+			} else {
+				MOVE_STOP;
+			}
+		}
+		MOVE_STOP;
+		tb_delay_ms(1000);
 	}
 }
 

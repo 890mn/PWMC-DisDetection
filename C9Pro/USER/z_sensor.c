@@ -102,7 +102,7 @@ int get_csb_value(uint8_t sensor_id) {
 	csb_t = TIM_GetCounter(TIM3);//获取时间,分辨率为1US
 	//340m/s = 0.017cm/us
 	csb_t = csb_t*0.017;
-	sprintf((char *)cmd_return, "\n[%d]csb_time=%d\r\n",sensor_id, (int)(csb_t));
+	sprintf((char *)cmd_return, "[%d]UTime=%d",sensor_id, (int)(csb_t));
 	uart3_send_str(cmd_return);
 	if(csb_t < 25000) {
 		return csb_t;

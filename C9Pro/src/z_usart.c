@@ -144,7 +144,7 @@ void tb_usart3_init(u32 rate) {
     NVIC_Init(&NVIC_InitStructure);   
 	
 	USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
-    //USART_ITConfig(USART3, USART_IT_TXE, ENABLE);
+  //USART_ITConfig(USART3, USART_IT_TXE, ENABLE);
 	
 	//USART_HalfDuplexCmd(USART3,ENABLE);
 		

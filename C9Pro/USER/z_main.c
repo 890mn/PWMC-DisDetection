@@ -129,24 +129,15 @@ void avoid_system(u8 *cmd) { // @Forward25cm！
 
 int main(void) {	
 	setup_rcc();		  //初始化时钟
-	setup_global();		//初始化全局变量
 	setup_gpio();		  //初始化IO口
 	setup_nled();		  //初始化工作指示灯
 	setup_beep();		  //初始化定时器
-	setup_djio();		  //初始化舵机IO口
 	setup_w25q64();		//初始化存储器W25Q64
-	setup_ps2();		  //初始化PS2手柄
-	setup_ir();				//初始化红外遥控器，红外接收头接A8引脚
 	setup_uart1();		//初始化串口1 用于下载动作组
 	setup_uart3();		//初始化串口3 用于底板总线、蓝牙、lora
 	setup_systick();	//初始化滴答时钟，1S增加一次millis()的值
-	setup_dj_timer();	//初始化定时器2 处理舵机PWM输出	
 	setup_interrupt();//初始化总中断		
-	//setup_kinematics(110, 105, 75, 190, &kinematics); //kinematics 90mm 105mm 98mm 150mm
-	setup_servo_bias();  //初始化舵机，将偏差代入初始值
 	IWDG_Init();       //初始化独立看门狗
-	setup_start();		//初始化启动信号
-	setup_do_group(); //开机动作
 	setup_sensor();
 	
 	while(1) {
@@ -166,10 +157,6 @@ int main(void) {
 
 void setup_rcc(void) {   //初始化时钟
 	tb_rcc_init();	  	   //时钟初始化
-}
-
-void setup_global(void) {//初始化全局变量
-	tb_global_init();	
 }
 
 void setup_gpio(void) {  //初始化IO口
@@ -211,18 +198,6 @@ void setup_w25q64(void) {//初始化存储器W25Q64
 	spiFlahsOn(0);
 }	
 
-void setup_adc(void) {//初始化ADC采集 使用DMA初始化
-	ADC_init();
-}
-
-void setup_ps2(void) {//初始化PS2手柄
-	PSX_init();	
-}
-
-void setup_ir(void) { //初始化红外遥控器
-	timer1_ir_init(65535,71);
-}
-
 void setup_uart1(void) {
   //串口1初始化
 	tb_usart1_init(115200);
@@ -263,7 +238,6 @@ void setup_start(void) {
 	beep_on();nled_on();tb_delay_ms(100);beep_off();nled_off();tb_delay_ms(100);
 	beep_on();nled_on();tb_delay_ms(100);beep_off();nled_off();tb_delay_ms(100);
 }	
-
 
 //初始化总中断
 void setup_interrupt(void) {

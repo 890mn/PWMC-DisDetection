@@ -32,20 +32,6 @@ u8 ai_mode = 0;
 #define SENSOR_RIGHT  3
 #define SENSOR_BACK   4
 
-typedef enum {
-    DIR_STOP = 0,
-    DIR_FORWARD,
-    DIR_BACK,
-    DIR_LEFT,
-    DIR_RIGHT,
-    DIR_LEFT_FORWARD,
-    DIR_RIGHT_FORWARD,
-    DIR_RIGCEN,
-    DIR_RIGCEN_REV,
-    DIR_LEFCEN,
-    DIR_LEFCEN_REV
-} Direction;
-
 typedef struct {
     const char* cmd;
     Direction dir;
@@ -136,7 +122,9 @@ void avoid_system(u8 *cmd) { // @Forward25cm！
     main_distance = atoi(numberStr);  // 转换成整数
 
     // 可选：打印调试信息
-    printf("[指令解析] 方向：%s → %d，距离：%dcm\n", directionStr, main_direction, main_distance);
+    char buf[128];
+		sprintf(buf, "[指令解析] 方向：%s → %d，距离：%dcm\n", directionStr, main_direction, main_distance);
+		zx_uart_send_str(buf);
 }
 
 int main(void) {	
@@ -151,15 +139,14 @@ int main(void) {
 	setup_ir();				//初始化红外遥控器，红外接收头接A8引脚
 	setup_uart1();		//初始化串口1 用于下载动作组
 	setup_uart3();		//初始化串口3 用于底板总线、蓝牙、lora
-	zx_uart_send_str("test\n");
 	setup_systick();	//初始化滴答时钟，1S增加一次millis()的值
 	setup_dj_timer();	//初始化定时器2 处理舵机PWM输出	
-	//setup_interrupt();//初始化总中断		
+	setup_interrupt();//初始化总中断		
 	//setup_kinematics(110, 105, 75, 190, &kinematics); //kinematics 90mm 105mm 98mm 150mm
 	setup_servo_bias();  //初始化舵机，将偏差代入初始值
-	//IWDG_Init();       //初始化独立看门狗
-	//setup_start();		//初始化启动信号
-	//setup_do_group(); //开机动作
+	IWDG_Init();       //初始化独立看门狗
+	setup_start();		//初始化启动信号
+	setup_do_group(); //开机动作
 	setup_sensor();
 	
 	while(1) {
@@ -167,8 +154,8 @@ int main(void) {
 		ultra_distance();	
 		tb_delay_ms(400);
 		loop_uart();		  //串口数据接收处理
-		//loop_AI();		    //执行对应功能
-		tb_delay_ms(4000);
+		loop_AI();		    //执行对应功能
+		tb_delay_ms(2000);
 	}
 }
 
@@ -494,13 +481,12 @@ void parse_psx_buf(unsigned char *buf, unsigned char mode) {
 //串口接收的数据解析函数
 void parse_cmd(u8 *cmd) {
 	int pos;
-	/*
 	if(pos = str_contain_str(cmd, (u8 *)"$STOP!"), pos){
-		main_direction = 0;	
+		main_direction = DIR_STOP;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$FORW!"), pos){
-		main_direction = 1;	
+		main_direction = DIR_FORWARD;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$BACK!"), pos){
-			main_direction = 2;		
+			main_direction = DIR_BACK;		
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LEFT!"), pos){
 			main_direction = 3;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$RIGH!"), pos){
@@ -516,14 +502,13 @@ void parse_cmd(u8 *cmd) {
 	}else if(pos = str_contain_str(cmd, (u8 *)"$MVCN!"), pos){
 			main_direction = 9;
 	}
-	*/
 }
 
 
 //根据ai_mode的值执行对应功能
 void loop_AI(void) {
 	execute_direction(main_direction);
-	main_direction = 99;
+	//main_direction = 99;
 }
 
 //处理小车电机摇杆控制

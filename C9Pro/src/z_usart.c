@@ -241,6 +241,8 @@ int USART1_IRQHandler(void) {
 				uart1_mode = 3;
 			} else if(sbuf_bak == '<') {	//保存动作组模式	<G0000#000P1500T1000!#001P1500T1000!B000!> 用尖括号括起来 带有组序号
 				uart1_mode = 4;
+			} else if(sbuf_bak == '@') {
+				uart1_mode = 5;
 			} 
 			buf_index = 0;
 		}
@@ -259,7 +261,10 @@ int USART1_IRQHandler(void) {
 		} else if((uart1_mode == 3) && (sbuf_bak == '}')){
 			uart_receive_buf[buf_index] = '\0';
 			uart1_get_ok = 1;
-		}    
+		} else if((uart1_mode == 5) && (sbuf_bak == '!')){
+			uart_receive_buf[buf_index] = '\0';
+			uart1_get_ok = 1;
+		}     
 
 		if(buf_index >= UART_BUF_SIZE)buf_index = 0;
 
@@ -290,6 +295,8 @@ int USART2_IRQHandler(void) {
 				uart1_mode = 3;
 			} else if(sbuf_bak == '<') {
 				uart1_mode = 4;
+			} else if(sbuf_bak == '@') {
+				uart1_mode = 5;
 			} 
 			buf_index = 0;
 		}
@@ -308,7 +315,10 @@ int USART2_IRQHandler(void) {
 		} else if((uart1_mode == 3) && (sbuf_bak == '}')){
 			uart_receive_buf[buf_index] = '\0';
 			uart1_get_ok = 1;
-		}    
+		} else if((uart1_mode == 5) && (sbuf_bak == '!')){
+			uart_receive_buf[buf_index] = '\0';
+			uart1_get_ok = 1;
+		}     
 
 		if(buf_index >= UART_BUF_SIZE)buf_index = 0;
 			

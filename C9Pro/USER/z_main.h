@@ -21,12 +21,25 @@
 
 #define W25Q64_INFO_ADDR_SAVE_STR			(((8<<10)-2)<<10)  //(8*1024-1)*1024		//eeprom_info结构体存储的位置
 
-
+typedef enum {
+    DIR_STOP = 0,
+    DIR_FORWARD,
+    DIR_BACK,
+    DIR_LEFT,
+    DIR_RIGHT,
+    DIR_LEFT_FORWARD,
+    DIR_RIGHT_FORWARD,
+    DIR_RIGCEN,
+    DIR_RIGCEN_REV,
+    DIR_LEFCEN,
+    DIR_LEFCEN_REV
+} Direction;
 
 /*******全局变量外部声明*******/
 extern u8 i;
 extern u8 ir_data[4],ir_flag;   
 extern u8 ai_mode;
+extern Direction main_direction;
 extern int xunji_speed;
 
 /*

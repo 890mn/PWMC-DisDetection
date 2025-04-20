@@ -11,6 +11,8 @@
 #include <stdio.h>		//标准库文件
 #include <string.h>		//标准库文件
 #include <math.h>	  	//标准库文件
+#include <stdlib.h>
+#include <ctype.h>
 #include "z_kinematics.h"	//逆运动学算法
 #include "z_action.h" //动作组执行文件
 #include "stm32f10x_iwdg.h"
@@ -30,78 +32,143 @@ u8 ai_mode = 0;
 #define SENSOR_RIGHT  3
 #define SENSOR_BACK   4
 
-#define MOVE_FORWARD car_run(600,600,600,600)
-#define MOVE_BACK car_run(-600,-600,-600,-600)
+typedef enum {
+    DIR_STOP = 0,
+    DIR_FORWARD,
+    DIR_BACK,
+    DIR_LEFT,
+    DIR_RIGHT,
+    DIR_LEFT_FORWARD,
+    DIR_RIGHT_FORWARD,
+    DIR_RIGCEN,
+    DIR_RIGCEN_REV,
+    DIR_LEFCEN,
+    DIR_LEFCEN_REV
+} Direction;
 
-#define MOVE_LEFT car_run(-600,600,-600,600)
-#define MOVE_RIGHT car_run(600,-600,600,-600)
+typedef struct {
+    const char* cmd;
+    Direction dir;
+} CommandMap;
 
-#define MOVE_LEFT_BACK car_run(-600,-600,600,600)
-#define MOVE_RIGHT_BACK car_run(600,600,-600,-600)
+uint16_t ultra_left = 0;
+uint16_t ultra_front = 0;
+uint16_t ultra_right = 0;
+uint16_t ultra_back = 0;
 
-#define MOVE_LEFT_FORWARD car_run(600,-600,-600,600)
-#define MOVE_RIGHT_FORWARD car_run(-600,600,600,-600)
+uint16_t main_distance = 0;
+Direction main_direction = DIR_STOP;
 
-#define MOVE_STOP car_run(0,0,0,0)
+void execute_direction(Direction dir) {
+    switch (dir) {
+        case DIR_STOP:           car_run(0, 0, 0, 0); break;
+        case DIR_FORWARD:        car_run(600, 600, 600, 600); break;
+        case DIR_BACK:           car_run(-600, -600, -600, -600); break;
+        case DIR_LEFT:           car_run(-600, 600, -600, 600); break;
+        case DIR_RIGHT:          car_run(600, -600, 600, -600); break;
+        case DIR_LEFT_FORWARD:   car_run(-600, 600, 600, -600); break;
+        case DIR_RIGHT_FORWARD:  car_run(600, -600, -600, 600); break;
+        case DIR_RIGCEN:         car_run(600, 0, 600, 0); break;
+        case DIR_RIGCEN_REV:     car_run(-600, 0, -600, 0); break;
+        case DIR_LEFCEN:         car_run(0, -600, 0, -600); break;
+        case DIR_LEFCEN_REV:     car_run(0, 600, 0, 600); break;
+        default:                 car_run(0, 0, 0, 0); break;
+    }
+}
 
-#define MOVE_LEFT_STOP car_run(0,600,0,600)
-#define MOVE_RIGHT_STOP car_run(600,0,600,0)
+const CommandMap directionTable[] = {
+    {"Stop", DIR_STOP},
+    {"Forward", DIR_FORWARD},
+    {"Back", DIR_BACK},
+    {"Left", DIR_LEFT},
+    {"Right", DIR_RIGHT},
+    {"LeftForward", DIR_LEFT_FORWARD},
+    {"RightForward", DIR_RIGHT_FORWARD},
+    {"RigCen", DIR_RIGCEN},
+    {"RigCenRev", DIR_RIGCEN_REV},
+    {"LefCen", DIR_LEFCEN},
+    {"LefCenRev", DIR_LEFCEN_REV}
+};
 
-#define MOVE_BACK_STOP car_run(-600,0,-600,0)
-#define MOVE_FORWARD_STOP car_run(0,600,0,600)
+Direction get_direction_from_str(const char* dirStr) {
+    for (int i = 0; i < sizeof(directionTable)/sizeof(CommandMap); ++i) {
+        if (strcmp(dirStr, directionTable[i].cmd) == 0) {
+            return directionTable[i].dir;
+        }
+    }
+    return DIR_STOP;
+}
+
+void ultra_distance(void) {
+    ultra_left = get_csb_value(SENSOR_LEFT);
+    tb_delay_ms(5); // 左-前之间稍作等待
+
+    ultra_front = get_csb_value(SENSOR_FRONT);
+    tb_delay_ms(5);
+
+    ultra_right = get_csb_value(SENSOR_RIGHT);
+    tb_delay_ms(5);
+
+    ultra_back = get_csb_value(SENSOR_BACK);
+    tb_delay_ms(10);
+}
+
+void avoid_system(u8 *cmd) { // @Forward25cm！
+    char directionStr[20] = {0};  // 提取方向
+    char numberStr[10] = {0};     // 提取距离
+    int i = 1, j = 0;
+
+    // 提取字母部分（方向）
+    while (isalpha(cmd[i]) && j < sizeof(directionStr) - 1) {
+        directionStr[j++] = cmd[i++];
+    }
+    directionStr[j] = '\0';
+
+    // 提取数字部分（距离）
+    j = 0;
+    while (isdigit(cmd[i]) && j < sizeof(numberStr) - 1) {
+        numberStr[j++] = cmd[i++];
+    }
+    numberStr[j] = '\0';
+
+    // 设置全局变量
+    main_direction = get_direction_from_str(directionStr);
+    main_distance = atoi(numberStr);  // 转换成整数
+
+    // 可选：打印调试信息
+    printf("[指令解析] 方向：%s → %d，距离：%dcm\n", directionStr, main_direction, main_distance);
+}
 
 int main(void) {	
 	setup_rcc();		  //初始化时钟
 	setup_global();		//初始化全局变量
 	setup_gpio();		  //初始化IO口
 	setup_nled();		  //初始化工作指示灯
-	//setup_beep();		  //初始化定时器
+	setup_beep();		  //初始化定时器
 	setup_djio();		  //初始化舵机IO口
 	setup_w25q64();		//初始化存储器W25Q64
 	setup_ps2();		  //初始化PS2手柄
 	setup_ir();				//初始化红外遥控器，红外接收头接A8引脚
 	setup_uart1();		//初始化串口1 用于下载动作组
 	setup_uart3();		//初始化串口3 用于底板总线、蓝牙、lora
+	zx_uart_send_str("test\n");
 	setup_systick();	//初始化滴答时钟，1S增加一次millis()的值
 	setup_dj_timer();	//初始化定时器2 处理舵机PWM输出	
-	setup_interrupt();//初始化总中断		
+	//setup_interrupt();//初始化总中断		
 	//setup_kinematics(110, 105, 75, 190, &kinematics); //kinematics 90mm 105mm 98mm 150mm
 	setup_servo_bias();  //初始化舵机，将偏差代入初始值
-	IWDG_Init();       //初始化独立看门狗
-	setup_start();		//初始化启动信号
-	setup_do_group(); //开机动作
+	//IWDG_Init();       //初始化独立看门狗
+	//setup_start();		//初始化启动信号
+	//setup_do_group(); //开机动作
 	setup_sensor();
 	
 	while(1) {
 		loop_nled();	  	//循环执行工作指示灯，500ms跳动一次
+		ultra_distance();	
+		tb_delay_ms(400);
 		loop_uart();		  //串口数据接收处理
-		loop_AI();		    //执行对应功能
-		
-		int left = get_csb_value(SENSOR_LEFT);
-		//tb_delay_ms(5);
-    	int front = get_csb_value(SENSOR_FRONT);
-		//tb_delay_ms(5);
-    	int right = get_csb_value(SENSOR_RIGHT);
-		//tb_delay_ms(5);
-    	int back = get_csb_value(SENSOR_BACK);
-		tb_delay_ms(10);
-		
-		if(front > 30) {
-        MOVE_FORWARD;
-		} else {
-			// 前方有障碍，优先右转 -> 左转 -> 后退
-			if(right > 30) {
-				MOVE_RIGHT;
-			} else if(left > 30) {
-				MOVE_LEFT;
-			} else if(back > 30) {
-				MOVE_BACK;
-			} else {
-				MOVE_STOP;
-			}
-		}
-		MOVE_STOP;
-		tb_delay_ms(1000);
+		//loop_AI();		    //执行对应功能
+		tb_delay_ms(4000);
 	}
 }
 
@@ -250,6 +317,8 @@ void loop_uart(void) {
 			parse_action(uart_receive_buf);
 		} else if(uart1_mode == 4) {		  //存储模式
 			save_action(uart_receive_buf);
+		} else if(uart1_mode == 5) {		  //存储模式
+			avoid_system(uart_receive_buf);
 		} 
 		uart1_mode = 0;
 		uart1_get_ok = 0;
@@ -424,100 +493,37 @@ void parse_psx_buf(unsigned char *buf, unsigned char mode) {
 
 //串口接收的数据解析函数
 void parse_cmd(u8 *cmd) {
-	int pos;//, i, index, int1, int2, int3, int4;
-	//uart1_send_str(cmd);
-		//智能控制相关指令，
-	if(pos = str_contain_str(cmd, (u8 *)"$WAKE!"), pos){
-			ai_mode = 0;	
-			voice_flag = 1;
-	}else if(pos = str_contain_str(cmd, (u8 *)"$TZ!"), pos){
-			ai_mode = 0;	
-	}else if(pos = str_contain_str(cmd, (u8 *)"$TZ!$TZ!"), pos){
-			ai_mode = 0;	
-	}else if(pos = str_contain_str(cmd, (u8 *)"$QJ!"), pos){
-			ai_mode = 1;	
-	}else if(pos = str_contain_str(cmd, (u8 *)"$HT!"), pos){
-			ai_mode = 2;		
-	}else if(pos = str_contain_str(cmd, (u8 *)"$ZZ!"), pos){
-			ai_mode = 3;	
-	}else if(pos = str_contain_str(cmd, (u8 *)"$YZ!"), pos){
-			ai_mode = 4;		
-	}else if(pos = str_contain_str(cmd, (u8 *)"$ZPY!"), pos){
-			ai_mode = 5;	
-	}else if(pos = str_contain_str(cmd, (u8 *)"$YPY!"), pos){
-			ai_mode = 6;	
-	}else if(pos = str_contain_str(cmd, (u8 *)"$DJGS!"), pos){
-			ai_mode = 11;	
-	}else if(pos = str_contain_str(cmd, (u8 *)"$ZYBZ!"), pos){
-			ai_mode = 12;	
-	}else if(pos = str_contain_str(cmd, (u8 *)"$ZNXJ!"), pos){
-			ai_mode = 13;
-	}else if(pos = str_contain_str(cmd, (u8 *)"$XJMS!"), pos){
-			ai_mode = 13;
-	}else if(pos = str_contain_str(cmd, (u8 *)"$XJBZ!"), pos){
-			ai_mode = 14;
+	int pos;
+	/*
+	if(pos = str_contain_str(cmd, (u8 *)"$STOP!"), pos){
+		main_direction = 0;	
+	}else if(pos = str_contain_str(cmd, (u8 *)"$FORW!"), pos){
+		main_direction = 1;	
+	}else if(pos = str_contain_str(cmd, (u8 *)"$BACK!"), pos){
+			main_direction = 2;		
+	}else if(pos = str_contain_str(cmd, (u8 *)"$LEFT!"), pos){
+			main_direction = 3;	
+	}else if(pos = str_contain_str(cmd, (u8 *)"$RIGH!"), pos){
+			main_direction = 4;		
+	}else if(pos = str_contain_str(cmd, (u8 *)"$LEFR!"), pos){
+			main_direction = 5;	
+	}else if(pos = str_contain_str(cmd, (u8 *)"$LEBA!"), pos){
+			main_direction = 6;	
+	}else if(pos = str_contain_str(cmd, (u8 *)"$RIFR!"), pos){
+			main_direction = 7;	
+	}else if(pos = str_contain_str(cmd, (u8 *)"$RIBA!"), pos){
+			main_direction = 8;	
+	}else if(pos = str_contain_str(cmd, (u8 *)"$MVCN!"), pos){
+			main_direction = 9;
 	}
+	*/
 }
 
 
 //根据ai_mode的值执行对应功能
 void loop_AI(void) {
-	if(ai_mode == 0){
-			car_run(0,0,0,0);		
-			ai_mode = 99;	
-	}else if(ai_mode == 1){
-			car_run(600,600,600,600);
-			if (voice_flag == 1) {
-				tb_delay_ms(2000);
-				car_run(0,0,0,0);
-				voice_flag = 0;
-			}
-			ai_mode = 99;	
-	}else if(ai_mode == 2){
-			car_run(-600,-600,-600,-600);	
-			if (voice_flag == 1) {
-				tb_delay_ms(2000);
-				car_run(0,0,0,0);
-				voice_flag = 0;
-			}	
-			ai_mode = 99;	
-	}else if(ai_mode == 3){
-			car_run(-600,600,-600,600);	
-			if (voice_flag == 1) {
-				tb_delay_ms(500);
-				car_run(0,0,0,0);
-				voice_flag = 0;
-			}
-			ai_mode = 99;	
-	}else if(ai_mode == 4){
-			car_run(600,-600,600,-600);		
-			if (voice_flag == 1) {
-				tb_delay_ms(500);
-				car_run(0,0,0,0);
-				voice_flag = 0;
-			}
-			ai_mode = 99;	
-	}else if(ai_mode == 5){
-			car_run(-600,600,600,-600);		
-			if (voice_flag == 1) {
-				tb_delay_ms(2000);
-				car_run(0,0,0,0);
-				voice_flag = 0;
-			}
-			ai_mode = 99;	
-	}else if(ai_mode == 6){
-			car_run(600,-600,-600,600);		
-			if (voice_flag == 1) {
-				tb_delay_ms(2000);
-				car_run(0,0,0,0);
-				voice_flag = 0;
-			}
-			ai_mode = 99;	
-	}else if(ai_mode == 11){
-			dingju_gensui();		
-	}else if(ai_mode == 12){
-			ziyou_bizhang();
-	}
+	execute_direction(main_direction);
+	main_direction = 99;
 }
 
 //处理小车电机摇杆控制

@@ -340,7 +340,10 @@ int USART3_IRQHandler(void) {
 				uart1_mode = 3;
 			} else if(sbuf_bak == '<') {
 				uart1_mode = 4;
+			} else if(sbuf_bak == '@') {
+				uart1_mode = 5;
 			} 
+
 			buf_index = 0;
 		}
 		
@@ -358,7 +361,10 @@ int USART3_IRQHandler(void) {
 		} else if((uart1_mode == 3) && (sbuf_bak == '}')){
 			uart_receive_buf[buf_index] = '\0';
 			uart1_get_ok = 1;
-		}    
+		} else if((uart1_mode == 5) && (sbuf_bak == '!')){
+			uart_receive_buf[buf_index] = '\0';
+			uart1_get_ok = 1;
+		}  
 
 		if(buf_index >= UART_BUF_SIZE)buf_index = 0;
 			

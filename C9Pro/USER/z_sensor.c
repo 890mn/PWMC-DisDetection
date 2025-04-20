@@ -86,29 +86,52 @@ void csb_Delay_Us(uint16_t time)  //延时函数
 返回值：  采集的数据  
 *************************************************************/
 int get_csb_value(uint8_t sensor_id) {
-	u16 csb_t;
-	long timeout= 0;
-	GPIO_SetBits(trig_ports[sensor_id], trig_pins[sensor_id]);
-	csb_Delay_Us(10);
-	GPIO_ResetBits(trig_ports[sensor_id], trig_pins[sensor_id]);
-	timeout= 0;
-	while(GPIO_ReadInputDataBit(echo_ports[sensor_id], echo_pins[sensor_id]) == 0&&(timeout++<10000)) //等待接收口高电平输出
-	if(timeout>=500000)return 0;
-	TIM_SetCounter(TIM3,0);//清除计数
-	TIM_Cmd(TIM3, ENABLE);  //使能TIMx外设
-	while(GPIO_ReadInputDataBit(echo_ports[sensor_id], echo_pins[sensor_id]) == 1&&(timeout++<10000))
-	if(timeout>=500000)return 0;
-	TIM_Cmd(TIM3, DISABLE);  //使能TIMx外设      
-	csb_t = TIM_GetCounter(TIM3);//获取时间,分辨率为1US
-	//340m/s = 0.017cm/us
-	csb_t = csb_t*0.017;
-	sprintf((char *)cmd_return, "[%d]UTime=%d",sensor_id, (int)(csb_t));
-	uart3_send_str(cmd_return);
-	if(csb_t < 25000) {
-		return csb_t;
-	}
-	return 0;
+    uint16_t echo_time = 0;
+    long timeout = 0;
+    int distance = 0;
+
+    // 发出 TRIG 脉冲
+    GPIO_SetBits(trig_ports[sensor_id], trig_pins[sensor_id]);
+    csb_Delay_Us(10);
+    GPIO_ResetBits(trig_ports[sensor_id], trig_pins[sensor_id]);
+
+    // 等待 ECHO 拉高（超时保护）
+    timeout = 0;
+    while (GPIO_ReadInputDataBit(echo_ports[sensor_id], echo_pins[sensor_id]) == 0) {
+        if (++timeout > 30000) goto send_result; // 超时，跳转发送0
+    }
+
+    TIM_SetCounter(TIM3, 0);
+    TIM_Cmd(TIM3, ENABLE);
+
+    // 等待 ECHO 拉低（结束测量）
+    timeout = 0;
+    while (GPIO_ReadInputDataBit(echo_ports[sensor_id], echo_pins[sensor_id]) == 1) {
+        if (++timeout > 60000) {
+            TIM_Cmd(TIM3, DISABLE);
+            goto send_result; // 超时，跳转发送0
+        }
+    }
+
+    TIM_Cmd(TIM3, DISABLE);
+    echo_time = TIM_GetCounter(TIM3);
+
+    // 计算距离（cm）
+    distance = (int)(echo_time * 0.017f + 0.5f);
+
+    // 合理值范围检测
+    if (distance <= 0 || distance > 600) {
+        distance = 0;
+    }
+
+send_result:
+    // 必发串口信息
+    sprintf((char *)cmd_return, "[%d]UTime=%d", sensor_id, distance);
+    uart3_send_str(cmd_return);
+
+    return distance;
 }
+
 
 /*************************************************************
 功能介绍：定距跟随：判断超声波检测的距离，小于20cm时后退；25-35cm或超过70cm时停止；40-60cm时前进

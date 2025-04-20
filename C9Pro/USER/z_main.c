@@ -124,7 +124,7 @@ void avoid_system(u8 *cmd) { // @Forward25cm！
     // 可选：打印调试信息
     char buf[128];
 		sprintf(buf, "[指令解析] 方向：%s → %d，距离：%dcm\n", directionStr, main_direction, main_distance);
-		zx_uart_send_str(buf);
+		zx_uart_send_str((u8*)buf);
 }
 
 int main(void) {	
@@ -154,7 +154,7 @@ int main(void) {
 		ultra_distance();	
 		tb_delay_ms(400);
 		loop_uart();		  //串口数据接收处理
-		loop_AI();		    //执行对应功能
+		execute_direction(main_direction);
 		tb_delay_ms(2000);
 	}
 }
@@ -270,10 +270,7 @@ void setup_interrupt(void) {
 	//总中断打开
 	tb_interrupt_open();
 }	
-//--------------------------------------------------------------------------------
 
-
-//--------------------------------------------------------------------------------
 /*
 	主循环函数实现
 */
@@ -314,169 +311,11 @@ void loop_uart(void) {
 	return;
 }	
 
-//循环读取PS2手柄数据
-void loop_ps2_data(void) {
-	static u32 systick_ms_bak = 0;
-	//每50ms处理1次
-	if(millis() - systick_ms_bak < 50) {
-		return;
-	}
-	systick_ms_bak = millis();
-	//读写手柄数据
-	psx_write_read(psx_buf);
-	
-#if 0
-	//测试手柄数据，1为打开 0为关闭
-	sprintf((char *)cmd_return, "0x%02x,0x%02x,0x%02x,0x%02x,0x%02x,0x%02x,0x%02x,0x%02x,0x%02x\r\n", 
-	(int)psx_buf[0], (int)psx_buf[1], (int)psx_buf[2], (int)psx_buf[3],
-	(int)psx_buf[4], (int)psx_buf[5], (int)psx_buf[6], (int)psx_buf[7], (int)psx_buf[8]);
-	uart1_send_str(cmd_return);
-#endif 	
-	
-	return;
-}	
-//处理手柄上的按钮
-void loop_ps2_button(void) {
-	static unsigned char psx_button_bak[2] = {0};
-
-	//对比两次获取的按键值是否相同 ，相同就不处理，不相同则处理
-	if((psx_button_bak[0] == psx_buf[3])
-	&& (psx_button_bak[1] == psx_buf[4])) {				
-	} else {		
-		//处理buf3和buf4两个字节，这两个字节存储这手柄16个按键的状态
-		parse_psx_buf(psx_buf+3, psx_buf[1]);
-		psx_button_bak[0] = psx_buf[3];
-		psx_button_bak[1] = psx_buf[4];
-	}
-	return;
-}	
-
-
-
-//--------------------------------------------------------------------------------
-
 //软件复位函数，调用后单片机自动复位
 void soft_reset(void) {
 	__set_FAULTMASK(1);     
 	NVIC_SystemReset();
 }
-
-//处理手柄按键字符，buf为字符数组，mode是指模式 主要是红灯和绿灯模式
-void parse_psx_buf(unsigned char *buf, unsigned char mode) {
-	u8 i, pos = 0;
-	static u16 bak=0xffff, temp, temp2;
-	temp = (buf[0]<<8) + buf[1];
-	
-	if(bak != temp) {
-		temp2 = temp;
-		temp &= bak;
-		for(i=0;i<16;i++) {     //16个按键一次轮询
-			if((1<<i) & temp) {
-			} else {
-				if((1<<i) & bak) {	//press 表示按键按下了
-															
-					memset(uart_receive_buf, 0, sizeof(uart_receive_buf));					
-					if(mode == PS2_LED_RED){												
-						//memcpy((char *)uart_receive_buf, (char *)pre_cmd_set_red[i], strlen(pre_cmd_set_red[i]));
-						if (i == 12) {
-							ai_mode = 1;
-							break;
-						} else if (i == 14) {
-							ai_mode = 2;
-							break;
-						} else if (i == 15) {
-							ai_mode = 3;
-							break;
-						} else if (i == 13) {
-							ai_mode = 4;
-							break;
-						} else if (i == 9 || i == 2) {
-							ai_mode = 5;
-							break;
-						} else if (i == 10 || i == 3) {
-							ai_mode = 6;
-							break;
-						} else if (i == 8 || i == 11) {
-							ai_mode = 0;
-							break;
-						} else if (i == 4) {
-							ai_mode = 11;
-							break;
-						} else if (i == 6) {
-							ai_mode = 12;
-							break;
-						} else if (i == 7) {
-							ai_mode = 13;
-							break;
-						} else if (i == 5) {
-							ai_mode = 14;
-							break;
-						}
-					}																
-					pos = str_contain_str(uart_receive_buf, (u8 *)"^");
-					if(pos) uart_receive_buf[pos-1] = '\0';
-					if(str_contain_str(uart_receive_buf, (u8 *)"$")) {
-						uart1_close();
-						uart1_get_ok = 0;
-						strcpy((char *)cmd_return, (char *)uart_receive_buf+11);
-						strcpy((char *)uart_receive_buf, (char *)cmd_return);
-						uart1_get_ok = 1;
-						uart1_open();
-						uart1_mode = 1;
-					} else if(str_contain_str(uart_receive_buf, (u8 *)"#")) {
-						uart1_close();
-						uart1_get_ok = 0;
-						strcpy((char *)cmd_return, (char *)uart_receive_buf+11);
-						strcpy((char *)uart_receive_buf,(char *) cmd_return);
-						uart1_get_ok = 1;
-						uart1_open();
-						uart1_mode = 2;
-					}
-					bak = 0xffff;
-				} else {//release 表示按键松开了
-										
-					memset(uart_receive_buf, 0, sizeof(uart_receive_buf));					
-					if(mode == PS2_LED_RED){
-						//memcpy((char *)uart_receive_buf, (char *)pre_cmd_set_red[i], strlen(pre_cmd_set_red[i]));		
-						if (i == 12 || i == 14 || i == 13 || i == 15 || i == 9 || i == 2 || i == 10 || i == 3 || i == 8 || i == 11) {
-							ai_mode = 0;
-							break;
-						}
-					}										
-											
-					pos = str_contain_str(uart_receive_buf, (u8 *)"^");
-					if(pos) {
-						if(str_contain_str(uart_receive_buf+pos, (u8 *)"$")) {
-							//uart1_close();
-							//uart1_get_ok = 0;
-							strcpy((char *)cmd_return, (char *)uart_receive_buf+pos);
-							cmd_return[strlen((char *)cmd_return) - 1] = '\0';
-							strcpy((char *)uart_receive_buf, (char *)cmd_return);
-							parse_cmd(uart_receive_buf);
-							parse_group_cmd(uart_receive_buf);
-							//uart1_get_ok = 1;
-							//uart1_mode = 1;
-						} else if(str_contain_str(uart_receive_buf+pos, (u8 *)"#")) {
-							//uart1_close();
-							//uart1_get_ok = 0;
-							strcpy((char *)cmd_return, (char *)uart_receive_buf+pos);
-							cmd_return[strlen((char *)cmd_return) - 1] = '\0';
-							strcpy((char *)uart_receive_buf, (char *)cmd_return);
-							parse_action(uart_receive_buf);
-							//uart1_get_ok = 1;
-							//uart1_mode = 2;
-						}
-						//uart1_send_str(uart_receive_buf);
-					}	
-				}
-			}
-		}
-		bak = temp2;
-		beep_on_times(1,100);
-	}	
-	return;
-}
-
 
 //串口接收的数据解析函数
 void parse_cmd(u8 *cmd) {
@@ -488,56 +327,21 @@ void parse_cmd(u8 *cmd) {
 	}else if(pos = str_contain_str(cmd, (u8 *)"$BACK!"), pos){
 			main_direction = DIR_BACK;		
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LEFT!"), pos){
-			main_direction = 3;	
+			main_direction = DIR_LEFT;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$RIGH!"), pos){
-			main_direction = 4;		
+			main_direction = DIR_RIGHT;		
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LEFR!"), pos){
-			main_direction = 5;	
+			main_direction = DIR_LEFT_FORWARD;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LEBA!"), pos){
-			main_direction = 6;	
-	}else if(pos = str_contain_str(cmd, (u8 *)"$RIFR!"), pos){
-			main_direction = 7;	
-	}else if(pos = str_contain_str(cmd, (u8 *)"$RIBA!"), pos){
-			main_direction = 8;	
-	}else if(pos = str_contain_str(cmd, (u8 *)"$MVCN!"), pos){
-			main_direction = 9;
-	}
-}
-
-
-//根据ai_mode的值执行对应功能
-void loop_AI(void) {
-	execute_direction(main_direction);
-	//main_direction = 99;
-}
-
-//处理小车电机摇杆控制
-void loop_ps2_car(void) {
-	static int car_left, car_right, car_left_bak, car_right_bak;
-	
-	if(psx_buf[1] != PS2_LED_RED)return;
-	
-	if(abs_int(127 - psx_buf[8]) < 5 )psx_buf[8] = 127;
-	if(abs_int(127 - psx_buf[6]) < 5 )psx_buf[6] = 127;
-	
-	//总线马达设置	
-	car_left = (127 - psx_buf[8]) * 8;
-	car_right = (127 - psx_buf[6]) * 8;
-	
-	if(abs_int(car_left) < 100)car_left = 0;
-	if(car_left > 1000)car_left = 1000;
-	if(car_left < -1000)car_left = -1000;
-	
-	if(abs_int(car_right) < 100)car_right = 0;
-	if(car_right > 1000)car_right = 1000;
-	if(car_right < -1000)car_right = -1000;
-
-	if(car_left != car_left_bak || car_right != car_right_bak) {
-		
-		//uart1_send_str((u8*)"ps2:");
-		car_run(car_left, car_right, car_left, car_right);
-		car_left_bak = car_left;
-		car_right_bak = car_right;
+			main_direction = DIR_RIGHT_FORWARD;	
+	}else if(pos = str_contain_str(cmd, (u8 *)"$RICE!"), pos){
+			main_direction = DIR_RIGCEN;	
+	}else if(pos = str_contain_str(cmd, (u8 *)"$RICR!"), pos){
+			main_direction = DIR_RIGCEN_REV;	
+	}else if(pos = str_contain_str(cmd, (u8 *)"$LECE!"), pos){
+			main_direction = DIR_LEFCEN;
+	}else if(pos = str_contain_str(cmd, (u8 *)"$LECR!"), pos){
+			main_direction = DIR_LEFCEN_REV;
 	}
 }
 
@@ -550,18 +354,4 @@ void car_run(int speedlq, int speedrq, int speedlh, int speedrh) {
 	sprintf((char *)cmd_return, "{#006P%04dT0000!#007P%04dT0000!#008P%04dT0000!#009P%04dT0000!}", (int)(1500+speedlq), (int)(1500-speedrq), (int)(1500+speedlh), (int)(1500-speedrh));
 	zx_uart_send_str(cmd_return);
 	return;
-}
-
-
-/***********************************************
-	函数名称：loop_ir() 
-	功能介绍：循环接收处理红外遥控器数据
-	函数参数：无
-	返回值：	无
- ***********************************************/
-void loop_ir(void) {
-	if(ir_flag) {
-		ir_function();
-		ir_flag = 0;
-	}
 }

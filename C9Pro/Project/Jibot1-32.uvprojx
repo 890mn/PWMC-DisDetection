@@ -485,19 +485,9 @@
               <FilePath>..\src\z_delay.c</FilePath>
             </File>
             <File>
-              <FileName>z_global.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\z_global.c</FilePath>
-            </File>
-            <File>
               <FileName>z_gpio.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\z_gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>z_ps2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\z_ps2.c</FilePath>
             </File>
             <File>
               <FileName>z_rcc.c</FileName>
@@ -515,29 +505,9 @@
               <FilePath>..\src\z_usart.c</FilePath>
             </File>
             <File>
-              <FileName>z_w25q64.c</FileName>
+              <FileName>z_global.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\src\z_w25q64.c</FilePath>
-            </File>
-            <File>
-              <FileName>z_adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\z_adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>z_kinematics.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\z_kinematics.c</FilePath>
-            </File>
-            <File>
-              <FileName>z_action.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\z_action.c</FilePath>
-            </File>
-            <File>
-              <FileName>z_ir.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\src\z_ir.c</FilePath>
+              <FilePath>..\src\z_global.c</FilePath>
             </File>
           </Files>
         </Group>

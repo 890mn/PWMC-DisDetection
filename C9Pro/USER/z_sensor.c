@@ -1,20 +1,3 @@
-#include "z_rcc.h"		//配置时钟文件
-#include "z_gpio.h"		//配置IO口文件
-#include "z_global.h"	//存放全局变量
-#include "z_delay.h"	//存放延时函数
-#include "z_type.h"		//存放类型定义
-#include "z_usart.h"	//存放串口功能文件
-#include "z_timer.h"	//存放定时器功能文件
-#include "z_ps2.h"		//存放索尼手柄
-#include "z_w25q64.h"	//存储芯片的操作
-#include "z_adc.h"		//ADC初始化
-#include <stdio.h>		//标准库文件
-#include <string.h>		//标准库文件
-#include <math.h>		//标准库文件
-#include "z_kinematics.h"	//逆运动学算法
-#include "stm32f10x_iwdg.h"
-#include "z_sensor.h"
-#include "z_action.h"
 #include "z_main.h"
 
 u16 kms_y = 0;
@@ -44,7 +27,7 @@ void setup_csb(void){
 	GPIO_InitTypeDef GPIO_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOA, ENABLE);  
 	
-	for (i = 0; i < 5; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		// 配置Trig引脚
 		GPIO_InitStructure.GPIO_Pin = trig_pins[i];

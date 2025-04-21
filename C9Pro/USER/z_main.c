@@ -1,31 +1,5 @@
-#include "z_rcc.h"		//配置时钟文件
-#include "z_gpio.h"		//配置IO口文件
-#include "z_global.h"	//存放全局变量
-#include "z_delay.h"	//存放延时函数
-#include "z_type.h"		//存放类型定义
-#include "z_usart.h"	//存放串口功能文件
-#include "z_timer.h"	//存放定时器功能文件
-#include "z_ps2.h"		//存放索尼手柄
-#include "z_w25q64.h"	//存储芯片的操作
-#include "z_adc.h"		//ADC初始化
-#include <stdio.h>		//标准库文件
-#include <string.h>		//标准库文件
-#include <math.h>	  	//标准库文件
-#include <stdlib.h>
-#include <ctype.h>
-#include "z_kinematics.h"	//逆运动学算法
-#include "z_action.h" //动作组执行文件
-#include "stm32f10x_iwdg.h"
-#include "z_sensor.h"
-
+#include "z_main.h"
 #define MODULE "Jibot1-32"
-
-u8 i = 0;
-u8 ir_data[4],ir_flag;
-u8 psx_buf[9]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00}; //存储手柄的数据 	
-u8 voice_flag = 0;      //用于控制语音识别时小车的基本动作执行时间为2秒
-int xunji_speed = 300;  //循迹速度,范围（0-1000），可根据实际情况修改循迹速度
-u8 ai_mode = 0;
 
 #define SENSOR_LEFT   1
 #define SENSOR_FRONT  2
@@ -122,8 +96,8 @@ void avoid_system(u8 *cmd) { // @Forward25cm！
     main_distance = atoi(numberStr);  // 转换成整数
 
     // 可选：打印调试信息
-    char buf[128];
-		sprintf(buf, "[指令解析] 方向：%s → %d，距离：%dcm\n", directionStr, main_direction, main_distance);
+    char buf[256];
+		sprintf(buf, "[指令解析] 方向：%s，距离：%dcm\n", directionStr, main_distance);
 		zx_uart_send_str((u8*)buf);
 }
 
@@ -240,15 +214,8 @@ void loop_nled(void) {
 void loop_uart(void) {
 	if(uart1_get_ok) {
 		if(uart1_mode == 1) {					    //命令模式
-			parse_group_cmd(uart_receive_buf);
 			beep_on_times(1,100);
 			parse_cmd(uart_receive_buf);			
-		} else if(uart1_mode == 2) {			//单个舵机调试
-			parse_action(uart_receive_buf);
-		} else if(uart1_mode == 3) {		  //多路舵机调试
-			parse_action(uart_receive_buf);
-		} else if(uart1_mode == 4) {		  //存储模式
-			save_action(uart_receive_buf);
 		} else if(uart1_mode == 5) {		  //存储模式
 			avoid_system(uart_receive_buf);
 		} 

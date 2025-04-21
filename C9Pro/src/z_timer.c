@@ -19,12 +19,6 @@
 
 u32 systick_ms = 0;
 
-u8 ir_start=0,ir_start_flag=0;
-u8 ir_repeat=0,ir_repeat_flag=0;
-u8 ir_end_flag=0,ir_time_flag=0;
-u8 ir_data_count=0;
-
-
 /**
  * 初始化独立看门狗
  * prer:分频数:0~7(只有低 3 位有效!)
@@ -234,50 +228,11 @@ float abs_float(float value) {
 	return (-value);
 }
 
-void duoji_inc_handle(u8 index) {	
-	int aim_temp;
-	
-	if(duoji_doing[index].inc != 0) {
-		
-		aim_temp = duoji_doing[index].aim;
-		
-		if(aim_temp > 2490){
-			aim_temp = 2490;
-		} else if(aim_temp < 500) {
-			aim_temp = 500;
-		}
-	
-		if(abs_float(aim_temp - duoji_doing[index].cur) <= abs_float(duoji_doing[index].inc + duoji_doing[index].inc)) {
-			duoji_doing[index].cur = aim_temp;
-			duoji_doing[index].inc = 0;
-		} else {
-			duoji_doing[index].cur += duoji_doing[index].inc;
-		}
-	}
-}
-
 void TIM2_IRQHandler(void) {
 	static u8 flag = 0;
-	static u8 duoji_index1 = 0;
-	int temp;
 	if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET) //检查 TIM2 更新中断发生与否
 	{
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update ); //清除 TIM2 更新中断标志
-		
-		if(duoji_index1 == 8) {
-			duoji_index1 = 0;
-		}
-		
-		if(flag == 0) {
-			TIM2->ARR = ((unsigned int)(duoji_doing[duoji_index1].cur));
-			dj_io_set(duoji_index1, 1);	
-			duoji_inc_handle(duoji_index1);
-		} else {
-			temp = 2500 - (unsigned int)(duoji_doing[duoji_index1].cur);
-			TIM2->ARR = temp;
-			dj_io_set(duoji_index1, 0);
-			duoji_index1 ++;
-		}
 		flag = !flag;
 	}
 } 
@@ -340,31 +295,4 @@ void timer1_ir_init(u16 arr,u16 psc)
 	TIM_ITConfig(TIM1, TIM_IT_CC1,ENABLE);
 
 	TIM_Cmd(TIM1, ENABLE);
-}
-
-
-/***********************************************
-	函数名称：	TIM1_UP_IRQHandler() 
-	功能介绍：	定时器1溢出中断 判断是否再无重复码
-	函数参数：	无
-	返回值：		无
- ***********************************************/
-void TIM1_UP_IRQHandler(void) {
-	if (TIM_GetITStatus(TIM1, TIM_IT_Update) == SET) {
-		TIM_ClearFlag(TIM1, TIM_FLAG_Update);
-		if(ir_time_flag<2)  
-			ir_time_flag++;
-		else {
-			if(ir_data_count>31){
-				ir_start=0;
-				ir_start_flag=0;
-				ir_repeat=0;
-				ir_repeat_flag=0;
-				ir_end_flag=0;
-				ir_time_flag=0;
-				ir_data_count=0;
-				Timeout_OFF();
-			}
-		}
-	}
 }

@@ -62,32 +62,71 @@ void ultra_distance(void) {
     tb_delay_ms(10);
 }
 
-void avoid_system(u8 *cmd) { // @Forward25cm！
-    char directionStr[20] = {0};  // 提取方向
-    char numberStr[10] = {0};     // 提取距离
+void avoid_system(u8 *cmd) {
+    // ------- 1. 解析方向和目标距离 -------
+    char directionStr[20] = {0};
+    char numberStr[10] = {0};
     int i = 1, j = 0;
-
-    // 提取字母部分（方向）
     while (isalpha(cmd[i]) && j < sizeof(directionStr) - 1) {
         directionStr[j++] = cmd[i++];
     }
     directionStr[j] = '\0';
-
-    // 提取数字部分（距离）
     j = 0;
     while (isdigit(cmd[i]) && j < sizeof(numberStr) - 1) {
         numberStr[j++] = cmd[i++];
     }
     numberStr[j] = '\0';
-
-    // 设置全局变量
     main_direction = get_direction_from_str(directionStr);
-    main_distance = atoi(numberStr);  // 转换成整数
+    main_distance = atoi(numberStr);
 
-    // 可选：打印调试信息
-    char buf[256];
-		sprintf(buf, "[指令解析] 方向：%s，距离：%dcm\n", directionStr, main_distance);
-		zx_uart_send_str((u8*)buf);
+    // ------- 2. 判断目标方向是否畅通 -------
+    int safe = 0;
+    switch (main_direction) {
+        case DIR_FORWARD:
+            if (ultra_left > main_distance + 10) {
+                execute_direction(main_direction);
+                safe = 1;
+            }
+            break;
+        case DIR_BACK:
+            if (ultra_back > main_distance + 10) {
+                execute_direction(main_direction);
+                safe = 1;
+            }
+            break;
+        case DIR_LEFT:
+            if (ultra_left > main_distance + 10) {
+                execute_direction(main_direction);
+                safe = 1;
+            }
+            break;
+        case DIR_RIGHT:
+            if (ultra_right > main_distance + 10) {
+                execute_direction(main_direction);
+                safe = 1;
+            }
+            break;
+        default:
+            break;
+    }
+
+    // ------- 3. 如果目标方向不安全，尝试绕行 -------
+    if (!safe) {
+        if (ultra_left > ultra_right && ultra_left > 20) {
+            execute_direction(DIR_LEFT);
+        } else if (ultra_right > 20) {
+            execute_direction(DIR_RIGHT);
+        } else if (ultra_back > 20) {
+            execute_direction(DIR_BACK);
+        } else {
+            execute_direction(DIR_STOP);
+        }
+
+        // 输出避障信息
+        char buf[128];
+        sprintf(buf, "[避障系统] 目标%s不可达，正在尝试绕行\n", directionStr);
+        zx_uart_send_str((u8*)buf);
+    }
 }
 
 int main(void) {	

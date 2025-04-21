@@ -107,3 +107,4 @@
 [2025-04-21 13:20:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
 [2025-04-21 13:28:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
 [2025-04-21 13:45:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-21 17:24:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex

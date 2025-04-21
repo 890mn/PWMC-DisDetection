@@ -1,15 +1,4 @@
 #include "z_main.h"
-#define MODULE "Jibot1-32"
-
-#define SENSOR_LEFT   1
-#define SENSOR_FRONT  2
-#define SENSOR_RIGHT  3
-#define SENSOR_BACK   4
-
-typedef struct {
-    const char* cmd;
-    Direction dir;
-} CommandMap;
 
 uint16_t ultra_left = 0;
 uint16_t ultra_front = 0;
@@ -18,6 +7,20 @@ uint16_t ultra_back = 0;
 
 uint16_t main_distance = 0;
 Direction main_direction = DIR_STOP;
+
+CommandMap directionTable[] = {
+    {"Stop", DIR_STOP},
+    {"Forward", DIR_FORWARD},
+    {"Back", DIR_BACK},
+    {"Left", DIR_LEFT},
+    {"Right", DIR_RIGHT},
+    {"LeftForward", DIR_LEFT_FORWARD},
+    {"RightForward", DIR_RIGHT_FORWARD},
+    {"RigCen", DIR_RIGCEN},
+    {"RigCenRev", DIR_RIGCEN_REV},
+    {"LefCen", DIR_LEFCEN},
+    {"LefCenRev", DIR_LEFCEN_REV}
+};
 
 void execute_direction(Direction dir) {
     switch (dir) {
@@ -35,20 +38,6 @@ void execute_direction(Direction dir) {
         default:                 car_run(0, 0, 0, 0); break;
     }
 }
-
-const CommandMap directionTable[] = {
-    {"Stop", DIR_STOP},
-    {"Forward", DIR_FORWARD},
-    {"Back", DIR_BACK},
-    {"Left", DIR_LEFT},
-    {"Right", DIR_RIGHT},
-    {"LeftForward", DIR_LEFT_FORWARD},
-    {"RightForward", DIR_RIGHT_FORWARD},
-    {"RigCen", DIR_RIGCEN},
-    {"RigCenRev", DIR_RIGCEN_REV},
-    {"LefCen", DIR_LEFCEN},
-    {"LefCenRev", DIR_LEFCEN_REV}
-};
 
 Direction get_direction_from_str(const char* dirStr) {
     for (int i = 0; i < sizeof(directionTable)/sizeof(CommandMap); ++i) {

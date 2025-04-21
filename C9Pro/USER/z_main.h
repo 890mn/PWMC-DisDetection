@@ -17,6 +17,11 @@
 #include "stm32f10x_iwdg.h"
 #include "z_sensor.h"
 
+#define SENSOR_LEFT   1
+#define SENSOR_FRONT  2
+#define SENSOR_RIGHT  3
+#define SENSOR_BACK   4
+
 typedef enum {
     DIR_STOP = 0,
     DIR_FORWARD,
@@ -30,32 +35,40 @@ typedef enum {
     DIR_LEFCEN,
     DIR_LEFCEN_REV
 } Direction;
-extern Direction main_direction;
 
-/*
-	初始化函数声明
-*/
+typedef struct {
+    const char* cmd;
+    Direction dir;
+} CommandMap;
+
+extern CommandMap directionTable[];
+extern Direction main_direction;
+extern uint16_t  main_distance;
+extern uint16_t  ultra_left;
+extern uint16_t  ultra_front;
+extern uint16_t  ultra_right;
+extern uint16_t  ultra_back;
 
 void setup_rcc(void);         //初始化时钟
-void setup_global(void);      //初始化全局变量		
 void setup_gpio(void);        //初始化IO口			
 void setup_nled(void);        //初始化工作指示灯
 void setup_beep(void);	      //初始化蜂鸣器		
 void setup_uart1(void);	      //初始化串口1
-void setup_uart2(void);	      //初始化串口2
 void setup_uart3(void);	      //初始化串口3
 void setup_systick(void);     //初始化滴答时钟，1S增加一次systick_ms的值
-void setup_start(void);		    //初始化启动信号
 void setup_interrupt(void);   //初始化总中断
-/*
-	主循环函数声明
-*/
+
 void loop_nled(void);	        //循环执行工作指示灯，500ms跳动一次	
 void loop_uart(void);	        //串口数据接收处理
 
 void soft_reset(void);					               //软件复位
 void parse_cmd(u8 *cmd);			            	   //命令解析
 void car_run(int speedlq, int speedrq, int speedlh, int speedrh);  
+
+void execute_direction(Direction dir);
+Direction get_direction_from_str(const char* dirStr);
+void ultra_distance(void);
+void avoid_system(u8 *cmd);
 
 
 #endif

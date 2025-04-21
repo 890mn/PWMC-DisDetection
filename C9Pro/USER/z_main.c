@@ -132,7 +132,6 @@ int main(void) {
 	setup_gpio();		  //初始化IO口
 	setup_nled();		  //初始化工作指示灯
 	setup_beep();		  //初始化定时器
-	setup_w25q64();		//初始化存储器W25Q64
 	setup_uart1();		//初始化串口1 用于下载动作组
 	setup_uart3();		//初始化串口3 用于底板总线、蓝牙、lora
 	setup_systick();	//初始化滴答时钟，1S增加一次millis()的值
@@ -172,31 +171,6 @@ void setup_beep(void) {  //初始化定时器蜂鸣器
 	beep_init();		
 	beep_off();			       //关闭蜂鸣器
 }			
-void setup_w25q64(void) {//初始化存储器W25Q64
-	u8 i;
-	spiFlahsOn(1);
-	w25x_init();				   //动作组存储芯片初始化
-	w25x_read((u8 *)(&eeprom_info), W25Q64_INFO_ADDR_SAVE_STR, sizeof(eeprom_info));//读取全局变量
-	
-	if(eeprom_info.version != VERSION) {//判断版本是否是当前版本
-		eeprom_info.version = VERSION;		//复制当前版本
-		eeprom_info.dj_record_num = 0;		//学习动作组变量赋值0
-	}
-	
-	if(eeprom_info.dj_bias_pwm[DJ_NUM] != FLAG_VERIFY) {
-		for(i=0;i<DJ_NUM;i++) {
-			eeprom_info.dj_bias_pwm[i] = 0;
-		}
-		eeprom_info.dj_bias_pwm[DJ_NUM] = FLAG_VERIFY;
-	}
-	
-	for(i=0;i<DJ_NUM;i++) {
-		duoji_doing[i].aim = 1500 + eeprom_info.dj_bias_pwm[i];
-		duoji_doing[i].cur = 1500 + eeprom_info.dj_bias_pwm[i];
-		duoji_doing[i].inc = 0;
-	}
-	spiFlahsOn(0);
-}	
 
 void setup_uart1(void) {
   //串口1初始化

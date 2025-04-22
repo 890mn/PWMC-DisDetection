@@ -68,8 +68,8 @@ void car_run(int speedlq, int speedrq, int speedlh, int speedrh);
 void execute_direction(Direction dir);
 Direction get_direction_from_str(const char* dirStr);
 void ultra_distance(void);
-void avoid_system(u8 *cmd);
-
+void avoid_system(void);
+void dirs(u8 *cmd);
 
 #endif
 

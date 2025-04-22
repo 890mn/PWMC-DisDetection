@@ -8,6 +8,9 @@ uint16_t ultra_back = 0;
 uint16_t main_distance = 0;
 Direction main_direction = DIR_STOP;
 
+bool avoid_mode = FALSE;
+bool any = FALSE;
+
 CommandMap directionTable[] = {
     {"Stop", DIR_STOP},
     {"Forward", DIR_FORWARD},
@@ -23,20 +26,24 @@ CommandMap directionTable[] = {
 };
 
 void execute_direction(Direction dir) {
-    switch (dir) {
-        case DIR_STOP:           car_run(0, 0, 0, 0); break;
-        case DIR_FORWARD:        car_run(600, 600, 600, 600); break;
-        case DIR_BACK:           car_run(-600, -600, -600, -600); break;
-        case DIR_LEFT:           car_run(-600, 600, -600, 600); break;
-        case DIR_RIGHT:          car_run(600, -600, 600, -600); break;
-        case DIR_LEFT_FORWARD:   car_run(-600, 600, 600, -600); break;
-        case DIR_RIGHT_FORWARD:  car_run(600, -600, -600, 600); break;
-        case DIR_RIGCEN:         car_run(600, 0, 600, 0); break;
-        case DIR_RIGCEN_REV:     car_run(-600, 0, -600, 0); break;
-        case DIR_LEFCEN:         car_run(0, -600, 0, -600); break;
-        case DIR_LEFCEN_REV:     car_run(0, 600, 0, 600); break;
-        default:                 car_run(0, 0, 0, 0); break;
-    }
+	if (any) {
+		car_run(0, 0, 0, 0);
+	} else {
+		switch (dir) {
+			case DIR_STOP:           car_run(0, 0, 0, 0); break;
+			case DIR_FORWARD:        car_run(600, 600, 600, 600); break;
+			case DIR_BACK:           car_run(-600, -600, -600, -600); break;
+			case DIR_LEFT:           car_run(-600, 600, -600, 600); break;
+			case DIR_RIGHT:          car_run(600, -600, 600, -600); break;
+			case DIR_LEFT_FORWARD:   car_run(-600, 600, 600, -600); break;
+			case DIR_RIGHT_FORWARD:  car_run(600, -600, -600, 600); break;
+			case DIR_RIGCEN:         car_run(600, 0, 600, 0); break;
+			case DIR_RIGCEN_REV:     car_run(-600, 0, -600, 0); break;
+			case DIR_LEFCEN:         car_run(0, -600, 0, -600); break;
+			case DIR_LEFCEN_REV:     car_run(0, 600, 0, 600); break;
+			default:                 car_run(0, 0, 0, 0); break;
+		}
+	}
 }
 
 Direction get_direction_from_str(const char* dirStr) {
@@ -62,9 +69,8 @@ void ultra_distance(void) {
     tb_delay_ms(10);
 }
 
-void avoid_system(u8 *cmd) {
-    // ------- 1. 解析方向和目标距离 -------
-    char directionStr[20] = {0};
+void dirs(u8 *cmd) {
+	char directionStr[20] = {0};
     char numberStr[10] = {0};
     int i = 1, j = 0;
     while (isalpha(cmd[i]) && j < sizeof(directionStr) - 1) {
@@ -78,12 +84,17 @@ void avoid_system(u8 *cmd) {
     numberStr[j] = '\0';
     main_direction = get_direction_from_str(directionStr);
     main_distance = atoi(numberStr);
+}
 
-    // ------- 2. 判断目标方向是否畅通 -------
+void avoid_system(void) {
+    if (!avoid_mode) return;
+
     int safe = 0;
+	any = FALSE;
+    // ------- 1. 判断目标方向是否畅通 -------
     switch (main_direction) {
         case DIR_FORWARD:
-            if (ultra_left > main_distance + 10) {
+            if (ultra_front > main_distance + 10) {
                 execute_direction(main_direction);
                 safe = 1;
             }
@@ -110,22 +121,51 @@ void avoid_system(u8 *cmd) {
             break;
     }
 
-    // ------- 3. 如果目标方向不安全，尝试绕行 -------
+    // ------- 2. 如果目标方向不安全，尝试绕行 -------
     if (!safe) {
         if (ultra_left > ultra_right && ultra_left > 20) {
-            execute_direction(DIR_LEFT);
+            main_direction = DIR_LEFT;
         } else if (ultra_right > 20) {
-            execute_direction(DIR_RIGHT);
+            main_direction = DIR_RIGHT;
         } else if (ultra_back > 20) {
-            execute_direction(DIR_BACK);
+            main_direction = DIR_BACK;
         } else {
-            execute_direction(DIR_STOP);
+            main_direction = DIR_STOP;
         }
+    }
 
-        // 输出避障信息
-        char buf[128];
-        sprintf(buf, "[避障系统] 目标%s不可达，正在尝试绕行\n", directionStr);
-        zx_uart_send_str((u8*)buf);
+    // ------- 3. 判断是否到达目标位置，退出避障 -------
+    switch (main_direction) {
+        case DIR_FORWARD:
+            if (ultra_front <= main_distance + 5) {
+                avoid_mode = FALSE;
+                main_direction = DIR_STOP;
+                zx_uart_send_str((u8*)"[避障] 前进目标已达，退出自动避障\n");
+            }
+            break;
+        case DIR_BACK:
+            if (ultra_back <= main_distance + 5) {
+                avoid_mode = FALSE;
+                main_direction = DIR_STOP;
+                zx_uart_send_str((u8*)"[避障] 后退目标已达，退出自动避障\n");
+            }
+            break;
+        case DIR_LEFT:
+            if (ultra_left <= main_distance + 5) {
+                avoid_mode = FALSE;
+                main_direction = DIR_STOP;
+                zx_uart_send_str((u8*)"[避障] 左移目标已达，退出自动避障\n");
+            }
+            break;
+        case DIR_RIGHT:
+            if (ultra_right <= main_distance + 5) {
+                avoid_mode = FALSE;
+                main_direction = DIR_STOP;
+                zx_uart_send_str((u8*)"[避障] 右移目标已达，退出自动避障\n");
+            }
+            break;
+        default:
+            break;
     }
 }
 
@@ -142,12 +182,19 @@ int main(void) {
 	setup_sensor();
 	
 	while(1) {
-		loop_nled();	  	//循环执行工作指示灯，500ms跳动一次
+		// 1 - Base scan
+		loop_nled();	   //循环执行工作指示灯，500ms跳动一次
 		ultra_distance();	
-		tb_delay_ms(400);
-		loop_uart();		  //串口数据接收处理
+		tb_delay_ms(350);
+
+		// 2 - UART scan
+		loop_uart();	  //串口数据接收处理
+		avoid_system();
+		tb_delay_ms(150); // 避障系统处理
+
+		// 3 - Car run
 		execute_direction(main_direction);
-		tb_delay_ms(2000);
+		tb_delay_ms(500);
 	}
 }
 
@@ -182,15 +229,7 @@ void setup_uart1(void) {
 	//串口发送测试字符
 	uart1_send_str((u8 *)"uart1 check ok!");
 }
-//初始化串口2
-void setup_uart2(void) {
-	//串口2初始化
-	tb_usart2_init(115200);
-	//串口2打开
-	uart2_open();
-	//串口发送测试字符
-	uart2_send_str((u8 *)"uart2 check ok!");
-}	
+
 //初始化串口3
 void setup_uart3(void) {
 	//串口3初始化
@@ -206,13 +245,6 @@ void setup_uart3(void) {
 void setup_systick(void) {
 	//系统滴答时钟初始化	
 	SysTick_Int_Init();
-}	
-//初始化启动信号
-void setup_start(void) {
-	//蜂鸣器LED 名叫闪烁 示意系统启动
-	beep_on();nled_on();tb_delay_ms(100);beep_off();nled_off();tb_delay_ms(100);
-	beep_on();nled_on();tb_delay_ms(100);beep_off();nled_off();tb_delay_ms(100);
-	beep_on();nled_on();tb_delay_ms(100);beep_off();nled_off();tb_delay_ms(100);
 }	
 
 //初始化总中断
@@ -241,11 +273,15 @@ void loop_nled(void) {
 //串口数据接收处理
 void loop_uart(void) {
 	if(uart1_get_ok) {
-		if(uart1_mode == 1) {					    //命令模式
+		if(uart1_mode == 1) { // $
 			beep_on_times(1,100);
+			any = FALSE;
 			parse_cmd(uart_receive_buf);			
-		} else if(uart1_mode == 5) {		  //存储模式
-			avoid_system(uart_receive_buf);
+		} else if(uart1_mode == 5) { // @
+			beep_on_times(2,100);
+			any = FALSE;
+			avoid_mode = TRUE;
+			dirs(uart_receive_buf);
 		} 
 		uart1_mode = 0;
 		uart1_get_ok = 0;
@@ -268,23 +304,27 @@ void parse_cmd(u8 *cmd) {
 	}else if(pos = str_contain_str(cmd, (u8 *)"$FORW!"), pos){
 		main_direction = DIR_FORWARD;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$BACK!"), pos){
-			main_direction = DIR_BACK;		
+		main_direction = DIR_BACK;		
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LEFT!"), pos){
-			main_direction = DIR_LEFT;	
+		main_direction = DIR_LEFT;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$RIGH!"), pos){
-			main_direction = DIR_RIGHT;		
+		main_direction = DIR_RIGHT;		
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LEFR!"), pos){
-			main_direction = DIR_LEFT_FORWARD;	
+		main_direction = DIR_LEFT_FORWARD;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LEBA!"), pos){
-			main_direction = DIR_RIGHT_FORWARD;	
+		main_direction = DIR_RIGHT_FORWARD;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$RICE!"), pos){
-			main_direction = DIR_RIGCEN;	
+		main_direction = DIR_RIGCEN;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$RICR!"), pos){
-			main_direction = DIR_RIGCEN_REV;	
+		main_direction = DIR_RIGCEN_REV;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LECE!"), pos){
-			main_direction = DIR_LEFCEN;
+		main_direction = DIR_LEFCEN;
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LECR!"), pos){
-			main_direction = DIR_LEFCEN_REV;
+		main_direction = DIR_LEFCEN_REV;
+	}else if(pos = str_contain_str(cmd, (u8 *)"$STOPANY!"), pos){
+		main_direction = DIR_STOP;
+		any = TRUE;
+		avoid_mode = FALSE;
 	}
 }
 

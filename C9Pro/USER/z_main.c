@@ -181,20 +181,24 @@ int main(void) {
 	IWDG_Init();       //初始化独立看门狗
 	setup_sensor();
 	
+	tb_delay_ms(2000);
+	//car_run(1000, 1000, 1000, 1000);
+	zx_uart_send_str("{#006P1000T2000!#007P1000T2000!#008P1000T2000!#009P1000T2000!}");
+
 	while(1) {
 		// 1 - Base scan
 		loop_nled();	   //循环执行工作指示灯，500ms跳动一次
-		ultra_distance();	
-		tb_delay_ms(350);
+		//ultra_distance();	
+		//tb_delay_ms(350);
 
 		// 2 - UART scan
-		loop_uart();	  //串口数据接收处理
-		avoid_system();
-		tb_delay_ms(150); // 避障系统处理
+		//loop_uart();	  //串口数据接收处理
+		//avoid_system();
+		//tb_delay_ms(150); // 避障系统处理
 
 		// 3 - Car run
-		execute_direction(main_direction);
-		tb_delay_ms(500);
+		//execute_direction(main_direction);
+		//tb_delay_ms(500);
 	}
 }
 
@@ -325,6 +329,7 @@ void parse_cmd(u8 *cmd) {
 		main_direction = DIR_STOP;
 		any = TRUE;
 		avoid_mode = FALSE;
+		beep_on_times(1,200);
 	}
 }
 

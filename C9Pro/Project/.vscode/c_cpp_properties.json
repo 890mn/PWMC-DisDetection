@@ -3,13 +3,14 @@
         {
             "name": "Target 1",
             "includePath": [
-                "i:\\Close2Hinar\\PWMC-DisDetection\\C9Pro\\USER",
-                "i:\\Close2Hinar\\PWMC-DisDetection\\C9Pro\\Libraries\\src",
-                "i:\\Close2Hinar\\PWMC-DisDetection\\C9Pro\\Libraries\\inc",
-                "i:\\Close2Hinar\\PWMC-DisDetection\\C9Pro\\Startup",
-                "i:\\Close2Hinar\\PWMC-DisDetection\\C9Pro\\CMSIS\\CM3\\CoreSupport",
-                "i:\\Close2Hinar\\PWMC-DisDetection\\C9Pro\\CMSIS\\CM3\\DeviceSupport\\ST\\STM32F10x",
-                "i:\\Close2Hinar\\PWMC-DisDetection\\C9Pro\\src"
+                "d:\\study_data\\CS_Major\\Hardware\\STM32\\PWMC-DisDetection\\C9Pro\\USER",
+                "d:\\study_data\\CS_Major\\Hardware\\STM32\\PWMC-DisDetection\\C9Pro\\Libraries\\src",
+                "d:\\study_data\\CS_Major\\Hardware\\STM32\\PWMC-DisDetection\\C9Pro\\Libraries\\inc",
+                "d:\\study_data\\CS_Major\\Hardware\\STM32\\PWMC-DisDetection\\C9Pro\\Startup",
+                "d:\\study_data\\CS_Major\\Hardware\\STM32\\PWMC-DisDetection\\C9Pro\\CMSIS\\CM3\\CoreSupport",
+                "d:\\study_data\\CS_Major\\Hardware\\STM32\\PWMC-DisDetection\\C9Pro\\CMSIS\\CM3\\DeviceSupport\\ST\\STM32F10x",
+                "d:\\study_data\\CS_Major\\Hardware\\STM32\\PWMC-DisDetection\\C9Pro\\src",
+                "C:\\Keil_v5\\ARM\\ARMCC\\include"
             ],
             "defines": [
                 "USE_STDPERIPH_DRIVER",

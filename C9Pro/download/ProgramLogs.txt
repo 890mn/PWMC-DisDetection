@@ -114,3 +114,28 @@
 [2025-04-22 12:15:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
 [2025-04-22 12:19:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
 [2025-04-22 12:27:Program Success:31FF6C063042593626410943 I:\Close2Hinar\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-22 18:29:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-22 18:35:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-22 18:37:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-22 18:37:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-22 19:10:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-22 19:11:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-22 19:16:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-22 19:17:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-22 19:19:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-22 19:20:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-22 19:22:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-22 19:23:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 19:26:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 21:58:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 21:59:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 22:03:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 22:09:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 22:11:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 22:14:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 22:18:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 22:23:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 22:56:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 23:05:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 23:09:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-22 23:12:日志记录不属免费功能,请注册支持作者改进软件

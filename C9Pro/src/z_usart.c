@@ -221,173 +221,90 @@ void tb_usart3_send_str(u8 *Data) {
 /**========================中断处理函数=============================**/
 //串口收发中断处理函数
 int USART1_IRQHandler(void) {
-	u8 sbuf_bak;
-	static u16 buf_index = 0;
+	u8 sbuf;
 
-	if(USART_GetFlagStatus(USART1,USART_IT_RXNE)==SET) {
-		USART_ClearITPendingBit(USART1, USART_IT_RXNE);		
-		sbuf_bak = USART_ReceiveData(USART1); 
-		//uart1_send_byte(sbuf_bak);
-		if(uart1_get_ok)return 0;
-		if(sbuf_bak == '<') {
-			uart1_mode = 4;
-			buf_index = 0;
-		}else if(uart1_mode == 0) {
-			if(sbuf_bak == '$') {			//命令模式 $XXX!
-				uart1_mode = 1;
-			} else if(sbuf_bak == '#') {	//单舵机模式	#000P1500T1000! 类似这种命令
-				uart1_mode = 2;
-			} else if(sbuf_bak == '{') {	//多舵机模式	{#000P1500T1000!#001P1500T1000!} 多个单舵机命令用大括号括起来
-				uart1_mode = 3;
-			} else if(sbuf_bak == '<') {	//保存动作组模式	<G0000#000P1500T1000!#001P1500T1000!B000!> 用尖括号括起来 带有组序号
-				uart1_mode = 4;
-			} else if(sbuf_bak == '@') {
-				uart1_mode = 5;
-			} 
-			buf_index = 0;
-		}
-		
-		uart_receive_buf[buf_index++] = sbuf_bak;
-				
-		if((uart1_mode == 4) && (sbuf_bak == '>')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		} else if((uart1_mode == 1) && (sbuf_bak == '!')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		} else if((uart1_mode == 2) && (sbuf_bak == '!')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		} else if((uart1_mode == 3) && (sbuf_bak == '}')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		} else if((uart1_mode == 5) && (sbuf_bak == '!')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		}     
+    if (USART_GetFlagStatus(USART1, USART_IT_RXNE) == SET) {
+        USART_ClearITPendingBit(USART1, USART_IT_RXNE);
+        sbuf = USART_ReceiveData(USART1);
+        
+        // 忽略新数据直到主循环处理完上一次
+        if (uart_frame.ready) return 0;
 
-		if(buf_index >= UART_BUF_SIZE)buf_index = 0;
+        // 如果接收到起始符，重新开始收集
+        if (sbuf == '$')      uart_frame.mode = 1;
+        else if (sbuf == '#') uart_frame.mode = 2;
+        else if (sbuf == '{') uart_frame.mode = 3;
+        else if (sbuf == '<') uart_frame.mode = 4;
+        else if (sbuf == '@') uart_frame.mode = 5;
 
-	}
-	
-	//发送中断 用前在初始化的时候请打开
-	//if(USART_GetITStatus(USART1, USART_IT_TXE) != RESET) {   
-		//USART_SendData(USARTy, TxBuffer1[TxCounter1++]);
-	//}   
-	return 0;
-}
+        // 接收数据
+        if (uart_frame.index < UART_BUF_SIZE) {
+            uart_frame.buf[uart_frame.index++] = sbuf;
+        }
 
-int USART2_IRQHandler(void) { 
-	u8 sbuf_bak;
-	static u16 buf_index = 0;
-	if(USART_GetFlagStatus(USART2,USART_IT_RXNE)==SET) {
-		USART_ClearITPendingBit(USART2, USART_IT_RXNE);		
-		sbuf_bak = USART_ReceiveData(USART2);
-		if(sbuf_bak == '<') {
-			uart1_mode = 4;
-			buf_index = 0;
-		}else if(uart1_mode == 0) {
-			if(sbuf_bak == '$') {
-				uart1_mode = 1;
-			} else if(sbuf_bak == '#') {
-				uart1_mode = 2;
-			} else if(sbuf_bak == '{') {
-				uart1_mode = 3;
-			} else if(sbuf_bak == '<') {
-				uart1_mode = 4;
-			} else if(sbuf_bak == '@') {
-				uart1_mode = 5;
-			} 
-			buf_index = 0;
-		}
-		
-		uart_receive_buf[buf_index++] = sbuf_bak;
-				
-		if((uart1_mode == 4) && (sbuf_bak == '>')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		} else if((uart1_mode == 1) && (sbuf_bak == '!')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		} else if((uart1_mode == 2) && (sbuf_bak == '!')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		} else if((uart1_mode == 3) && (sbuf_bak == '}')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		} else if((uart1_mode == 5) && (sbuf_bak == '!')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		}     
+        // 接收结束条件判断
+        if ((uart_frame.mode == 1 || uart_frame.mode == 2 || uart_frame.mode == 5) && sbuf == '!') {
+            uart_frame.buf[uart_frame.index] = '\0';
+            uart_frame.ready = 1;
+        } else if (uart_frame.mode == 3 && sbuf == '}') {
+            uart_frame.buf[uart_frame.index] = '\0';
+            uart_frame.ready = 1;
+        } else if (uart_frame.mode == 4 && sbuf == '>') {
+            uart_frame.buf[uart_frame.index] = '\0';
+            uart_frame.ready = 1;
+        }
 
-		if(buf_index >= UART_BUF_SIZE)buf_index = 0;
-			
-	}
-	
-	//发送中断 用前在初始化的时候请打开
-	//if(USART_GetITStatus(USART2, USART_IT_TXE) != RESET) {   
-	//	USART_SendData(USARTy, TxBuffer1[TxCounter1++]);
-	//}  
-	return 0;
+        // 超限保护
+        if (uart_frame.index >= UART_BUF_SIZE) {
+            uart_frame.index = 0;
+        }
+    }
+
+    return 0;
 }
 
 int USART3_IRQHandler(void) { 
-	u8 sbuf_bak;
-	static u16 buf_index = 0;
-	if(USART_GetFlagStatus(USART3,USART_IT_RXNE)==SET) {
-		USART_ClearITPendingBit(USART3, USART_IT_RXNE);	
-		sbuf_bak = USART_ReceiveData(USART3);
-		if(uart1_get_ok)return 0;
-		if(sbuf_bak == '<') {
-			uart1_mode = 4;
-			buf_index = 0;
-		}else if(uart1_mode == 0) {
-			if(sbuf_bak == '$') {		
-				uart1_mode = 1;
-			} else if(sbuf_bak == '#') {
-				uart1_mode = 2;
-			} else if(sbuf_bak == '{') {
-				uart1_mode = 3;
-			} else if(sbuf_bak == '<') {
-				uart1_mode = 4;
-			} else if(sbuf_bak == '@') {
-				uart1_mode = 5;
-			} 
+	u8 sbuf;
 
-			buf_index = 0;
-		}
-		
-		uart_receive_buf[buf_index++] = sbuf_bak;
-				
-		if((uart1_mode == 4) && (sbuf_bak == '>')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		} else if((uart1_mode == 1) && (sbuf_bak == '!')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		} else if((uart1_mode == 2) && (sbuf_bak == '!')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		} else if((uart1_mode == 3) && (sbuf_bak == '}')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		} else if((uart1_mode == 5) && (sbuf_bak == '!')){
-			uart_receive_buf[buf_index] = '\0';
-			uart1_get_ok = 1;
-		}  
+    if (USART_GetFlagStatus(USART3, USART_IT_RXNE) == SET) {
+        USART_ClearITPendingBit(USART3, USART_IT_RXNE);
+        sbuf = USART_ReceiveData(USART3);
+        
+        // 忽略新数据直到主循环处理完上一次
+        if (uart_frame.ready) return 0;
 
-		if(buf_index >= UART_BUF_SIZE)buf_index = 0;
-			
-	}
-	
-	//发送中断 用前在初始化的时候请打开
-	//if(USART_GetITStatus(USART3, USART_IT_TXE) != RESET) {   
-	//	USART_SendData(USART3, 1);
-	//}  
-	return 0;
+        // 如果接收到起始符，重新开始收集
+        if (sbuf == '$')      uart_frame.mode = 1;
+        else if (sbuf == '#') uart_frame.mode = 2;
+        else if (sbuf == '{') uart_frame.mode = 3;
+        else if (sbuf == '<') uart_frame.mode = 4;
+        else if (sbuf == '@') uart_frame.mode = 5;
+
+        // 接收数据
+        if (uart_frame.index < UART_BUF_SIZE) {
+            uart_frame.buf[uart_frame.index++] = sbuf;
+        }
+
+        // 接收结束条件判断
+        if ((uart_frame.mode == 1 || uart_frame.mode == 2 || uart_frame.mode == 5) && sbuf == '!') {
+            uart_frame.buf[uart_frame.index] = '\0';
+            uart_frame.ready = 1;
+        } else if (uart_frame.mode == 3 && sbuf == '}') {
+            uart_frame.buf[uart_frame.index] = '\0';
+            uart_frame.ready = 1;
+        } else if (uart_frame.mode == 4 && sbuf == '>') {
+            uart_frame.buf[uart_frame.index] = '\0';
+            uart_frame.ready = 1;
+        }
+
+        // 超限保护
+        if (uart_frame.index >= UART_BUF_SIZE) {
+            uart_frame.index = 0;
+        }
+    }
+
+    return 0;
 }
-
-
 
 void uart1_send_str(u8 *str) {
 	tb_usart1_send_str(str);

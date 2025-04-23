@@ -2,7 +2,8 @@
 #include "stm32f10x_conf.h"
 
 u8 cmd_return[CMD_RETURN_SIZE];
-u8 uart_receive_buf[UART_BUF_SIZE], uart1_get_ok, uart1_mode;
+u8 uart1_get_ok, uart1_mode;
+UART_Frame uart_frame = {0};
 
 uint16_t str_contain_str(unsigned char *str, unsigned char *str2) {
 	unsigned char *str_temp, *str_temp2;

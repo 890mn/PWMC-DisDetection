@@ -10,6 +10,7 @@ Direction main_direction = DIR_STOP;
 
 bool avoid_mode = FALSE;
 bool any = FALSE;
+volatile bool executed_in_this_loop = FALSE;
 
 CommandMap directionTable[] = {
     {"Stop", DIR_STOP},
@@ -25,24 +26,54 @@ CommandMap directionTable[] = {
     {"LefCenRev", DIR_LEFCEN_REV}
 };
 
-void execute_direction(Direction dir) {
+int get_default_time(Direction dir) {
+	switch (dir) {
+		case DIR_FORWARD:
+		case DIR_BACK:
+			return DEFAULT_TIME_MS;
+		case DIR_LEFT:
+		case DIR_RIGHT:
+		case DIR_LEFT_FORWARD:
+		case DIR_RIGHT_FORWARD:
+			return SHORT_TIME_MS;
+		case DIR_RIGCEN:
+		case DIR_RIGCEN_REV:
+		case DIR_LEFCEN:
+		case DIR_LEFCEN_REV:
+			return TURN_TIME_MS;
+		default:
+			return 0;
+	}
+}
+
+void execute_direction(Direction dir, int duration_ms) {
+	char execBuf[64];
+	sprintf(execBuf, "[底盘] 执行 %d 估算时间=%dms\n", dir, duration_ms);
+	zx_uart_send_str((u8*)execBuf);
+
 	if (any) {
-		car_run(0, 0, 0, 0);
-	} else {
-		switch (dir) {
-			case DIR_STOP:           car_run(0, 0, 0, 0); break;
-			case DIR_FORWARD:        car_run(600, 600, 600, 600); break;
-			case DIR_BACK:           car_run(-600, -600, -600, -600); break;
-			case DIR_LEFT:           car_run(-600, 600, -600, 600); break;
-			case DIR_RIGHT:          car_run(600, -600, 600, -600); break;
-			case DIR_LEFT_FORWARD:   car_run(-600, 600, 600, -600); break;
-			case DIR_RIGHT_FORWARD:  car_run(600, -600, -600, 600); break;
-			case DIR_RIGCEN:         car_run(600, 0, 600, 0); break;
-			case DIR_RIGCEN_REV:     car_run(-600, 0, -600, 0); break;
-			case DIR_LEFCEN:         car_run(0, -600, 0, -600); break;
-			case DIR_LEFCEN_REV:     car_run(0, 600, 0, 600); break;
-			default:                 car_run(0, 0, 0, 0); break;
-		}
+		car_run(0, 0, 0, 0, 0);
+		return;
+	}
+
+	// 使用默认时间（如果未指定）
+	if (duration_ms <= 0) {
+		duration_ms = get_default_time(dir);
+	}
+
+	switch (dir) {
+		case DIR_STOP:           car_run(0, 0, 0, 0, 0); break;
+		case DIR_FORWARD:        car_run(500, 500, 500, 500, duration_ms); break;
+		case DIR_BACK:           car_run(-500, -500, -500, -500, duration_ms); break;
+		case DIR_LEFT:           car_run(-500, 500, -500, 500, duration_ms); break;
+		case DIR_RIGHT:          car_run(500, -500, 500, -500, duration_ms); break;
+		case DIR_LEFT_FORWARD:   car_run(-500, 500, 500, -500, duration_ms); break;
+		case DIR_RIGHT_FORWARD:  car_run(500, -500, -500, 500, duration_ms); break;
+		case DIR_RIGCEN:         car_run(500, 0, 500, 0, duration_ms); break;
+		case DIR_RIGCEN_REV:     car_run(-500, 0,-500, 0, duration_ms); break;
+		case DIR_LEFCEN:         car_run(0, -500, 0, -500, duration_ms); break;
+		case DIR_LEFCEN_REV:     car_run(0, 500, 0, 500, duration_ms); break;
+		default:                 car_run(0, 0, 0, 0, 0); break;
 	}
 }
 
@@ -57,7 +88,7 @@ Direction get_direction_from_str(const char* dirStr) {
 
 void ultra_distance(void) {
     ultra_left = get_csb_value(SENSOR_LEFT);
-    tb_delay_ms(5); // 左-前之间稍作等待
+    tb_delay_ms(5);
 
     ultra_front = get_csb_value(SENSOR_FRONT);
     tb_delay_ms(5);
@@ -67,6 +98,10 @@ void ultra_distance(void) {
 
     ultra_back = get_csb_value(SENSOR_BACK);
     tb_delay_ms(10);
+
+    char buf[64];
+    sprintf(buf, "[超声波] L=%d F=%d R=%d B=%d\n", ultra_left, ultra_front, ultra_right, ultra_back);
+    zx_uart_send_str((u8*)buf);
 }
 
 void dirs(u8 *cmd) {
@@ -87,86 +122,108 @@ void dirs(u8 *cmd) {
 }
 
 void avoid_system(void) {
-    if (!avoid_mode) return;
+	executed_in_this_loop = FALSE;
+	if (!avoid_mode) return;
 
-    int safe = 0;
+	int safe = 0;
 	any = FALSE;
-    // ------- 1. 判断目标方向是否畅通 -------
-    switch (main_direction) {
-        case DIR_FORWARD:
-            if (ultra_front > main_distance + 10) {
-                execute_direction(main_direction);
-                safe = 1;
-            }
-            break;
-        case DIR_BACK:
-            if (ultra_back > main_distance + 10) {
-                execute_direction(main_direction);
-                safe = 1;
-            }
-            break;
-        case DIR_LEFT:
-            if (ultra_left > main_distance + 10) {
-                execute_direction(main_direction);
-                safe = 1;
-            }
-            break;
-        case DIR_RIGHT:
-            if (ultra_right > main_distance + 10) {
-                execute_direction(main_direction);
-                safe = 1;
-            }
-            break;
-        default:
-            break;
-    }
+	int estimated_time = 0;
 
-    // ------- 2. 如果目标方向不安全，尝试绕行 -------
-    if (!safe) {
-        if (ultra_left > ultra_right && ultra_left > 20) {
-            main_direction = DIR_LEFT;
-        } else if (ultra_right > 20) {
-            main_direction = DIR_RIGHT;
-        } else if (ultra_back > 20) {
-            main_direction = DIR_BACK;
-        } else {
-            main_direction = DIR_STOP;
-        }
-    }
+	char debugBuf[64];
+	sprintf(debugBuf, "[避障] 进入 %d 距离=%d\n", main_direction, main_distance);
+	zx_uart_send_str((u8*)debugBuf);
 
-    // ------- 3. 判断是否到达目标位置，退出避障 -------
-    switch (main_direction) {
-        case DIR_FORWARD:
-            if (ultra_front <= main_distance + 5) {
-                avoid_mode = FALSE;
-                main_direction = DIR_STOP;
-                zx_uart_send_str((u8*)"[避障] 前进目标已达，退出自动避障\n");
-            }
-            break;
-        case DIR_BACK:
-            if (ultra_back <= main_distance + 5) {
-                avoid_mode = FALSE;
-                main_direction = DIR_STOP;
-                zx_uart_send_str((u8*)"[避障] 后退目标已达，退出自动避障\n");
-            }
-            break;
-        case DIR_LEFT:
-            if (ultra_left <= main_distance + 5) {
-                avoid_mode = FALSE;
-                main_direction = DIR_STOP;
-                zx_uart_send_str((u8*)"[避障] 左移目标已达，退出自动避障\n");
-            }
-            break;
-        case DIR_RIGHT:
-            if (ultra_right <= main_distance + 5) {
-                avoid_mode = FALSE;
-                main_direction = DIR_STOP;
-                zx_uart_send_str((u8*)"[避障] 右移目标已达，退出自动避障\n");
-            }
-            break;
-        default:
-            break;
-    }
+	// ---------- 1. 判断主方向是否畅通 ----------
+	switch (main_direction) {
+		case DIR_FORWARD:
+			if (ultra_front > main_distance) {
+				safe = 1;
+				estimated_time = TIME_FROM_DIST(main_distance) / 1000;
+			}
+			break;
+		case DIR_BACK:
+			if (ultra_back > main_distance) {
+				safe = 1;
+				estimated_time = TIME_FROM_DIST(main_distance) / 1000;
+			}
+			break;
+		case DIR_LEFT:
+			if (ultra_left > main_distance) {
+				safe = 1;
+				estimated_time = TIME_FROM_DIST(main_distance) / 1000;
+			}
+			break;
+		case DIR_RIGHT:
+			if (ultra_right > main_distance) {
+				safe = 1;
+				estimated_time = TIME_FROM_DIST(main_distance) / 1000;
+			}
+			break;
+		default:
+			break;
+	}
+
+	// ---------- 2. 启发式路径推理（主路径不通时） ----------
+	if (!safe) {
+		if (ultra_left > 30) {
+			main_direction = DIR_LEFT;
+			main_distance = 30;
+			estimated_time = TIME_FROM_DIST(main_distance) / 1000;
+			zx_uart_send_str((u8*)"[避障] 向左绕行\n");
+		} else if (ultra_right > 30) {
+			main_direction = DIR_RIGHT;
+			main_distance = 30;
+			estimated_time = TIME_FROM_DIST(main_distance) / 1000;
+			zx_uart_send_str((u8*)"[避障] 向右绕行\n");
+		} else if (ultra_back > 30) {
+			main_direction = DIR_BACK;
+			main_distance = 30;
+			estimated_time = TIME_FROM_DIST(main_distance) / 1000;
+			zx_uart_send_str((u8*)"[避障] 后退避让\n");
+		} else {
+			main_direction = DIR_STOP;
+			estimated_time = 0;
+			zx_uart_send_str((u8*)"[避障] 所有方向受阻，停止等待\n");
+		}
+	}
+
+	// ---------- 3. 执行动作 ----------
+	execute_direction(main_direction, estimated_time);
+
+	// ---------- 4. 判断是否到达目标距离 ----------
+	switch (main_direction) {
+		case DIR_FORWARD:
+			if (ultra_front <= main_distance + 5) {
+				avoid_mode = FALSE;
+				main_direction = DIR_STOP;
+				zx_uart_send_str((u8*)"[避障] 前进目标已达，退出避障\n");
+			}
+			break;
+		case DIR_BACK:
+			if (ultra_back <= main_distance + 5) {
+				avoid_mode = FALSE;
+				main_direction = DIR_STOP;
+				zx_uart_send_str((u8*)"[避障] 后退目标已达，退出避障\n");
+			}
+			break;
+		case DIR_LEFT:
+			if (ultra_left <= main_distance + 5) {
+				avoid_mode = FALSE;
+				main_direction = DIR_STOP;
+				zx_uart_send_str((u8*)"[避障] 左移目标已达，退出避障\n");
+			}
+			break;
+		case DIR_RIGHT:
+			if (ultra_right <= main_distance + 5) {
+				avoid_mode = FALSE;
+				main_direction = DIR_STOP;
+				zx_uart_send_str((u8*)"[避障] 右移目标已达，退出避障\n");
+			}
+			break;
+		default:
+			break;
+	}
+	executed_in_this_loop = TRUE;
 }
 
 int main(void) {	
@@ -181,24 +238,26 @@ int main(void) {
 	IWDG_Init();       //初始化独立看门狗
 	setup_sensor();
 	
-	tb_delay_ms(2000);
+	//tb_delay_ms(2000);
 	//car_run(1000, 1000, 1000, 1000);
-	zx_uart_send_str("{#006P1000T2000!#007P1000T2000!#008P1000T2000!#009P1000T2000!}");
+	//zx_uart_send_str("{#006P1000T2000!#007P1000T2000!#008P1000T2000!#009P1000T2000!}");
 
-	while(1) {
-		// 1 - Base scan
-		loop_nled();	   //循环执行工作指示灯，500ms跳动一次
-		//ultra_distance();	
-		//tb_delay_ms(350);
+	while (1) {
+		// 1 - 基础刷新
+		loop_nled();	    
+		ultra_distance();	
+		tb_delay_ms(350);
 
-		// 2 - UART scan
-		//loop_uart();	  //串口数据接收处理
-		//avoid_system();
-		//tb_delay_ms(150); // 避障系统处理
+		// 2 - 串口处理 + 避障
+		loop_uart();	
+		avoid_system();	
+		tb_delay_ms(150); // 避障系统处理延时
 
-		// 3 - Car run
-		//execute_direction(main_direction);
-		//tb_delay_ms(500);
+		// 3 - 底盘动作（若未被避障系统控制）
+		if (!executed_in_this_loop && !avoid_mode) {
+			execute_direction(main_direction, -1);	
+		}
+		tb_delay_ms(500);
 	}
 }
 
@@ -276,22 +335,32 @@ void loop_nled(void) {
 }		
 //串口数据接收处理
 void loop_uart(void) {
-	if(uart1_get_ok) {
-		if(uart1_mode == 1) { // $
-			beep_on_times(1,100);
-			any = FALSE;
-			parse_cmd(uart_receive_buf);			
-		} else if(uart1_mode == 5) { // @
-			beep_on_times(2,100);
-			any = FALSE;
-			avoid_mode = TRUE;
-			dirs(uart_receive_buf);
-		} 
-		uart1_mode = 0;
-		uart1_get_ok = 0;
-		uart1_open();
-	}
-	return;
+    if (!uart_frame.ready) return;
+
+    // 拷贝数据并清空标志
+    u8 mode = uart_frame.mode;
+    u8 buf[UART_BUF_SIZE];
+    memcpy(buf, uart_frame.buf, uart_frame.index + 1);
+    
+    uart_frame.ready = 0;
+    uart_frame.index = 0;
+    uart_frame.mode = 0;
+
+    // 实际处理
+    switch(mode) {
+        case 1: // $
+            beep_on_times(1, 100);
+            parse_cmd(buf);
+            break;
+        case 5: // @
+            beep_on_times(2, 100);
+            avoid_mode = TRUE;
+            dirs(buf);
+            break;
+        default:
+            // 可扩展其他处理
+            break;
+    }
 }	
 
 //软件复位函数，调用后单片机自动复位
@@ -338,8 +407,13 @@ void parse_cmd(u8 *cmd) {
 函数参数：左前轮速度，右前轮速度，左后轮速度，右后轮速度，范围：-1000~1000， 负值反转，正值正转
 返回值：  无  
 *************************************************************/
-void car_run(int speedlq, int speedrq, int speedlh, int speedrh) {	
-	sprintf((char *)cmd_return, "{#006P%04dT0000!#007P%04dT0000!#008P%04dT0000!#009P%04dT0000!}", (int)(1500+speedlq), (int)(1500-speedrq), (int)(1500+speedlh), (int)(1500-speedrh));
+void car_run(int speedlq, int speedrq, int speedlh, int speedrh, int duration_ms) {
+	sprintf((char *)cmd_return,
+		"{#006P%04dT%04d!#007P%04dT%04d!#008P%04dT%04d!#009P%04dT%04d!}",
+		(int)(1500 + speedlq), duration_ms,
+		(int)(1500 - speedrq), duration_ms,
+		(int)(1500 + speedlh), duration_ms,
+		(int)(1500 - speedrh), duration_ms
+	);
 	zx_uart_send_str(cmd_return);
-	return;
 }

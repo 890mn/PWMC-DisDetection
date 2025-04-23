@@ -22,6 +22,17 @@
 #define SENSOR_RIGHT  3
 #define SENSOR_BACK   4
 
+#define DIST(t) ( (6 * (t) * (t)) / 1000 + 25 * (t) - 5500 )    // mm
+#define ANGT(t) ( (-5 * (t) * (t)) / 1000 + 203 * (t) - 62750 ) // mdeg
+
+// distance -> time (ms)，反向估算执行时间
+#define TIME_FROM_DIST(d) (20 * (d) + 220000)  // 粗略拟合，保证时间合理区间
+#define TIME_FROM_ANGT(a) (15 * (a) + 180000) // 角度转时间的估算
+
+#define DEFAULT_TIME_MS  1000
+#define SHORT_TIME_MS    500
+#define TURN_TIME_MS     800
+
 typedef enum {
     DIR_STOP = 0,
     DIR_FORWARD,
@@ -61,11 +72,13 @@ void setup_interrupt(void);   //初始化总中断
 void loop_nled(void);	        //循环执行工作指示灯，500ms跳动一次	
 void loop_uart(void);	        //串口数据接收处理
 
-void soft_reset(void);					               //软件复位
-void parse_cmd(u8 *cmd);			            	   //命令解析
-void car_run(int speedlq, int speedrq, int speedlh, int speedrh);  
+void soft_reset(void);
+void parse_cmd(u8 *cmd);
 
-void execute_direction(Direction dir);
+void car_run(int speedlq, int speedrq, int speedlh, int speedrh, int duration_ms);
+int get_default_time(Direction dir);
+void execute_direction(Direction dir, int duration_ms);
+
 Direction get_direction_from_str(const char* dirStr);
 void ultra_distance(void);
 void avoid_system(void);

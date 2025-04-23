@@ -146,3 +146,9 @@
 [2025-04-23 22:46:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
 [2025-04-23 22:55:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
 [2025-04-23 22:57:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-23 23:06:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-23 23:08:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-23 23:12:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-23 23:21:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-23 23:24:日志记录不属免费功能,请注册支持作者改进软件
+[2025-04-23 23:30:日志记录不属免费功能,请注册支持作者改进软件

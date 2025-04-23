@@ -12,6 +12,19 @@ bool avoid_mode = FALSE;
 bool any = FALSE;
 volatile bool executed_in_this_loop = FALSE;
 
+typedef enum {
+    AVOID_IDLE,
+    AVOID_PLANNING,
+    AVOID_EXECUTING,
+    AVOID_CHECKING
+} AvoidState;
+
+AvoidState avoid_state = AVOID_IDLE;
+Direction avoid_direction = DIR_STOP;
+int avoid_target_distance = 0;
+int avoid_time_remaining = 0;
+int avoid_distance_done = 0;
+
 CommandMap directionTable[] = {
     {"Stop", DIR_STOP},
     {"Forward", DIR_FORWARD},
@@ -121,109 +134,91 @@ void dirs(u8 *cmd) {
     main_distance = atoi(numberStr);
 }
 
-void avoid_system(void) {
-	executed_in_this_loop = FALSE;
-	if (!avoid_mode) return;
+void reset_avoid_state() {
+    avoid_mode = FALSE;
+    avoid_state = AVOID_IDLE;
+    main_direction = DIR_STOP;
+    avoid_distance_done = 0;
+    avoid_target_distance = 0;
+    zx_uart_send_str((u8*)"[避障] 状态重置，退出避障\n");
+}
 
-	int safe = 0;
-	any = FALSE;
-	int estimated_time = 0;
+void plan_next_direction() {
+    if (ultra_front > main_distance) {
+        main_direction = DIR_FORWARD;
+        avoid_target_distance = main_distance;
+        zx_uart_send_str((u8*)"[避障] 主方向畅通，继续前进\n");
+    } else if (ultra_left > 30) {
+        main_direction = DIR_LEFT;
+        avoid_target_distance = 30;
+        zx_uart_send_str((u8*)"[避障] 左侧可行，向左绕行\n");
+    } else if (ultra_right > 30) {
+        main_direction = DIR_RIGHT;
+        avoid_target_distance = 30;
+        zx_uart_send_str((u8*)"[避障] 右侧可行，向右绕行\n");
+    } else if (ultra_back > 30) {
+        main_direction = DIR_BACK;
+        avoid_target_distance = 30;
+        zx_uart_send_str((u8*)"[避障] 后方可行，退一步\n");
+    } else {
+        main_direction = DIR_STOP;
+        avoid_target_distance = 0;
+        zx_uart_send_str((u8*)"[避障] 所有方向受阻，等待中\n");
+    }
+}
 
-	char debugBuf[64];
-	sprintf(debugBuf, "[避障] 进入 %d 距离=%d\n", main_direction, main_distance);
-	zx_uart_send_str((u8*)debugBuf);
+void execute_current_step() {
+    int exec_time = TIME_FROM_DIST(avoid_target_distance) / 1000;
+    char dbg[64];
+    sprintf(dbg, "[避障] 执行方向=%d 距离=%d 时间=%dms\n", main_direction, avoid_target_distance, exec_time);
+    zx_uart_send_str((u8*)dbg);
+    execute_direction(main_direction, exec_time);
+    avoid_distance_done += avoid_target_distance;
+}
 
-	// ---------- 1. 判断主方向是否畅通 ----------
-	switch (main_direction) {
-		case DIR_FORWARD:
-			if (ultra_front > main_distance) {
-				safe = 1;
-				estimated_time = TIME_FROM_DIST(main_distance) / 1000;
-			}
-			break;
-		case DIR_BACK:
-			if (ultra_back > main_distance) {
-				safe = 1;
-				estimated_time = TIME_FROM_DIST(main_distance) / 1000;
-			}
-			break;
-		case DIR_LEFT:
-			if (ultra_left > main_distance) {
-				safe = 1;
-				estimated_time = TIME_FROM_DIST(main_distance) / 1000;
-			}
-			break;
-		case DIR_RIGHT:
-			if (ultra_right > main_distance) {
-				safe = 1;
-				estimated_time = TIME_FROM_DIST(main_distance) / 1000;
-			}
-			break;
-		default:
-			break;
-	}
+void check_if_goal_reached() {
+    if (avoid_distance_done >= main_distance) {
+        zx_uart_send_str((u8*)"[避障] 已到达目标距离，结束避障\n");
+        reset_avoid_state();
+    } else {
+        zx_uart_send_str((u8*)"[避障] 尚未到达目标，继续规划\n");
+        avoid_state = AVOID_PLANNING;
+    }
+}
 
-	// ---------- 2. 启发式路径推理（主路径不通时） ----------
-	if (!safe) {
-		if (ultra_left > 30) {
-			main_direction = DIR_LEFT;
-			main_distance = 30;
-			estimated_time = TIME_FROM_DIST(main_distance) / 1000;
-			zx_uart_send_str((u8*)"[避障] 向左绕行\n");
-		} else if (ultra_right > 30) {
-			main_direction = DIR_RIGHT;
-			main_distance = 30;
-			estimated_time = TIME_FROM_DIST(main_distance) / 1000;
-			zx_uart_send_str((u8*)"[避障] 向右绕行\n");
-		} else if (ultra_back > 30) {
-			main_direction = DIR_BACK;
-			main_distance = 30;
-			estimated_time = TIME_FROM_DIST(main_distance) / 1000;
-			zx_uart_send_str((u8*)"[避障] 后退避让\n");
-		} else {
-			main_direction = DIR_STOP;
-			estimated_time = 0;
-			zx_uart_send_str((u8*)"[避障] 所有方向受阻，停止等待\n");
-		}
-	}
+void avoid_system() {
+    executed_in_this_loop = FALSE;
+    if (!avoid_mode) return;
 
-	// ---------- 3. 执行动作 ----------
-	execute_direction(main_direction, estimated_time);
+    switch (avoid_state) {
+        case AVOID_IDLE:
+            zx_uart_send_str((u8*)"[避障] 初始规划\n");
+            avoid_distance_done = 0;
+            avoid_state = AVOID_PLANNING;
+            break;
 
-	// ---------- 4. 判断是否到达目标距离 ----------
-	switch (main_direction) {
-		case DIR_FORWARD:
-			if (ultra_front <= main_distance + 5) {
-				avoid_mode = FALSE;
-				main_direction = DIR_STOP;
-				zx_uart_send_str((u8*)"[避障] 前进目标已达，退出避障\n");
-			}
-			break;
-		case DIR_BACK:
-			if (ultra_back <= main_distance + 5) {
-				avoid_mode = FALSE;
-				main_direction = DIR_STOP;
-				zx_uart_send_str((u8*)"[避障] 后退目标已达，退出避障\n");
-			}
-			break;
-		case DIR_LEFT:
-			if (ultra_left <= main_distance + 5) {
-				avoid_mode = FALSE;
-				main_direction = DIR_STOP;
-				zx_uart_send_str((u8*)"[避障] 左移目标已达，退出避障\n");
-			}
-			break;
-		case DIR_RIGHT:
-			if (ultra_right <= main_distance + 5) {
-				avoid_mode = FALSE;
-				main_direction = DIR_STOP;
-				zx_uart_send_str((u8*)"[避障] 右移目标已达，退出避障\n");
-			}
-			break;
-		default:
-			break;
-	}
-	executed_in_this_loop = TRUE;
+        case AVOID_PLANNING:
+            plan_next_direction();
+            avoid_state = AVOID_EXECUTING;
+            break;
+
+        case AVOID_EXECUTING:
+            if (main_direction != DIR_STOP) {
+                execute_current_step();
+            }
+            avoid_state = AVOID_CHECKING;
+            break;
+
+        case AVOID_CHECKING:
+            check_if_goal_reached();
+            break;
+
+        default:
+            reset_avoid_state();
+            break;
+    }
+
+    executed_in_this_loop = TRUE;
 }
 
 int main(void) {	
@@ -246,18 +241,18 @@ int main(void) {
 		// 1 - 基础刷新
 		loop_nled();	    
 		ultra_distance();	
-		tb_delay_ms(350);
+		tb_delay_ms(50);
 
 		// 2 - 串口处理 + 避障
 		loop_uart();	
 		avoid_system();	
-		tb_delay_ms(150); // 避障系统处理延时
+		tb_delay_ms(50); // 避障系统处理延时
 
 		// 3 - 底盘动作（若未被避障系统控制）
 		if (!executed_in_this_loop && !avoid_mode) {
 			execute_direction(main_direction, -1);	
 		}
-		tb_delay_ms(500);
+		tb_delay_ms(200);
 	}
 }
 

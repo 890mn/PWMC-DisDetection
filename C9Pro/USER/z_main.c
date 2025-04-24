@@ -24,6 +24,8 @@ Direction avoid_direction = DIR_STOP;
 int avoid_target_distance = 0;
 int avoid_time_remaining = 0;
 int avoid_distance_done = 0;
+#define SAFE_THRESHOLD 20  // cm
+int forward_done = 0;      // 已完成的主方向行进距离
 
 CommandMap directionTable[] = {
     {"Stop", DIR_STOP},
@@ -140,30 +142,31 @@ void reset_avoid_state() {
     main_direction = DIR_STOP;
     avoid_distance_done = 0;
     avoid_target_distance = 0;
-    zx_uart_send_str((u8*)"[避障] 状态重置，退出避障\n");
 }
 
 void plan_next_direction() {
-    if (ultra_front > main_distance) {
+    if (ultra_front > SAFE_THRESHOLD) {
         main_direction = DIR_FORWARD;
-        avoid_target_distance = main_distance;
-        zx_uart_send_str((u8*)"[避障] 主方向畅通，继续前进\n");
-    } else if (ultra_left > 30) {
-        main_direction = DIR_LEFT;
-        avoid_target_distance = 30;
-        zx_uart_send_str((u8*)"[避障] 左侧可行，向左绕行\n");
-    } else if (ultra_right > 30) {
-        main_direction = DIR_RIGHT;
-        avoid_target_distance = 30;
-        zx_uart_send_str((u8*)"[避障] 右侧可行，向右绕行\n");
-    } else if (ultra_back > 30) {
-        main_direction = DIR_BACK;
-        avoid_target_distance = 30;
-        zx_uart_send_str((u8*)"[避障] 后方可行，退一步\n");
+        avoid_target_distance = SAFE_THRESHOLD; // 每次前进20cm
+        zx_uart_send_str((u8*)"[避障] 前方仍可前进一段，继续前进\n");
     } else {
-        main_direction = DIR_STOP;
-        avoid_target_distance = 0;
-        zx_uart_send_str((u8*)"[避障] 所有方向受阻，等待中\n");
+        // 进入绕行
+        if (ultra_left > SAFE_THRESHOLD) {
+            main_direction = DIR_LEFT;
+            avoid_target_distance = 30;
+            zx_uart_send_str((u8*)"[避障] 前方受阻，尝试向左绕行\n");
+        } else if (ultra_right > SAFE_THRESHOLD) {
+            main_direction = DIR_RIGHT;
+            avoid_target_distance = 30;
+            zx_uart_send_str((u8*)"[避障] 前方受阻，尝试向右绕行\n");
+        } else if (ultra_back > SAFE_THRESHOLD) {
+            main_direction = DIR_BACK;
+            avoid_target_distance = 30;
+            zx_uart_send_str((u8*)"[避障] 无路可走，尝试后退避障\n");
+        } else {
+            main_direction = DIR_STOP;
+            zx_uart_send_str((u8*)"[避障] 全方位阻挡，挂起等待\n");
+        }
     }
 }
 
@@ -173,15 +176,19 @@ void execute_current_step() {
     sprintf(dbg, "[避障] 执行方向=%d 距离=%d 时间=%dms\n", main_direction, avoid_target_distance, exec_time);
     zx_uart_send_str((u8*)dbg);
     execute_direction(main_direction, exec_time);
-    avoid_distance_done += avoid_target_distance;
+
+    // 只有主方向前进才记录进度
+    if (main_direction == DIR_FORWARD) {
+        forward_done += avoid_target_distance;
+    }
 }
 
 void check_if_goal_reached() {
-    if (avoid_distance_done >= main_distance) {
-        zx_uart_send_str((u8*)"[避障] 已到达目标距离，结束避障\n");
+    if (forward_done >= main_distance) {
+        zx_uart_send_str((u8*)"[避障] 已到达目标主距离，退出避障\n");
         reset_avoid_state();
     } else {
-        zx_uart_send_str((u8*)"[避障] 尚未到达目标，继续规划\n");
+        zx_uart_send_str((u8*)"[避障] 主路程未完成，继续导航\n");
         avoid_state = AVOID_PLANNING;
     }
 }
@@ -249,7 +256,7 @@ int main(void) {
 		tb_delay_ms(50); // 避障系统处理延时
 
 		// 3 - 底盘动作（若未被避障系统控制）
-		if (!executed_in_this_loop && !avoid_mode) {
+		if (!executed_in_this_loop) {
 			execute_direction(main_direction, -1);	
 		}
 		tb_delay_ms(200);

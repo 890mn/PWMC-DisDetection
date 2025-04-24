@@ -464,52 +464,52 @@ Image Symbol Table
     .text                                    0x08001e00   Section        0  z_usart.o(.text)
     .text                                    0x08002304   Section        0  z_global.o(.text)
     .text                                    0x0800234c   Section        0  z_main.o(.text)
-    .text                                    0x08002bac   Section        0  z_sensor.o(.text)
-    .text                                    0x08002d5c   Section       16  rt_ctype_table.o(.text)
-    .text                                    0x08002d6c   Section        0  noretval__2sprintf.o(.text)
-    .text                                    0x08002d94   Section        0  _printf_pad.o(.text)
-    .text                                    0x08002de4   Section        0  _printf_dec.o(.text)
-    .text                                    0x08002e5c   Section        0  __printf_flags_wp.o(.text)
-    .text                                    0x08002f94   Section        0  atoi.o(.text)
-    .text                                    0x08002fae   Section      138  rt_memcpy_v6.o(.text)
-    .text                                    0x08003038   Section       78  rt_memclr_w.o(.text)
-    .text                                    0x08003088   Section      128  strcmpv7m.o(.text)
-    .text                                    0x08003108   Section        0  heapauxi.o(.text)
-    .text                                    0x08003110   Section        8  rt_locale_intlibspace.o(.text)
-    .text                                    0x08003118   Section        8  rt_errno_addr_intlibspace.o(.text)
-    .text                                    0x08003120   Section        0  _printf_intcommon.o(.text)
-    .text                                    0x080031d4   Section        0  _printf_char_common.o(.text)
-    _printf_input_char                       0x080031d5   Thumb Code    10  _printf_char_common.o(.text)
-    .text                                    0x08003204   Section        0  _sputc.o(.text)
-    .text                                    0x0800320e   Section        0  strtol.o(.text)
-    .text                                    0x0800327e   Section      100  rt_memcpy_w.o(.text)
-    .text                                    0x080032e4   Section        8  libspace.o(.text)
-    .text                                    0x080032ec   Section        0  _strtoul.o(.text)
-    .text                                    0x0800338a   Section       74  sys_stackheap_outer.o(.text)
-    .text                                    0x080033d4   Section        0  _chval.o(.text)
-    .text                                    0x080033f0   Section        0  exit.o(.text)
-    .text                                    0x08003404   Section        0  sys_exit.o(.text)
-    .text                                    0x08003410   Section        2  use_no_semi.o(.text)
-    .text                                    0x08003412   Section        0  indicate_semi.o(.text)
-    i._is_digit                              0x08003412   Section        0  __printf_wp.o(i._is_digit)
-    locale$$code                             0x08003420   Section       44  lc_ctype_c.o(locale$$code)
-    x$fpl$fadd                               0x0800344c   Section      196  faddsub_clz.o(x$fpl$fadd)
-    _fadd1                                   0x0800345b   Thumb Code     0  faddsub_clz.o(x$fpl$fadd)
-    x$fpl$ffix                               0x08003510   Section       54  ffix.o(x$fpl$ffix)
-    x$fpl$ffltu                              0x08003548   Section       38  fflt_clz.o(x$fpl$ffltu)
-    x$fpl$fmul                               0x08003570   Section      258  fmul.o(x$fpl$fmul)
-    x$fpl$fnaninf                            0x08003672   Section      140  fnaninf.o(x$fpl$fnaninf)
-    x$fpl$fretinf                            0x080036fe   Section       10  fretinf.o(x$fpl$fretinf)
-    x$fpl$fsub                               0x08003708   Section      234  faddsub_clz.o(x$fpl$fsub)
-    _fsub1                                   0x08003717   Thumb Code     0  faddsub_clz.o(x$fpl$fsub)
-    .constdata                               0x080037f2   Section       17  __printf_flags_wp.o(.constdata)
-    x$fpl$usenofp                            0x080037f2   Section        0  usenofp.o(x$fpl$usenofp)
-    maptable                                 0x080037f2   Data          17  __printf_flags_wp.o(.constdata)
-    .conststring                             0x08003804   Section      106  z_main.o(.conststring)
-    locale$$data                             0x08003890   Section      272  lc_ctype_c.o(locale$$data)
-    __lcctype_c_name                         0x08003894   Data           2  lc_ctype_c.o(locale$$data)
-    __lcctype_c_start                        0x0800389c   Data           0  lc_ctype_c.o(locale$$data)
-    __lcctype_c_end                          0x080039a0   Data           0  lc_ctype_c.o(locale$$data)
+    .text                                    0x08002ba4   Section        0  z_sensor.o(.text)
+    .text                                    0x08002d54   Section       16  rt_ctype_table.o(.text)
+    .text                                    0x08002d64   Section        0  noretval__2sprintf.o(.text)
+    .text                                    0x08002d8c   Section        0  _printf_pad.o(.text)
+    .text                                    0x08002ddc   Section        0  _printf_dec.o(.text)
+    .text                                    0x08002e54   Section        0  __printf_flags_wp.o(.text)
+    .text                                    0x08002f8c   Section        0  atoi.o(.text)
+    .text                                    0x08002fa6   Section      138  rt_memcpy_v6.o(.text)
+    .text                                    0x08003030   Section       78  rt_memclr_w.o(.text)
+    .text                                    0x08003080   Section      128  strcmpv7m.o(.text)
+    .text                                    0x08003100   Section        0  heapauxi.o(.text)
+    .text                                    0x08003108   Section        8  rt_locale_intlibspace.o(.text)
+    .text                                    0x08003110   Section        8  rt_errno_addr_intlibspace.o(.text)
+    .text                                    0x08003118   Section        0  _printf_intcommon.o(.text)
+    .text                                    0x080031cc   Section        0  _printf_char_common.o(.text)
+    _printf_input_char                       0x080031cd   Thumb Code    10  _printf_char_common.o(.text)
+    .text                                    0x080031fc   Section        0  _sputc.o(.text)
+    .text                                    0x08003206   Section        0  strtol.o(.text)
+    .text                                    0x08003276   Section      100  rt_memcpy_w.o(.text)
+    .text                                    0x080032dc   Section        8  libspace.o(.text)
+    .text                                    0x080032e4   Section        0  _strtoul.o(.text)
+    .text                                    0x08003382   Section       74  sys_stackheap_outer.o(.text)
+    .text                                    0x080033cc   Section        0  _chval.o(.text)
+    .text                                    0x080033e8   Section        0  exit.o(.text)
+    .text                                    0x080033fc   Section        0  sys_exit.o(.text)
+    .text                                    0x08003408   Section        2  use_no_semi.o(.text)
+    .text                                    0x0800340a   Section        0  indicate_semi.o(.text)
+    i._is_digit                              0x0800340a   Section        0  __printf_wp.o(i._is_digit)
+    locale$$code                             0x08003418   Section       44  lc_ctype_c.o(locale$$code)
+    x$fpl$fadd                               0x08003444   Section      196  faddsub_clz.o(x$fpl$fadd)
+    _fadd1                                   0x08003453   Thumb Code     0  faddsub_clz.o(x$fpl$fadd)
+    x$fpl$ffix                               0x08003508   Section       54  ffix.o(x$fpl$ffix)
+    x$fpl$ffltu                              0x08003540   Section       38  fflt_clz.o(x$fpl$ffltu)
+    x$fpl$fmul                               0x08003568   Section      258  fmul.o(x$fpl$fmul)
+    x$fpl$fnaninf                            0x0800366a   Section      140  fnaninf.o(x$fpl$fnaninf)
+    x$fpl$fretinf                            0x080036f6   Section       10  fretinf.o(x$fpl$fretinf)
+    x$fpl$fsub                               0x08003700   Section      234  faddsub_clz.o(x$fpl$fsub)
+    _fsub1                                   0x0800370f   Thumb Code     0  faddsub_clz.o(x$fpl$fsub)
+    .constdata                               0x080037ea   Section       17  __printf_flags_wp.o(.constdata)
+    x$fpl$usenofp                            0x080037ea   Section        0  usenofp.o(x$fpl$usenofp)
+    maptable                                 0x080037ea   Data          17  __printf_flags_wp.o(.constdata)
+    .conststring                             0x080037fc   Section      106  z_main.o(.conststring)
+    locale$$data                             0x08003888   Section      272  lc_ctype_c.o(locale$$data)
+    __lcctype_c_name                         0x0800388c   Data           2  lc_ctype_c.o(locale$$data)
+    __lcctype_c_start                        0x08003894   Data           0  lc_ctype_c.o(locale$$data)
+    __lcctype_c_end                          0x08003998   Data           0  lc_ctype_c.o(locale$$data)
     .data                                    0x20000000   Section       20  system_stm32f10x.o(.data)
     .data                                    0x20000014   Section       20  stm32f10x_rcc.o(.data)
     ADCPrescTable                            0x20000014   Data           4  stm32f10x_rcc.o(.data)
@@ -519,18 +519,18 @@ Image Symbol Table
     .data                                    0x2000002c   Section        8  z_timer.o(.data)
     flag                                     0x2000002c   Data           1  z_timer.o(.data)
     .data                                    0x20000034   Section        1  z_global.o(.data)
-    .data                                    0x20000038   Section      116  z_main.o(.data)
+    .data                                    0x20000038   Section      120  z_main.o(.data)
     flag                                     0x2000003d   Data           1  z_main.o(.data)
-    time_count                               0x20000050   Data           4  z_main.o(.data)
-    .data                                    0x200000ac   Section       60  z_sensor.o(.data)
-    .bss                                     0x200000e8   Section     1030  z_global.o(.bss)
-    .bss                                     0x200004ee   Section     1024  z_global.o(.bss)
-    .bss                                     0x200008f0   Section       96  libspace.o(.bss)
-    HEAP                                     0x20000950   Section      512  startup_stm32f10x_hd.o(HEAP)
-    Heap_Mem                                 0x20000950   Data         512  startup_stm32f10x_hd.o(HEAP)
-    STACK                                    0x20000b50   Section     1024  startup_stm32f10x_hd.o(STACK)
-    Stack_Mem                                0x20000b50   Data        1024  startup_stm32f10x_hd.o(STACK)
-    __initial_sp                             0x20000f50   Data           0  startup_stm32f10x_hd.o(STACK)
+    time_count                               0x20000054   Data           4  z_main.o(.data)
+    .data                                    0x200000b0   Section       60  z_sensor.o(.data)
+    .bss                                     0x200000ec   Section     1030  z_global.o(.bss)
+    .bss                                     0x200004f2   Section     1024  z_global.o(.bss)
+    .bss                                     0x200008f4   Section       96  libspace.o(.bss)
+    HEAP                                     0x20000958   Section      512  startup_stm32f10x_hd.o(HEAP)
+    Heap_Mem                                 0x20000958   Data         512  startup_stm32f10x_hd.o(HEAP)
+    STACK                                    0x20000b58   Section     1024  startup_stm32f10x_hd.o(STACK)
+    Stack_Mem                                0x20000b58   Data        1024  startup_stm32f10x_hd.o(STACK)
+    __initial_sp                             0x20000f58   Data           0  startup_stm32f10x_hd.o(STACK)
 
     Global Symbols
 
@@ -938,88 +938,88 @@ Image Symbol Table
     get_direction_from_str                   0x08002471   Thumb Code    42  z_main.o(.text)
     ultra_distance                           0x0800249b   Thumb Code    92  z_main.o(.text)
     dirs                                     0x080024f7   Thumb Code   116  z_main.o(.text)
-    reset_avoid_state                        0x0800256b   Thumb Code    20  z_main.o(.text)
-    plan_next_direction                      0x0800257f   Thumb Code    82  z_main.o(.text)
-    execute_current_step                     0x080025d1   Thumb Code    62  z_main.o(.text)
+    reset_avoid_state                        0x0800256b   Thumb Code    16  z_main.o(.text)
+    plan_next_direction                      0x0800257b   Thumb Code    80  z_main.o(.text)
+    execute_current_step                     0x080025cb   Thumb Code    68  z_main.o(.text)
     check_if_goal_reached                    0x0800260f   Thumb Code    36  z_main.o(.text)
     avoid_system                             0x08002633   Thumb Code    80  z_main.o(.text)
-    parse_cmd                                0x08002683   Thumb Code   862  z_main.o(.text)
-    loop_uart                                0x080029e1   Thumb Code    94  z_main.o(.text)
-    loop_nled                                0x08002a3f   Thumb Code    48  z_main.o(.text)
-    setup_interrupt                          0x08002a6f   Thumb Code     4  z_main.o(.text)
-    setup_systick                            0x08002a73   Thumb Code     4  z_main.o(.text)
-    setup_uart3                              0x08002a77   Thumb Code    38  z_main.o(.text)
-    setup_uart1                              0x08002a9d   Thumb Code    32  z_main.o(.text)
-    setup_beep                               0x08002abd   Thumb Code    18  z_main.o(.text)
-    setup_nled                               0x08002acf   Thumb Code    18  z_main.o(.text)
-    setup_gpio                               0x08002ae1   Thumb Code     4  z_main.o(.text)
-    setup_rcc                                0x08002ae5   Thumb Code     4  z_main.o(.text)
-    main                                     0x08002ae9   Thumb Code    96  z_main.o(.text)
-    soft_reset                               0x08002b49   Thumb Code    26  z_main.o(.text)
-    setup_csb                                0x08002bad   Thumb Code   104  z_sensor.o(.text)
-    setup_xunji                              0x08002c15   Thumb Code    32  z_sensor.o(.text)
-    setup_sensor                             0x08002c35   Thumb Code    12  z_sensor.o(.text)
-    csb_Delay_Us                             0x08002c41   Thumb Code    24  z_sensor.o(.text)
-    get_csb_value                            0x08002c59   Thumb Code   224  z_sensor.o(.text)
-    __rt_ctype_table                         0x08002d5d   Thumb Code    16  rt_ctype_table.o(.text)
-    __2sprintf                               0x08002d6d   Thumb Code    34  noretval__2sprintf.o(.text)
-    _printf_pre_padding                      0x08002d95   Thumb Code    44  _printf_pad.o(.text)
-    _printf_post_padding                     0x08002dc1   Thumb Code    34  _printf_pad.o(.text)
-    _printf_int_dec                          0x08002de5   Thumb Code   104  _printf_dec.o(.text)
-    __printf                                 0x08002e5d   Thumb Code   308  __printf_flags_wp.o(.text)
-    atoi                                     0x08002f95   Thumb Code    26  atoi.o(.text)
-    __aeabi_memcpy                           0x08002faf   Thumb Code     0  rt_memcpy_v6.o(.text)
-    __rt_memcpy                              0x08002faf   Thumb Code   138  rt_memcpy_v6.o(.text)
-    _memcpy_lastbytes                        0x08003015   Thumb Code     0  rt_memcpy_v6.o(.text)
-    __aeabi_memclr4                          0x08003039   Thumb Code     0  rt_memclr_w.o(.text)
-    __aeabi_memclr8                          0x08003039   Thumb Code     0  rt_memclr_w.o(.text)
-    __rt_memclr_w                            0x08003039   Thumb Code    78  rt_memclr_w.o(.text)
-    _memset_w                                0x0800303d   Thumb Code     0  rt_memclr_w.o(.text)
-    strcmp                                   0x08003089   Thumb Code   128  strcmpv7m.o(.text)
-    __use_two_region_memory                  0x08003109   Thumb Code     2  heapauxi.o(.text)
-    __rt_heap_escrow$2region                 0x0800310b   Thumb Code     2  heapauxi.o(.text)
-    __rt_heap_expand$2region                 0x0800310d   Thumb Code     2  heapauxi.o(.text)
-    __rt_locale                              0x08003111   Thumb Code     8  rt_locale_intlibspace.o(.text)
-    __aeabi_errno_addr                       0x08003119   Thumb Code     8  rt_errno_addr_intlibspace.o(.text)
-    __errno$intlibspace                      0x08003119   Thumb Code     0  rt_errno_addr_intlibspace.o(.text)
-    __rt_errno_addr$intlibspace              0x08003119   Thumb Code     0  rt_errno_addr_intlibspace.o(.text)
-    _printf_int_common                       0x08003121   Thumb Code   178  _printf_intcommon.o(.text)
-    _printf_char_common                      0x080031df   Thumb Code    32  _printf_char_common.o(.text)
-    _sputc                                   0x08003205   Thumb Code    10  _sputc.o(.text)
-    strtol                                   0x0800320f   Thumb Code   112  strtol.o(.text)
-    __aeabi_memcpy4                          0x0800327f   Thumb Code     0  rt_memcpy_w.o(.text)
-    __aeabi_memcpy8                          0x0800327f   Thumb Code     0  rt_memcpy_w.o(.text)
-    __rt_memcpy_w                            0x0800327f   Thumb Code   100  rt_memcpy_w.o(.text)
-    _memcpy_lastbytes_aligned                0x080032c7   Thumb Code     0  rt_memcpy_w.o(.text)
-    __user_libspace                          0x080032e5   Thumb Code     8  libspace.o(.text)
-    __user_perproc_libspace                  0x080032e5   Thumb Code     0  libspace.o(.text)
-    __user_perthread_libspace                0x080032e5   Thumb Code     0  libspace.o(.text)
-    _strtoul                                 0x080032ed   Thumb Code   158  _strtoul.o(.text)
-    __user_setup_stackheap                   0x0800338b   Thumb Code    74  sys_stackheap_outer.o(.text)
-    _chval                                   0x080033d5   Thumb Code    28  _chval.o(.text)
-    exit                                     0x080033f1   Thumb Code    18  exit.o(.text)
-    _sys_exit                                0x08003405   Thumb Code     8  sys_exit.o(.text)
-    __I$use$semihosting                      0x08003411   Thumb Code     0  use_no_semi.o(.text)
-    __use_no_semihosting_swi                 0x08003411   Thumb Code     2  use_no_semi.o(.text)
-    __semihosting_library_function           0x08003413   Thumb Code     0  indicate_semi.o(.text)
-    _is_digit                                0x08003413   Thumb Code    14  __printf_wp.o(i._is_digit)
-    _get_lc_ctype                            0x08003421   Thumb Code    44  lc_ctype_c.o(locale$$code)
-    __aeabi_fadd                             0x0800344d   Thumb Code     0  faddsub_clz.o(x$fpl$fadd)
-    _fadd                                    0x0800344d   Thumb Code   196  faddsub_clz.o(x$fpl$fadd)
-    __aeabi_f2iz                             0x08003511   Thumb Code     0  ffix.o(x$fpl$ffix)
-    _ffix                                    0x08003511   Thumb Code    54  ffix.o(x$fpl$ffix)
-    __aeabi_ui2f                             0x08003549   Thumb Code     0  fflt_clz.o(x$fpl$ffltu)
-    _ffltu                                   0x08003549   Thumb Code    38  fflt_clz.o(x$fpl$ffltu)
-    __aeabi_fmul                             0x08003571   Thumb Code     0  fmul.o(x$fpl$fmul)
-    _fmul                                    0x08003571   Thumb Code   258  fmul.o(x$fpl$fmul)
-    __fpl_fnaninf                            0x08003673   Thumb Code   140  fnaninf.o(x$fpl$fnaninf)
-    __fpl_fretinf                            0x080036ff   Thumb Code    10  fretinf.o(x$fpl$fretinf)
-    __aeabi_fsub                             0x08003709   Thumb Code     0  faddsub_clz.o(x$fpl$fsub)
-    _fsub                                    0x08003709   Thumb Code   234  faddsub_clz.o(x$fpl$fsub)
-    __I$use$fp                               0x080037f2   Number         0  usenofp.o(x$fpl$usenofp)
-    Region$$Table$$Base                      0x08003870   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08003890   Number         0  anon$$obj.o(Region$$Table)
-    __ctype                                  0x0800389d   Data           0  lc_ctype_c.o(locale$$data)
+    parse_cmd                                0x08002683   Thumb Code   858  z_main.o(.text)
+    loop_uart                                0x080029dd   Thumb Code    94  z_main.o(.text)
+    loop_nled                                0x08002a3b   Thumb Code    48  z_main.o(.text)
+    setup_interrupt                          0x08002a6b   Thumb Code     4  z_main.o(.text)
+    setup_systick                            0x08002a6f   Thumb Code     4  z_main.o(.text)
+    setup_uart3                              0x08002a73   Thumb Code    38  z_main.o(.text)
+    setup_uart1                              0x08002a99   Thumb Code    32  z_main.o(.text)
+    setup_beep                               0x08002ab9   Thumb Code    18  z_main.o(.text)
+    setup_nled                               0x08002acb   Thumb Code    18  z_main.o(.text)
+    setup_gpio                               0x08002add   Thumb Code     4  z_main.o(.text)
+    setup_rcc                                0x08002ae1   Thumb Code     4  z_main.o(.text)
+    main                                     0x08002ae5   Thumb Code    92  z_main.o(.text)
+    soft_reset                               0x08002b41   Thumb Code    26  z_main.o(.text)
+    setup_csb                                0x08002ba5   Thumb Code   104  z_sensor.o(.text)
+    setup_xunji                              0x08002c0d   Thumb Code    32  z_sensor.o(.text)
+    setup_sensor                             0x08002c2d   Thumb Code    12  z_sensor.o(.text)
+    csb_Delay_Us                             0x08002c39   Thumb Code    24  z_sensor.o(.text)
+    get_csb_value                            0x08002c51   Thumb Code   224  z_sensor.o(.text)
+    __rt_ctype_table                         0x08002d55   Thumb Code    16  rt_ctype_table.o(.text)
+    __2sprintf                               0x08002d65   Thumb Code    34  noretval__2sprintf.o(.text)
+    _printf_pre_padding                      0x08002d8d   Thumb Code    44  _printf_pad.o(.text)
+    _printf_post_padding                     0x08002db9   Thumb Code    34  _printf_pad.o(.text)
+    _printf_int_dec                          0x08002ddd   Thumb Code   104  _printf_dec.o(.text)
+    __printf                                 0x08002e55   Thumb Code   308  __printf_flags_wp.o(.text)
+    atoi                                     0x08002f8d   Thumb Code    26  atoi.o(.text)
+    __aeabi_memcpy                           0x08002fa7   Thumb Code     0  rt_memcpy_v6.o(.text)
+    __rt_memcpy                              0x08002fa7   Thumb Code   138  rt_memcpy_v6.o(.text)
+    _memcpy_lastbytes                        0x0800300d   Thumb Code     0  rt_memcpy_v6.o(.text)
+    __aeabi_memclr4                          0x08003031   Thumb Code     0  rt_memclr_w.o(.text)
+    __aeabi_memclr8                          0x08003031   Thumb Code     0  rt_memclr_w.o(.text)
+    __rt_memclr_w                            0x08003031   Thumb Code    78  rt_memclr_w.o(.text)
+    _memset_w                                0x08003035   Thumb Code     0  rt_memclr_w.o(.text)
+    strcmp                                   0x08003081   Thumb Code   128  strcmpv7m.o(.text)
+    __use_two_region_memory                  0x08003101   Thumb Code     2  heapauxi.o(.text)
+    __rt_heap_escrow$2region                 0x08003103   Thumb Code     2  heapauxi.o(.text)
+    __rt_heap_expand$2region                 0x08003105   Thumb Code     2  heapauxi.o(.text)
+    __rt_locale                              0x08003109   Thumb Code     8  rt_locale_intlibspace.o(.text)
+    __aeabi_errno_addr                       0x08003111   Thumb Code     8  rt_errno_addr_intlibspace.o(.text)
+    __errno$intlibspace                      0x08003111   Thumb Code     0  rt_errno_addr_intlibspace.o(.text)
+    __rt_errno_addr$intlibspace              0x08003111   Thumb Code     0  rt_errno_addr_intlibspace.o(.text)
+    _printf_int_common                       0x08003119   Thumb Code   178  _printf_intcommon.o(.text)
+    _printf_char_common                      0x080031d7   Thumb Code    32  _printf_char_common.o(.text)
+    _sputc                                   0x080031fd   Thumb Code    10  _sputc.o(.text)
+    strtol                                   0x08003207   Thumb Code   112  strtol.o(.text)
+    __aeabi_memcpy4                          0x08003277   Thumb Code     0  rt_memcpy_w.o(.text)
+    __aeabi_memcpy8                          0x08003277   Thumb Code     0  rt_memcpy_w.o(.text)
+    __rt_memcpy_w                            0x08003277   Thumb Code   100  rt_memcpy_w.o(.text)
+    _memcpy_lastbytes_aligned                0x080032bf   Thumb Code     0  rt_memcpy_w.o(.text)
+    __user_libspace                          0x080032dd   Thumb Code     8  libspace.o(.text)
+    __user_perproc_libspace                  0x080032dd   Thumb Code     0  libspace.o(.text)
+    __user_perthread_libspace                0x080032dd   Thumb Code     0  libspace.o(.text)
+    _strtoul                                 0x080032e5   Thumb Code   158  _strtoul.o(.text)
+    __user_setup_stackheap                   0x08003383   Thumb Code    74  sys_stackheap_outer.o(.text)
+    _chval                                   0x080033cd   Thumb Code    28  _chval.o(.text)
+    exit                                     0x080033e9   Thumb Code    18  exit.o(.text)
+    _sys_exit                                0x080033fd   Thumb Code     8  sys_exit.o(.text)
+    __I$use$semihosting                      0x08003409   Thumb Code     0  use_no_semi.o(.text)
+    __use_no_semihosting_swi                 0x08003409   Thumb Code     2  use_no_semi.o(.text)
+    __semihosting_library_function           0x0800340b   Thumb Code     0  indicate_semi.o(.text)
+    _is_digit                                0x0800340b   Thumb Code    14  __printf_wp.o(i._is_digit)
+    _get_lc_ctype                            0x08003419   Thumb Code    44  lc_ctype_c.o(locale$$code)
+    __aeabi_fadd                             0x08003445   Thumb Code     0  faddsub_clz.o(x$fpl$fadd)
+    _fadd                                    0x08003445   Thumb Code   196  faddsub_clz.o(x$fpl$fadd)
+    __aeabi_f2iz                             0x08003509   Thumb Code     0  ffix.o(x$fpl$ffix)
+    _ffix                                    0x08003509   Thumb Code    54  ffix.o(x$fpl$ffix)
+    __aeabi_ui2f                             0x08003541   Thumb Code     0  fflt_clz.o(x$fpl$ffltu)
+    _ffltu                                   0x08003541   Thumb Code    38  fflt_clz.o(x$fpl$ffltu)
+    __aeabi_fmul                             0x08003569   Thumb Code     0  fmul.o(x$fpl$fmul)
+    _fmul                                    0x08003569   Thumb Code   258  fmul.o(x$fpl$fmul)
+    __fpl_fnaninf                            0x0800366b   Thumb Code   140  fnaninf.o(x$fpl$fnaninf)
+    __fpl_fretinf                            0x080036f7   Thumb Code    10  fretinf.o(x$fpl$fretinf)
+    __aeabi_fsub                             0x08003701   Thumb Code     0  faddsub_clz.o(x$fpl$fsub)
+    _fsub                                    0x08003701   Thumb Code   234  faddsub_clz.o(x$fpl$fsub)
+    __I$use$fp                               0x080037ea   Number         0  usenofp.o(x$fpl$usenofp)
+    Region$$Table$$Base                      0x08003868   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08003888   Number         0  anon$$obj.o(Region$$Table)
+    __ctype                                  0x08003895   Data           0  lc_ctype_c.o(locale$$data)
     SystemCoreClock                          0x20000000   Data           4  system_stm32f10x.o(.data)
     AHBPrescTable                            0x20000004   Data          16  system_stm32f10x.o(.data)
     systick_ms                               0x20000030   Data           4  z_timer.o(.data)
@@ -1036,15 +1036,16 @@ Image Symbol Table
     main_distance                            0x20000046   Data           2  z_main.o(.data)
     avoid_target_distance                    0x20000048   Data           4  z_main.o(.data)
     avoid_distance_done                      0x2000004c   Data           4  z_main.o(.data)
-    directionTable                           0x20000054   Data          88  z_main.o(.data)
-    trig_pins                                0x200000ac   Data          10  z_sensor.o(.data)
-    echo_pins                                0x200000b6   Data          10  z_sensor.o(.data)
-    trig_ports                               0x200000c0   Data          20  z_sensor.o(.data)
-    echo_ports                               0x200000d4   Data          20  z_sensor.o(.data)
-    uart_frame                               0x200000e8   Data        1030  z_global.o(.bss)
-    cmd_return                               0x200004ee   Data        1024  z_global.o(.bss)
-    __libspace_start                         0x200008f0   Data          96  libspace.o(.bss)
-    __temporary_stack_top$libspace           0x20000950   Data           0  libspace.o(.bss)
+    forward_done                             0x20000050   Data           4  z_main.o(.data)
+    directionTable                           0x20000058   Data          88  z_main.o(.data)
+    trig_pins                                0x200000b0   Data          10  z_sensor.o(.data)
+    echo_pins                                0x200000ba   Data          10  z_sensor.o(.data)
+    trig_ports                               0x200000c4   Data          20  z_sensor.o(.data)
+    echo_ports                               0x200000d8   Data          20  z_sensor.o(.data)
+    uart_frame                               0x200000ec   Data        1030  z_global.o(.bss)
+    cmd_return                               0x200004f2   Data        1024  z_global.o(.bss)
+    __libspace_start                         0x200008f4   Data          96  libspace.o(.bss)
+    __temporary_stack_top$libspace           0x20000954   Data           0  libspace.o(.bss)
 
 
 
@@ -1054,9 +1055,9 @@ Memory Map of the image
 
   Image Entry point : 0x08000131
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00003a88, Max: 0x00010000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00003a84, Max: 0x00010000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x000039a0, Max: 0x00010000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00003998, Max: 0x00010000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -1130,78 +1131,79 @@ Memory Map of the image
     0x08001a20   0x08001a20   0x000003e0   Code   RO          343    .text               z_timer.o
     0x08001e00   0x08001e00   0x00000504   Code   RO          358    .text               z_usart.o
     0x08002304   0x08002304   0x00000048   Code   RO          371    .text               z_global.o
-    0x0800234c   0x0800234c   0x00000860   Code   RO          393    .text               z_main.o
-    0x08002bac   0x08002bac   0x000001b0   Code   RO          419    .text               z_sensor.o
-    0x08002d5c   0x08002d5c   0x00000010   Code   RO          440    .text               c_w.l(rt_ctype_table.o)
-    0x08002d6c   0x08002d6c   0x00000028   Code   RO          444    .text               c_w.l(noretval__2sprintf.o)
-    0x08002d94   0x08002d94   0x0000004e   Code   RO          448    .text               c_w.l(_printf_pad.o)
-    0x08002de2   0x08002de2   0x00000002   PAD
-    0x08002de4   0x08002de4   0x00000078   Code   RO          450    .text               c_w.l(_printf_dec.o)
-    0x08002e5c   0x08002e5c   0x00000138   Code   RO          464    .text               c_w.l(__printf_flags_wp.o)
-    0x08002f94   0x08002f94   0x0000001a   Code   RO          474    .text               c_w.l(atoi.o)
-    0x08002fae   0x08002fae   0x0000008a   Code   RO          476    .text               c_w.l(rt_memcpy_v6.o)
-    0x08003038   0x08003038   0x0000004e   Code   RO          478    .text               c_w.l(rt_memclr_w.o)
-    0x08003086   0x08003086   0x00000002   PAD
-    0x08003088   0x08003088   0x00000080   Code   RO          480    .text               c_w.l(strcmpv7m.o)
-    0x08003108   0x08003108   0x00000006   Code   RO          482    .text               c_w.l(heapauxi.o)
-    0x0800310e   0x0800310e   0x00000002   PAD
-    0x08003110   0x08003110   0x00000008   Code   RO          508    .text               c_w.l(rt_locale_intlibspace.o)
-    0x08003118   0x08003118   0x00000008   Code   RO          513    .text               c_w.l(rt_errno_addr_intlibspace.o)
-    0x08003120   0x08003120   0x000000b2   Code   RO          515    .text               c_w.l(_printf_intcommon.o)
-    0x080031d2   0x080031d2   0x00000002   PAD
-    0x080031d4   0x080031d4   0x00000030   Code   RO          517    .text               c_w.l(_printf_char_common.o)
-    0x08003204   0x08003204   0x0000000a   Code   RO          519    .text               c_w.l(_sputc.o)
-    0x0800320e   0x0800320e   0x00000070   Code   RO          522    .text               c_w.l(strtol.o)
-    0x0800327e   0x0800327e   0x00000064   Code   RO          527    .text               c_w.l(rt_memcpy_w.o)
-    0x080032e2   0x080032e2   0x00000002   PAD
-    0x080032e4   0x080032e4   0x00000008   Code   RO          534    .text               c_w.l(libspace.o)
-    0x080032ec   0x080032ec   0x0000009e   Code   RO          554    .text               c_w.l(_strtoul.o)
-    0x0800338a   0x0800338a   0x0000004a   Code   RO          601    .text               c_w.l(sys_stackheap_outer.o)
-    0x080033d4   0x080033d4   0x0000001c   Code   RO          603    .text               c_w.l(_chval.o)
-    0x080033f0   0x080033f0   0x00000012   Code   RO          605    .text               c_w.l(exit.o)
-    0x08003402   0x08003402   0x00000002   PAD
-    0x08003404   0x08003404   0x0000000c   Code   RO          638    .text               c_w.l(sys_exit.o)
-    0x08003410   0x08003410   0x00000002   Code   RO          640    .text               c_w.l(use_no_semi.o)
-    0x08003412   0x08003412   0x00000000   Code   RO          642    .text               c_w.l(indicate_semi.o)
-    0x08003412   0x08003412   0x0000000e   Code   RO          462    i._is_digit         c_w.l(__printf_wp.o)
-    0x08003420   0x08003420   0x0000002c   Code   RO          525    locale$$code        c_w.l(lc_ctype_c.o)
-    0x0800344c   0x0800344c   0x000000c4   Code   RO          486    x$fpl$fadd          fz_ws.l(faddsub_clz.o)
-    0x08003510   0x08003510   0x00000036   Code   RO          492    x$fpl$ffix          fz_ws.l(ffix.o)
-    0x08003546   0x08003546   0x00000002   PAD
-    0x08003548   0x08003548   0x00000026   Code   RO          496    x$fpl$ffltu         fz_ws.l(fflt_clz.o)
-    0x0800356e   0x0800356e   0x00000002   PAD
-    0x08003570   0x08003570   0x00000102   Code   RO          502    x$fpl$fmul          fz_ws.l(fmul.o)
-    0x08003672   0x08003672   0x0000008c   Code   RO          529    x$fpl$fnaninf       fz_ws.l(fnaninf.o)
-    0x080036fe   0x080036fe   0x0000000a   Code   RO          531    x$fpl$fretinf       fz_ws.l(fretinf.o)
-    0x08003708   0x08003708   0x000000ea   Code   RO          488    x$fpl$fsub          fz_ws.l(faddsub_clz.o)
-    0x080037f2   0x080037f2   0x00000000   Code   RO          533    x$fpl$usenofp       fz_ws.l(usenofp.o)
-    0x080037f2   0x080037f2   0x00000011   Data   RO          465    .constdata          c_w.l(__printf_flags_wp.o)
-    0x08003803   0x08003803   0x00000001   PAD
-    0x08003804   0x08003804   0x0000006a   Data   RO          394    .conststring        z_main.o
-    0x0800386e   0x0800386e   0x00000002   PAD
-    0x08003870   0x08003870   0x00000020   Data   RO          694    Region$$Table       anon$$obj.o
-    0x08003890   0x08003890   0x00000110   Data   RO          524    locale$$data        c_w.l(lc_ctype_c.o)
+    0x0800234c   0x0800234c   0x00000858   Code   RO          393    .text               z_main.o
+    0x08002ba4   0x08002ba4   0x000001b0   Code   RO          419    .text               z_sensor.o
+    0x08002d54   0x08002d54   0x00000010   Code   RO          440    .text               c_w.l(rt_ctype_table.o)
+    0x08002d64   0x08002d64   0x00000028   Code   RO          444    .text               c_w.l(noretval__2sprintf.o)
+    0x08002d8c   0x08002d8c   0x0000004e   Code   RO          448    .text               c_w.l(_printf_pad.o)
+    0x08002dda   0x08002dda   0x00000002   PAD
+    0x08002ddc   0x08002ddc   0x00000078   Code   RO          450    .text               c_w.l(_printf_dec.o)
+    0x08002e54   0x08002e54   0x00000138   Code   RO          464    .text               c_w.l(__printf_flags_wp.o)
+    0x08002f8c   0x08002f8c   0x0000001a   Code   RO          474    .text               c_w.l(atoi.o)
+    0x08002fa6   0x08002fa6   0x0000008a   Code   RO          476    .text               c_w.l(rt_memcpy_v6.o)
+    0x08003030   0x08003030   0x0000004e   Code   RO          478    .text               c_w.l(rt_memclr_w.o)
+    0x0800307e   0x0800307e   0x00000002   PAD
+    0x08003080   0x08003080   0x00000080   Code   RO          480    .text               c_w.l(strcmpv7m.o)
+    0x08003100   0x08003100   0x00000006   Code   RO          482    .text               c_w.l(heapauxi.o)
+    0x08003106   0x08003106   0x00000002   PAD
+    0x08003108   0x08003108   0x00000008   Code   RO          508    .text               c_w.l(rt_locale_intlibspace.o)
+    0x08003110   0x08003110   0x00000008   Code   RO          513    .text               c_w.l(rt_errno_addr_intlibspace.o)
+    0x08003118   0x08003118   0x000000b2   Code   RO          515    .text               c_w.l(_printf_intcommon.o)
+    0x080031ca   0x080031ca   0x00000002   PAD
+    0x080031cc   0x080031cc   0x00000030   Code   RO          517    .text               c_w.l(_printf_char_common.o)
+    0x080031fc   0x080031fc   0x0000000a   Code   RO          519    .text               c_w.l(_sputc.o)
+    0x08003206   0x08003206   0x00000070   Code   RO          522    .text               c_w.l(strtol.o)
+    0x08003276   0x08003276   0x00000064   Code   RO          527    .text               c_w.l(rt_memcpy_w.o)
+    0x080032da   0x080032da   0x00000002   PAD
+    0x080032dc   0x080032dc   0x00000008   Code   RO          534    .text               c_w.l(libspace.o)
+    0x080032e4   0x080032e4   0x0000009e   Code   RO          554    .text               c_w.l(_strtoul.o)
+    0x08003382   0x08003382   0x0000004a   Code   RO          601    .text               c_w.l(sys_stackheap_outer.o)
+    0x080033cc   0x080033cc   0x0000001c   Code   RO          603    .text               c_w.l(_chval.o)
+    0x080033e8   0x080033e8   0x00000012   Code   RO          605    .text               c_w.l(exit.o)
+    0x080033fa   0x080033fa   0x00000002   PAD
+    0x080033fc   0x080033fc   0x0000000c   Code   RO          638    .text               c_w.l(sys_exit.o)
+    0x08003408   0x08003408   0x00000002   Code   RO          640    .text               c_w.l(use_no_semi.o)
+    0x0800340a   0x0800340a   0x00000000   Code   RO          642    .text               c_w.l(indicate_semi.o)
+    0x0800340a   0x0800340a   0x0000000e   Code   RO          462    i._is_digit         c_w.l(__printf_wp.o)
+    0x08003418   0x08003418   0x0000002c   Code   RO          525    locale$$code        c_w.l(lc_ctype_c.o)
+    0x08003444   0x08003444   0x000000c4   Code   RO          486    x$fpl$fadd          fz_ws.l(faddsub_clz.o)
+    0x08003508   0x08003508   0x00000036   Code   RO          492    x$fpl$ffix          fz_ws.l(ffix.o)
+    0x0800353e   0x0800353e   0x00000002   PAD
+    0x08003540   0x08003540   0x00000026   Code   RO          496    x$fpl$ffltu         fz_ws.l(fflt_clz.o)
+    0x08003566   0x08003566   0x00000002   PAD
+    0x08003568   0x08003568   0x00000102   Code   RO          502    x$fpl$fmul          fz_ws.l(fmul.o)
+    0x0800366a   0x0800366a   0x0000008c   Code   RO          529    x$fpl$fnaninf       fz_ws.l(fnaninf.o)
+    0x080036f6   0x080036f6   0x0000000a   Code   RO          531    x$fpl$fretinf       fz_ws.l(fretinf.o)
+    0x08003700   0x08003700   0x000000ea   Code   RO          488    x$fpl$fsub          fz_ws.l(faddsub_clz.o)
+    0x080037ea   0x080037ea   0x00000000   Code   RO          533    x$fpl$usenofp       fz_ws.l(usenofp.o)
+    0x080037ea   0x080037ea   0x00000011   Data   RO          465    .constdata          c_w.l(__printf_flags_wp.o)
+    0x080037fb   0x080037fb   0x00000001   PAD
+    0x080037fc   0x080037fc   0x0000006a   Data   RO          394    .conststring        z_main.o
+    0x08003866   0x08003866   0x00000002   PAD
+    0x08003868   0x08003868   0x00000020   Data   RO          694    Region$$Table       anon$$obj.o
+    0x08003888   0x08003888   0x00000110   Data   RO          524    locale$$data        c_w.l(lc_ctype_c.o)
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x080039a0, Size: 0x00000f50, Max: 0x00005000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08003998, Size: 0x00000f58, Max: 0x00005000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x080039a0   0x00000014   Data   RW          126    .data               system_stm32f10x.o
-    0x20000014   0x080039b4   0x00000014   Data   RW          156    .data               stm32f10x_rcc.o
-    0x20000028   0x080039c8   0x00000001   Data   RW          315    .data               z_gpio.o
-    0x20000029   0x080039c9   0x00000003   PAD
-    0x2000002c   0x080039cc   0x00000008   Data   RW          344    .data               z_timer.o
-    0x20000034   0x080039d4   0x00000001   Data   RW          374    .data               z_global.o
-    0x20000035   0x080039d5   0x00000003   PAD
-    0x20000038   0x080039d8   0x00000074   Data   RW          395    .data               z_main.o
-    0x200000ac   0x08003a4c   0x0000003c   Data   RW          423    .data               z_sensor.o
-    0x200000e8        -       0x00000406   Zero   RW          372    .bss                z_global.o
-    0x200004ee        -       0x00000400   Zero   RW          373    .bss                z_global.o
-    0x200008ee   0x08003a88   0x00000002   PAD
-    0x200008f0        -       0x00000060   Zero   RW          535    .bss                c_w.l(libspace.o)
-    0x20000950        -       0x00000200   Zero   RW          295    HEAP                startup_stm32f10x_hd.o
-    0x20000b50        -       0x00000400   Zero   RW          294    STACK               startup_stm32f10x_hd.o
+    0x20000000   0x08003998   0x00000014   Data   RW          126    .data               system_stm32f10x.o
+    0x20000014   0x080039ac   0x00000014   Data   RW          156    .data               stm32f10x_rcc.o
+    0x20000028   0x080039c0   0x00000001   Data   RW          315    .data               z_gpio.o
+    0x20000029   0x080039c1   0x00000003   PAD
+    0x2000002c   0x080039c4   0x00000008   Data   RW          344    .data               z_timer.o
+    0x20000034   0x080039cc   0x00000001   Data   RW          374    .data               z_global.o
+    0x20000035   0x080039cd   0x00000003   PAD
+    0x20000038   0x080039d0   0x00000078   Data   RW          395    .data               z_main.o
+    0x200000b0   0x08003a48   0x0000003c   Data   RW          423    .data               z_sensor.o
+    0x200000ec        -       0x00000406   Zero   RW          372    .bss                z_global.o
+    0x200004f2        -       0x00000400   Zero   RW          373    .bss                z_global.o
+    0x200008f2   0x08003a84   0x00000002   PAD
+    0x200008f4        -       0x00000060   Zero   RW          535    .bss                c_w.l(libspace.o)
+    0x20000954   0x08003a84   0x00000004   PAD
+    0x20000958        -       0x00000200   Zero   RW          295    HEAP                startup_stm32f10x_hd.o
+    0x20000b58        -       0x00000400   Zero   RW          294    STACK               startup_stm32f10x_hd.o
 
 
 ==============================================================================
@@ -1224,14 +1226,14 @@ Image component sizes
         60          0          0          0          0       1503   z_delay.o
         72          0          0          1       2054       2417   z_global.o
        472         26          0          1          0       2925   z_gpio.o
-      2144        764        106        116          0      23390   z_main.o
+      2136        760        106        120          0      23487   z_main.o
         86          0          0          0          0        542   z_rcc.o
        432         36          0         60          0       2445   z_sensor.o
        992         28          0          8          0       4085   z_timer.o
       1284         34          0          0          0       6256   z_usart.o
 
     ----------------------------------------------------------------------
-     11126       1142        444        232       3592     349273   Object Totals
+     11118       1138        444        236       3592     349370   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          4          0          2          6          2          0   (incl. Padding)
 
@@ -1291,8 +1293,8 @@ Image component sizes
          0          0          0          0          0          0   usenofp.o
 
     ----------------------------------------------------------------------
-      2892         90        290          0         96       2748   Library Totals
-        18          0          1          0          0          0   (incl. Padding)
+      2892         90        290          0        100       2748   Library Totals
+        18          0          1          0          4          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -1302,7 +1304,7 @@ Image component sizes
        930         20          0          0          0        556   fz_ws.l
 
     ----------------------------------------------------------------------
-      2892         90        290          0         96       2748   Library Totals
+      2892         90        290          0        100       2748   Library Totals
 
     ----------------------------------------------------------------------
 
@@ -1311,15 +1313,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     14018       1232        734        232       3688     348377   Grand Totals
-     14018       1232        734        232       3688     348377   ELF Image Totals
-     14018       1232        734        232          0          0   ROM Totals
+     14010       1228        734        236       3692     348474   Grand Totals
+     14010       1228        734        236       3692     348474   ELF Image Totals
+     14010       1228        734        236          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                14752 (  14.41kB)
-    Total RW  Size (RW Data + ZI Data)              3920 (   3.83kB)
-    Total ROM Size (Code + RO Data + RW Data)      14984 (  14.63kB)
+    Total RO  Size (Code + RO Data)                14744 (  14.40kB)
+    Total RW  Size (RW Data + ZI Data)              3928 (   3.84kB)
+    Total ROM Size (Code + RO Data + RW Data)      14980 (  14.63kB)
 
 ==============================================================================
 

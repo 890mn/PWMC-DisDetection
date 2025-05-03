@@ -5,27 +5,25 @@ uint16_t ultra_front = 0;
 uint16_t ultra_right = 0;
 uint16_t ultra_back = 0;
 
-uint16_t main_distance = 0;
-Direction main_direction = DIR_STOP;
+uint16_t main_dis = 0;
+Direction main_dir = DIR_STOP;
 
-bool avoid_mode = FALSE;
+uint16_t cmd_dis = 0;
+Direction cmd_dir = DIR_STOP;
+
+uint16_t saved_dis = 0;
+Direction saved_dir = DIR_STOP;
+
 bool any = FALSE;
 volatile bool executed_in_this_loop = FALSE;
 
-typedef enum {
-    AVOID_IDLE,
-    AVOID_PLANNING,
-    AVOID_EXECUTING,
-    AVOID_CHECKING
-} AvoidState;
-
-AvoidState avoid_state = AVOID_IDLE;
-Direction avoid_direction = DIR_STOP;
-int avoid_target_distance = 0;
-int avoid_time_remaining = 0;
-int avoid_distance_done = 0;
-#define SAFE_THRESHOLD 20  // cm
-int forward_done = 0;      // 已完成的主方向行进距离
+typedef struct {
+	bool mode;
+	AvoidState state;
+	Direction dir;
+	int dis;
+}Avoid_t;
+Avoid_t Core = {FALSE, AST_IDLE, DIR_STOP, 0};
 
 CommandMap directionTable[] = {
     {"Stop", DIR_STOP},
@@ -41,8 +39,8 @@ CommandMap directionTable[] = {
     {"LefCenRev", DIR_LEFCEN_REV}
 };
 
-int get_default_time(Direction dir) {
-	switch (dir) {
+int get_default_time() {
+	switch (main_dir) {
 		case DIR_FORWARD:
 		case DIR_BACK:
 			return DEFAULT_TIME_MS;
@@ -61,23 +59,24 @@ int get_default_time(Direction dir) {
 	}
 }
 
-void execute_direction(Direction dir, int duration_ms) {
-	char execBuf[64];
-	sprintf(execBuf, "[底盘] 执行 %d 估算时间=%dms\n", dir, duration_ms);
-	zx_uart_send_str((u8*)execBuf);
-
+void execute_direction() {
+	int duration_ms;
 	if (any) {
 		car_run(0, 0, 0, 0, 0);
 		return;
 	}
 
-	// 使用默认时间（如果未指定）
-	if (duration_ms <= 0) {
-		duration_ms = get_default_time(dir);
+	if (Core.mode == TRUE) {
+		duration_ms = DIST_TIME_X1000(main_dis) / 1000;
+	} else {
+		duration_ms = get_default_time();
 	}
 
-	switch (dir) {
-		case DIR_STOP:           car_run(0, 0, 0, 0, 0); break;
+	char execBuf[64];
+	sprintf(execBuf, "[底盘] 执行 %d 估算时间=%dms\n", main_dir, duration_ms);
+	zx_uart_send_str((u8*)execBuf);
+
+	switch (main_dir) {
 		case DIR_FORWARD:        car_run(500, 500, 500, 500, duration_ms); break;
 		case DIR_BACK:           car_run(-500, -500, -500, -500, duration_ms); break;
 		case DIR_LEFT:           car_run(-500, 500, -500, 500, duration_ms); break;
@@ -88,6 +87,7 @@ void execute_direction(Direction dir, int duration_ms) {
 		case DIR_RIGCEN_REV:     car_run(-500, 0,-500, 0, duration_ms); break;
 		case DIR_LEFCEN:         car_run(0, -500, 0, -500, duration_ms); break;
 		case DIR_LEFCEN_REV:     car_run(0, 500, 0, 500, duration_ms); break;
+		case DIR_STOP:
 		default:                 car_run(0, 0, 0, 0, 0); break;
 	}
 }
@@ -132,100 +132,102 @@ void dirs(u8 *cmd) {
         numberStr[j++] = cmd[i++];
     }
     numberStr[j] = '\0';
-    main_direction = get_direction_from_str(directionStr);
-    main_distance = atoi(numberStr);
+    cmd_dir = get_direction_from_str(directionStr);
+    cmd_dis = atoi(numberStr);
 }
 
-void reset_avoid_state() {
-    avoid_mode = FALSE;
-    avoid_state = AVOID_IDLE;
-    main_direction = DIR_STOP;
-    avoid_distance_done = 0;
-    avoid_target_distance = 0;
+void Core_reset() {
+    Core.mode = FALSE;
+    Core.dir = DIR_STOP;
+	Core.dis = 0;
+	main_dir = DIR_STOP;
 }
 
-void plan_next_direction() {
-    if (ultra_front > SAFE_THRESHOLD) {
-        main_direction = DIR_FORWARD;
-        avoid_target_distance = SAFE_THRESHOLD; // 每次前进20cm
-        zx_uart_send_str((u8*)"[避障] 前方仍可前进一段，继续前进\n");
-    } else {
-        // 进入绕行
-        if (ultra_left > SAFE_THRESHOLD) {
-            main_direction = DIR_LEFT;
-            avoid_target_distance = 30;
-            zx_uart_send_str((u8*)"[避障] 前方受阻，尝试向左绕行\n");
-        } else if (ultra_right > SAFE_THRESHOLD) {
-            main_direction = DIR_RIGHT;
-            avoid_target_distance = 30;
-            zx_uart_send_str((u8*)"[避障] 前方受阻，尝试向右绕行\n");
-        } else if (ultra_back > SAFE_THRESHOLD) {
-            main_direction = DIR_BACK;
-            avoid_target_distance = 30;
-            zx_uart_send_str((u8*)"[避障] 无路可走，尝试后退避障\n");
-        } else {
-            main_direction = DIR_STOP;
-            zx_uart_send_str((u8*)"[避障] 全方位阻挡，挂起等待\n");
+void AST_Core() {
+    if (Core.mode == FALSE) return;
+
+    switch (Core.state) {
+        case AST_IDLE:
+            zx_uart_send_str((u8*)"[ASTCore] Core Start\n");
+            Core.state = AST_CHECK;
+            break;
+
+        case AST_CHECK:
+            if (Core.dis >= cmd_dis) {
+                zx_uart_send_str((u8*)"[ASTCore] Core finish\n");
+				Core_reset();
+                Core.state = AST_IDLE;
+                break;
+            }
+
+            if (ultra_front < SAFE_THRES_CM || ultra_back < SAFE_THRES_CM ||
+                ultra_left < SAFE_THRES_CM || ultra_right < SAFE_THRES_CM) {
+                
+                zx_uart_send_str((u8*)"[ASTCore] ALERT PLAN\n");
+
+                // 保存当前指令
+                saved_dir = Core.dir;
+                saved_dis = Core.dis;
+
+                // 停车
+                main_dir = DIR_STOP;
+
+                // 切换到规划状态
+                Core.state = AST_PLAN;
+                break;
+            }
+
+            Core.dis += 10;
+            main_dir = Core.dir;
+            main_dis = Core.dis;
+            char dbg[64];
+            sprintf(dbg, "[ASTCore] MAIN_DIR=%d MAIN_DIS=%d\n", main_dir, main_dis);
+            zx_uart_send_str((u8*)dbg);
+            break;
+
+        case AST_PLAN: {
+            // 在PLAN模式下，尝试自动寻找绕行路径
+            static int plan_step = 0; // 增加一个小状态机步进
+
+            switch (plan_step) {
+                case 0: // 第一步，判断左侧能否绕行
+                    if (ultra_left > SAFE_THRES_CM) {
+                        main_dir = DIR_LEFT;
+                        zx_uart_send_str((u8*)"[ASTCore] PLAN:LEFT\n");
+                        plan_step = 1;
+                    } else if (ultra_right > SAFE_THRES_CM) {
+                        main_dir = DIR_RIGHT;
+                        zx_uart_send_str((u8*)"[ASTCore] PLAN:RIGHT\n");
+                        plan_step = 1;
+                    } else if (ultra_back > SAFE_THRES_CM) {
+                        main_dir = DIR_BACK;
+                        zx_uart_send_str((u8*)"[ASTCore] PLAN:BACK\n");
+                        plan_step = 1;
+                    } else {
+                        main_dir = DIR_STOP;
+                        zx_uart_send_str((u8*)"[ASTCore] PLAN:ALL BLOCK WAIT\n");
+                        plan_step = 0;
+                    }
+                    break;
+
+                case 1: // 第二步，执行避障动作一段时间
+                    Core.dis += 10; // 避障过程也推进距离，模拟行驶
+                    main_dis = Core.dis;
+                    zx_uart_send_str((u8*)"[ASTCore] IN PLAN\n");
+
+                    // 如果前方已经畅通，恢复原路线
+                    if (ultra_front > SAFE_THRES_CM) {
+                        Core.dir = saved_dir;
+                        Core.dis = saved_dis;
+                        zx_uart_send_str((u8*)"[ASTCore] PLAN COMPLETE\n");
+                        plan_step = 0;
+                        Core.state = AST_CHECK;
+                    }
+                    break;
+            }
+            break;
         }
     }
-}
-
-void execute_current_step() {
-    int exec_time = TIME_FROM_DIST(avoid_target_distance) / 1000;
-    char dbg[64];
-    sprintf(dbg, "[避障] 执行方向=%d 距离=%d 时间=%dms\n", main_direction, avoid_target_distance, exec_time);
-    zx_uart_send_str((u8*)dbg);
-    execute_direction(main_direction, exec_time);
-
-    // 只有主方向前进才记录进度
-    if (main_direction == DIR_FORWARD) {
-        forward_done += avoid_target_distance;
-    }
-}
-
-void check_if_goal_reached() {
-    if (forward_done >= main_distance) {
-        zx_uart_send_str((u8*)"[避障] 已到达目标主距离，退出避障\n");
-        reset_avoid_state();
-    } else {
-        zx_uart_send_str((u8*)"[避障] 主路程未完成，继续导航\n");
-        avoid_state = AVOID_PLANNING;
-    }
-}
-
-void avoid_system() {
-    executed_in_this_loop = FALSE;
-    if (!avoid_mode) return;
-
-    switch (avoid_state) {
-        case AVOID_IDLE:
-            zx_uart_send_str((u8*)"[避障] 初始规划\n");
-            avoid_distance_done = 0;
-            avoid_state = AVOID_PLANNING;
-            break;
-
-        case AVOID_PLANNING:
-            plan_next_direction();
-            avoid_state = AVOID_EXECUTING;
-            break;
-
-        case AVOID_EXECUTING:
-            if (main_direction != DIR_STOP) {
-                execute_current_step();
-            }
-            avoid_state = AVOID_CHECKING;
-            break;
-
-        case AVOID_CHECKING:
-            check_if_goal_reached();
-            break;
-
-        default:
-            reset_avoid_state();
-            break;
-    }
-
-    executed_in_this_loop = TRUE;
 }
 
 int main(void) {	
@@ -252,13 +254,11 @@ int main(void) {
 
 		// 2 - 串口处理 + 避障
 		loop_uart();	
-		avoid_system();	
+		AST_Core();	
 		tb_delay_ms(50); // 避障系统处理延时
 
-		// 3 - 底盘动作（若未被避障系统控制）
-		if (!executed_in_this_loop) {
-			execute_direction(main_direction, -1);	
-		}
+		// 3 - 底盘动作
+		execute_direction();	
 		tb_delay_ms(200);
 	}
 }
@@ -356,7 +356,7 @@ void loop_uart(void) {
             break;
         case 5: // @
             beep_on_times(2, 100);
-            avoid_mode = TRUE;
+            Core.mode = TRUE;
             dirs(buf);
             break;
         default:
@@ -375,31 +375,31 @@ void soft_reset(void) {
 void parse_cmd(u8 *cmd) {
 	int pos;
 	if(pos = str_contain_str(cmd, (u8 *)"$STOP!"), pos){
-		main_direction = DIR_STOP;	
+		main_dir = DIR_STOP;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$FORW!"), pos){
-		main_direction = DIR_FORWARD;	
+		main_dir = DIR_FORWARD;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$BACK!"), pos){
-		main_direction = DIR_BACK;		
+		main_dir = DIR_BACK;		
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LEFT!"), pos){
-		main_direction = DIR_LEFT;	
+		main_dir = DIR_LEFT;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$RIGH!"), pos){
-		main_direction = DIR_RIGHT;		
+		main_dir = DIR_RIGHT;		
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LEFR!"), pos){
-		main_direction = DIR_LEFT_FORWARD;	
+		main_dir = DIR_LEFT_FORWARD;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LEBA!"), pos){
-		main_direction = DIR_RIGHT_FORWARD;	
+		main_dir = DIR_RIGHT_FORWARD;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$RICE!"), pos){
-		main_direction = DIR_RIGCEN;	
+		main_dir = DIR_RIGCEN;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$RICR!"), pos){
-		main_direction = DIR_RIGCEN_REV;	
+		main_dir = DIR_RIGCEN_REV;	
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LECE!"), pos){
-		main_direction = DIR_LEFCEN;
+		main_dir = DIR_LEFCEN;
 	}else if(pos = str_contain_str(cmd, (u8 *)"$LECR!"), pos){
-		main_direction = DIR_LEFCEN_REV;
+		main_dir = DIR_LEFCEN_REV;
 	}else if(pos = str_contain_str(cmd, (u8 *)"$STOPANY!"), pos){
-		main_direction = DIR_STOP;
+		main_dir = DIR_STOP;
 		any = TRUE;
-		avoid_mode = FALSE;
+		Core.mode = FALSE;
 		beep_on_times(1,200);
 	}
 }

@@ -25,14 +25,15 @@
 #define DIST(t) ( (6 * (t) * (t)) / 1000 + 25 * (t) - 5500 )    // mm
 #define ANGT(t) ( (-5 * (t) * (t)) / 1000 + 203 * (t) - 62750 ) // mdeg
 
-// distance -> time (ms)，反向估算执行时间
-#define TIME_FROM_DIST(d) (20 * (d) + 220000)  // 粗略拟合，保证时间合理区间
-#define TIME_FROM_ANGT(a) (15 * (a) + 180000) // 角度转时间的估算
+// 输入单位：cm，输出单位：ms（记得 /1000）
+#define DIST_TIME_X1000(d)  (31890 * (d) - 91 * (d) * (d) + 241230)
+// 输入单位：deg，输出单位：ms（记得 /1000）
+#define ANGT_TIME_X1000(a)  (5000 * (a) + (a) * (a) + 312490)
 
 #define DEFAULT_TIME_MS  1000
 #define SHORT_TIME_MS    500
 #define TURN_TIME_MS     800
-
+#define SAFE_THRES_CM 15
 typedef enum {
     DIR_STOP = 0,
     DIR_FORWARD,
@@ -47,14 +48,20 @@ typedef enum {
     DIR_LEFCEN_REV
 } Direction;
 
+typedef enum {
+    AST_IDLE,
+    AST_PLAN,
+    AST_CHECK
+} AvoidState;
+
 typedef struct {
     const char* cmd;
     Direction dir;
 } CommandMap;
 
 extern CommandMap directionTable[];
-extern Direction main_direction;
-extern uint16_t  main_distance;
+extern Direction main_dir;
+extern uint16_t  main_dis;
 extern uint16_t  ultra_left;
 extern uint16_t  ultra_front;
 extern uint16_t  ultra_right;
@@ -76,12 +83,12 @@ void soft_reset(void);
 void parse_cmd(u8 *cmd);
 
 void car_run(int speedlq, int speedrq, int speedlh, int speedrh, int duration_ms);
-int get_default_time(Direction dir);
-void execute_direction(Direction dir, int duration_ms);
+int get_default_time(void);
+void execute_direction(void);
 
 Direction get_direction_from_str(const char* dirStr);
 void ultra_distance(void);
-void avoid_system(void);
+void AST_Core(void);
 void dirs(u8 *cmd);
 
 #endif

@@ -226,15 +226,9 @@ int USART1_IRQHandler(void) {
     if (USART_GetFlagStatus(USART1, USART_IT_RXNE) == SET) {
         USART_ClearITPendingBit(USART1, USART_IT_RXNE);
         sbuf = USART_ReceiveData(USART1);
-        
-        // 忽略新数据直到主循环处理完上一次
-        if (uart_frame.ready) return 0;
 
         // 如果接收到起始符，重新开始收集
         if (sbuf == '$')      uart_frame.mode = 1;
-        else if (sbuf == '#') uart_frame.mode = 2;
-        else if (sbuf == '{') uart_frame.mode = 3;
-        else if (sbuf == '<') uart_frame.mode = 4;
         else if (sbuf == '@') uart_frame.mode = 5;
 
         // 接收数据
@@ -243,16 +237,10 @@ int USART1_IRQHandler(void) {
         }
 
         // 接收结束条件判断
-        if ((uart_frame.mode == 1 || uart_frame.mode == 2 || uart_frame.mode == 5) && sbuf == '!') {
+        if ((uart_frame.mode == 1 || uart_frame.mode == 5) && sbuf == '!') {
             uart_frame.buf[uart_frame.index] = '\0';
             uart_frame.ready = 1;
-        } else if (uart_frame.mode == 3 && sbuf == '}') {
-            uart_frame.buf[uart_frame.index] = '\0';
-            uart_frame.ready = 1;
-        } else if (uart_frame.mode == 4 && sbuf == '>') {
-            uart_frame.buf[uart_frame.index] = '\0';
-            uart_frame.ready = 1;
-        }
+        } 
 
         // 超限保护
         if (uart_frame.index >= UART_BUF_SIZE) {
@@ -269,16 +257,16 @@ int USART3_IRQHandler(void) {
     if (USART_GetFlagStatus(USART3, USART_IT_RXNE) == SET) {
         USART_ClearITPendingBit(USART3, USART_IT_RXNE);
         sbuf = USART_ReceiveData(USART3);
-        
-        // 忽略新数据直到主循环处理完上一次
-        if (uart_frame.ready) return 0;
 
         // 如果接收到起始符，重新开始收集
-        if (sbuf == '$')      uart_frame.mode = 1;
-        else if (sbuf == '#') uart_frame.mode = 2;
-        else if (sbuf == '{') uart_frame.mode = 3;
-        else if (sbuf == '<') uart_frame.mode = 4;
-        else if (sbuf == '@') uart_frame.mode = 5;
+        if (sbuf == '$') {
+            uart_frame.mode = 1;
+            uart_frame.index = 0; // 清空重新开始收集
+        }
+        else if (sbuf == '@') {
+            uart_frame.mode = 5;
+            uart_frame.index = 0;
+        }
 
         // 接收数据
         if (uart_frame.index < UART_BUF_SIZE) {
@@ -286,16 +274,10 @@ int USART3_IRQHandler(void) {
         }
 
         // 接收结束条件判断
-        if ((uart_frame.mode == 1 || uart_frame.mode == 2 || uart_frame.mode == 5) && sbuf == '!') {
+        if ((uart_frame.mode == 1 || uart_frame.mode == 5) && sbuf == '!') {
             uart_frame.buf[uart_frame.index] = '\0';
             uart_frame.ready = 1;
-        } else if (uart_frame.mode == 3 && sbuf == '}') {
-            uart_frame.buf[uart_frame.index] = '\0';
-            uart_frame.ready = 1;
-        } else if (uart_frame.mode == 4 && sbuf == '>') {
-            uart_frame.buf[uart_frame.index] = '\0';
-            uart_frame.ready = 1;
-        }
+        } 
 
         // 超限保护
         if (uart_frame.index >= UART_BUF_SIZE) {

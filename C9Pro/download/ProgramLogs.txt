@@ -155,3 +155,16 @@
 [2025-04-23 23:38:日志记录不属免费功能,请注册支持作者改进软件
 [2025-04-24 12:11:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
 [2025-04-24 21:38:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-25 12:58:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-25 13:20:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-25 13:42:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-25 20:00:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-25 20:00:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-25 20:37:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-25 20:47:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-25 20:51:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-25 20:55:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-25 21:07:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-25 21:09:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-26 23:03:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
+[2025-04-29 21:59:Program Success:31FF6C063042593626410943 D:\study_data\CS_Major\Hardware\STM32\PWMC-DisDetection\C9Pro\OUT\Carbot-32.hex
